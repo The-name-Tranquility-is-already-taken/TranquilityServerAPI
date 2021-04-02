@@ -11,7 +11,8 @@ exports.listMembers = (req, res) => {
       if (err)
         res.send(err);
       res.json(Response);
-      logging.log("[ IP ] - /Members");
+      var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      logging.log(`[ ${ip} ] - /Members`);
   });
 };
 exports.createNewMember = (req, res) => {
@@ -25,7 +26,8 @@ exports.createNewMember = (req, res) => {
     if(req.body.secretKey == process.env.secretKey)
     {
       res.status(codes.Ok);
-      logging.log("[ IP ] - /Members");
+      var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      logging.log(`[ ${ip} ] - /Members`);
       res.json(Response);
     }
     else {
@@ -64,7 +66,8 @@ exports.delete_a_member = (req, res) => {
         res.send(err);
     }
     if(!Response || Response[0] == undefined || Response == undefined || Response == []) {
-      logging.log("[ IP ] - Tried to delete a member that doesnt exist.");
+      var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+      logging.log(`[ ${ip} ] - Tried to delete a member that doesnt exist.`);
       res.status(codes.Not_Found);
       res.json(
         {   message: "Member doesnt exist.",
@@ -79,7 +82,10 @@ exports.delete_a_member = (req, res) => {
       }, (err, DeleteResponse) => {
         if (err)
           res.send(err);
-        logging.log(`[ IP ] - Deleted member ${Response[0].Tag}.`);
+        
+        var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        logging.log(`[ ${ip} ] - Deleted member ${Response[0].Tag}.`);
+  
         res.status(codes.Accepted);
         res.json({message: `Member ${Response[0].Tag} successfully deleted`});
     });
