@@ -30,7 +30,7 @@ exports.createNewMember = (req, res) => {
   });
 };
 exports.getMemberRecord = (req, res) => {
-    Members.find({MemberID: req.params.MemberID}, (err, Response) => {
+    Members.find({id: req.params.MemberID}, (err, Response) => {
     if (err) {
       res.status(codes.Bad_Request);
       res.send(err);
@@ -38,11 +38,10 @@ exports.getMemberRecord = (req, res) => {
     res.json(Response);
   });
 };
-exports.update_a_member = (req, res) => {
+exports.updateMember = (req, res) => {
     Members.findOneAndUpdate(
       {
-        MemberID: req.params.MemberID,
-        Token: req.body.token
+        id: req.params.MemberID
       }, req.body, {new: true}, (err, Response) => {
     if (err) {
       res.status(codes.Bad_Request);
@@ -53,8 +52,8 @@ exports.update_a_member = (req, res) => {
     res.json(Response);
   });
 };
-exports.delete_a_member = (req, res) => {
-  Members.find({MemberID: req.params.MemberID}, (err, Response) => {
+exports.deleteMember = (req, res) => {
+  Members.find({id: req.params.MemberID}, (err, Response) => {
     if (err) {
         res.send(err);
     }
@@ -71,7 +70,7 @@ exports.delete_a_member = (req, res) => {
     }
     Members.deleteOne(
       {
-        MemberID: req.params.MemberID
+        id: req.params.MemberID
       }, (err, DeleteResponse) => {
         if (err)
           res.send(err);

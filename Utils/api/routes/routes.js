@@ -6,10 +6,10 @@ module.exports = (app) => {
     .post(MemberList.createNewMember);
   app.route('/api/member/:MemberID')
     .get(MemberList.getMemberRecord)
-    .put(MemberList.update_a_member)
-    .delete(MemberList.delete_a_member);
+    .put(MemberList.updateMember)
+    .delete(MemberList.deleteMember);
   app.route('/api/member/:MemberID')
     .get(MemberList.getMemberRecord)
-    .put(MemberList.update_a_member)
-    .delete(MemberList.delete_a_member);
+    .put(MemberList.updateMember)
+    .delete(MemberList.deleteMember);
 };
