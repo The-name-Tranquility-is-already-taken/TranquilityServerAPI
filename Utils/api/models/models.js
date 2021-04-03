@@ -2,15 +2,15 @@
 const mongoose = require('mongoose');
 const Schema = mongoose.Schema;
 const MemberSchema = new Schema({
-  MemberID: {
+  id: {
     type: String,
-    required: 'A MemberID is needed'
+    required: 'A member id is needed'
   },
-  Created_date: {
+  createdDate: {
     type: Date,
     default: Date.now
   },
-  Tag: {
+  tag: {
       type: String,
       required: 'A user tag is needed'
   },
@@ -24,7 +24,7 @@ const MemberSchema = new Schema({
     },
   email: {
       type: String,
-      required: 'Need an email for the uer'
+      required: 'Need an email for the user'
     },
 });
 module.exports = mongoose.model('Members', MemberSchema);
@@ -32,7 +32,7 @@ module.exports = mongoose.model('Members', MemberSchema);
 const GuildSchema = new Schema({
   id: {
     type: String,
-    required: 'A MemberID is needed'
+    required: 'A Guild ID is needed'
   },
   createdDate: {
     type: Date,
@@ -45,18 +45,6 @@ const GuildSchema = new Schema({
   description: {
       type: String,
       required: 'Guilds description Tag'
-  },
-  hash: {
-    type: String,
-    required: 'Hash of password is needed'
-  },
-  phoneNumber: {
-      type: String,
-      required: 'Need a phone number'
-    },
-  email: {
-      type: String,
-      required: 'Need an email for the uer'
-    },
+  }
 });
 module.exports = mongoose.model('Members', MemberSchema);

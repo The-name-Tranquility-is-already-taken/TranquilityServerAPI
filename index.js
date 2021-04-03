@@ -9,7 +9,6 @@ port = process.env.PORT || 3000;
 mongoose = require('mongoose')
 const uri = process.env.mongodb;
 require('./Utils/api/models/models') //created model loading here
-
 // mongoose instance connection url connection
 mongoose.connect(uri, {
  useNewUrlParser: true,
@@ -18,8 +17,9 @@ mongoose.connect(uri, {
  }).then(res=>{
   logging.log('DB Connected!');
  }).catch(err => {
-  console.log(Error, err.message);
+  console.log(Error,"Failed to connect to DB\nErrror :"+ err.message);
 });
+
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 

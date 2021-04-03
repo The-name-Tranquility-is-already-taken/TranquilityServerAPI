@@ -23,17 +23,10 @@ exports.createNewMember = (req, res) => {
       res.send(err);
       return;
     }
-    if(req.body.secretKey == process.env.secretKey)
-    {
-      res.status(codes.Ok);
-      var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
-      logging.log(`[ ${ip} ] - /Members`);
-      res.json(Response);
-    }
-    else {
-      res.status(codes.Unauthorized);
-      res.send("UN-AUTHENTICATED");
-    }
+    res.status(codes.Ok);
+    var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+    logging.log(`[ ${ip} ] - /Members`);
+    res.json(Response);
   });
 };
 exports.getMemberRecord = (req, res) => {
