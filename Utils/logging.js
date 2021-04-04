@@ -9,11 +9,10 @@ function getLogLevelNum(level) {
     if(level == "ALL")      return 4;
     log("Unsure what log level " + level.red + " belongs to.", "GENERIC");
     return 4;
-
 }
 exports.getLogLevelNum = (level) => {
     return getLogLevelNum(level);
-}
+};
 function log(message, type = "DEBUG") {
     if(getLogLevelNum(type) > getLogLevelNum(logLevel)) {
         return;
@@ -44,7 +43,7 @@ function log(message, type = "DEBUG") {
 }
 exports.log = (message, type = "DEBUG") => {
     return log(message, type);
-}
+};
 function char_count(str, letter)  {
     var letter_Count = 0;
     for (var position = 0; position < str.length; position++) {
@@ -56,7 +55,7 @@ function char_count(str, letter)  {
 }
 exports.char_count = (str, letter) => {
     return char_count(str, letter);
-}
+};
 function getDateTime() {
 
     var date = new Date();
@@ -82,4 +81,4 @@ function getDateTime() {
 }
 exports.getDateTime = () => {
     return getDateTime();
-}
+};
