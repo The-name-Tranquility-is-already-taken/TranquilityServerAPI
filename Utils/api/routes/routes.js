@@ -12,4 +12,14 @@ module.exports = (app) => {
     .get(MemberList.getMemberRecord)
     .put(MemberList.updateMember)
     .delete(MemberList.deleteMember);
+
+
+    /*
+    Authentication gateway for authentication
+    /api/auth/:MemberID?hash=base64hash???
+    */
+    const AuthGateways = require('../controllers/authGateways');
+    app.route('/api/auth')
+      .get(AuthGateways.login);
+
 };
