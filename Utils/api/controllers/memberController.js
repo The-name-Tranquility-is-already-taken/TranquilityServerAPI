@@ -57,7 +57,7 @@ exports.deleteMember = (req, res) => {
     if (err) {
         res.send(err);
     }
-    if(!Response || Response[0] == undefined || Response == undefined || Response == []) {
+    if(!Response || Response[0] == undefined || Response == []) {
       var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
       logging.log(`[ ${ip} ] - Tried to delete a member that doesnt exist.`);
       res.status(codes.Not_Found);
@@ -75,7 +75,7 @@ exports.deleteMember = (req, res) => {
         if (err)
           res.send(err);
         
-        var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;
+        var ip = req.headers['x-forwarded-for'] || req.connection.remoteAddress;  
         logging.log(`[ ${ip} ] - Deleted member ${Response[0].Tag}.`);
   
         res.status(codes.Accepted);

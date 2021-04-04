@@ -4,9 +4,9 @@ require('dotenv').config();
 
 const express = require('express'),
 app = express(),
-port = process.env.PORT || 3000;
+port = process.env.PORT || 3000,
+mongoose = require('mongoose');
 
-mongoose = require('mongoose')
 const uri = process.env.mongodb;
 require('./Utils/api/models/models') //created model loading here
 // mongoose instance connection url connection

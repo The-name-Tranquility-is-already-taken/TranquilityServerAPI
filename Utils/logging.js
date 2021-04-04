@@ -1,4 +1,4 @@
-const colors = require('colors');
+require('colors');
 
 logLevel = "ALL";
 function getLogLevelNum(level) {
