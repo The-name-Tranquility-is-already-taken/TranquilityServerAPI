@@ -15,8 +15,8 @@ module.exports = (app) => {
 
 
     /*
-    Authentication gateway for authentication
-    /api/auth/:MemberID?hash=base64hash???
+      Authentication gateway for authentication
+      /api/auth/:MemberID?hash=base64hash???
     */
     const AuthGateways = require('../controllers/authGateways');
     app.route('/api/auth/:MemberID')
