@@ -1,10 +1,10 @@
 'use strict';
-const codes = require("../../error_codes").codes;
+const codes = require("../../Utils/error_codes").codes;
 
 const mongoose = require('mongoose');
 const Members = mongoose.model('Members');
 
-const logging = require('../../logging');
+const logging = require('../../Utils/logging');
 
 exports.login = (req, res) => {
     logging.log(`Trying to login as. ${req.params.MemberID}`);
