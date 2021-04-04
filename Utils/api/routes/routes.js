@@ -20,6 +20,6 @@ module.exports = (app) => {
 
     */
   const AuthGateways = require('../controllers/AuthGateways.js');
-  app.route('/api/auth')
+  app.route('/api/auth/:MemberID')
     .get(AuthGateways.login);
 };
