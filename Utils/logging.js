@@ -15,10 +15,7 @@ exports.getLogLevelNum = (level) => {
     return getLogLevelNum(level);
 }
 function log(message, type = "DEBUG") {
-    if(getLogLevelNum(type) > getLogLevelNum(logLevel))
-    {
-        // console.log("Log level: " + getLogLevelNum(type));
-        // console.log("Config log level: " + getLogLevelNum(logLevel));
+    if(getLogLevelNum(type) > getLogLevelNum(logLevel)) {
         return;
     }
 
@@ -43,7 +40,7 @@ function log(message, type = "DEBUG") {
         }
         return tmp;
     }
-    console.log(StartMessage + balence(StartMessage) +  "-> " + message);
+    console.log(StartMessage + balence() +  "-> " + message);
 }
 exports.log = (message, type = "DEBUG") => {
     return log(message, type);
