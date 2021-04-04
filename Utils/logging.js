@@ -19,7 +19,7 @@ function log(message, type = "DEBUG") {
         return;
     }
 
-    maxSize = 55
+    maxSize = 45
 
     time = getDateTime().yellow;
 
