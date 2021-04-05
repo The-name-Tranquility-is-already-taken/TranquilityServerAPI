@@ -69,15 +69,12 @@ exports.joinGuild = (req, res) => {
     if(!Response) {
       res.status(codes.Bad_Request);
       console.log(err);
-      logging.log("Invalid UserID.", "ERROR");
       res.send("Invalid UserID.");
       return;
     }
 
     Response.guilds.forEach(e => {
       if(e == req.params.GuildID) {
-        logging.log("User already within guild.");
-
         res.status(codes.Conflict);
         res.send("User already within guild.");
   
