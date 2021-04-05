@@ -1,22 +1,24 @@
 "use strict";
 module.exports = (app) => {
-  const MemberList = require("../controllers/memberController");
-  const GuildGatewayController = require("../controllers/guildController");
-  const AuthGateways = require("../controllers/authGateways");
+  const MemberList = require("../gatewayFunctions/memberGateway");
+  const GuildGatewayController = require("../gatewayFunctions/guildGateway");
+  const AuthGateways = require("../gatewayFunctions/authGateway");
+  const auth = require('../proxys/authProxy').authWrapper;
 
+  // Public API
   app .route("/api/member")
-      .get(MemberList.listMembers)
-      .post(MemberList.createNewMember);
+      // .get(auth, MemberList.listMembers)
+      .post(auth, MemberList.createNewMember);
 
   app .route("/api/member/:MemberID")
-      .get(MemberList.getMemberRecord)
-      .put(MemberList.updateMember)
-      .delete(MemberList.deleteMember);
+      .get(auth, MemberList.getMemberRecord)
+      .put(auth, MemberList.updateMember)
+      .delete(auth, MemberList.deleteMember);
 
       // Routes for getting all guilds a user has access to. and creating guilds.
   app .route("/api/guild/:MemberID")
-      .get(GuildGatewayController.getGuilds)
-      .post(GuildGatewayController.createGuild);
+      .get(auth, GuildGatewayController.getGuildsUserCanAccess)
+      .post(auth, GuildGatewayController.createGuild);
 
       // Routes for joining guilds.
   app .route("/api/guild/:MemberID/:GuildID/:GuildInvite")

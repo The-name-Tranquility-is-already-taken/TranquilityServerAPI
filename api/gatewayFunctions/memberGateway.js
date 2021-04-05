@@ -6,13 +6,37 @@ const mongoose = require("mongoose"),
 
 const logging = require("../../Utils/logging");
 
-exports.listMembers = (req, res) => {
-  Members.find({}, (err, Response) => {
-    if (err) res.send(err);
-    res.json(Response);
-    var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    logging.log(`[ ${ip} ] - /Members`);
+// Returns an array containing all memberData
+async function listAllMembers() {
+  var memberArray = await Members.find({}).catch(err => {
+    if (err) {
+      console.log(err);
+      logging.log("List all members had an error", "ERROR");
+    }
   });
+  return memberArray;
+}
+
+async function getMemberRecord(memberID) {
+  var member = await Members.find({ id: memberID }).catch(err => {
+    if (err) {
+      console.log(err);
+      logging.log("getMemberRecord had an error", "ERROR");
+    }
+  });
+  return member;
+}
+
+exports.getMemberInfo = async (memberID) => {
+  return await getMemberRecord(memberID);
+}
+
+exports.listMembers = async (req, res) => {
+  var memberArray = await listAllMembers();
+  var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  logging.log(`[ ${ip} ] - /Members`);
+
+  res.json(memberArray);
 };
 exports.createNewMember = (req, res) => {
   let tmp_NewMember = new Members(req.body);
@@ -29,13 +53,14 @@ exports.createNewMember = (req, res) => {
   });
 };
 exports.getMemberRecord = (req, res) => {
-  Members.find({ id: req.params.MemberID }, (err, Response) => {
-    if (err) {
-      res.status(codes.Bad_Request);
-      res.send(err);
-    }
-    res.json(Response);
-  });
+  // Members.find({ id: req.params.MemberID }, (err, Response) => {
+  //   if (err) {
+  //     res.status(codes.Bad_Request);
+  //     res.send(err);
+  //   }
+  //   res.json(Response);
+  // });
+  res.json(getMemberRecord(req.params.MemberID));
 };
 exports.updateMember = (req, res) => {
   Members.findOneAndUpdate(
