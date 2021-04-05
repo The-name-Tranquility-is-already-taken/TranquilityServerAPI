@@ -9,5 +9,6 @@ const MemberSchema = new Schema({
   phoneNumber: { type: String, required: "Need a phone number" },
   email: { type: String, required: "Need an email for the user" },
   guilds: { type: Array, required: "Default guilds array is needed"},
+  token: { type: String, required: "Token. needed."},
 });
 module.exports = mongoose.model("Members", MemberSchema);

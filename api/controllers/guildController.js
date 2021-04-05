@@ -7,175 +7,165 @@ Members = mongoose.model("Members");
 
 const logging = require("../../Utils/logging");
 
-exports.getGuilds = (req, res) => {
-  Members.find({ id: req.params.MemberID }, (err, Response) => {
-    if (err) res.send(err);
-    
-    res.json(Response);
+// Allocate a new unique guild id
+function allocateNewGuildID() {
+  return 2;
+}
 
-    var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    logging.log(`[ ${ip} ] - /guild/${req.params.MemberID}` );
-  });
-};
-exports.createGuild = (req, res) => {
-
-  var usersGuilds = [];
-  // Find member based of id.
-  Members.find({ id: req.params.MemberID }, (err, Response) => {
-    if (err) {
-      res.status(codes.Bad_Request);
-      console.log(err);
-      logging.log("An error has happened.", "ERROR");
-      res.send("ERR");
-      return;
-    }
-    usersGuilds = Response.guilds;
-    res.json(usersGuilds);
-    return;
-  });
-
-
-  Members.findOneAndUpdate(
-    { id: req.params.MemberID },
-    req.body,
-    { new: true },
-    (err, Response) => {
-      if (err) {
-        res.status(codes.Bad_Request);
-        console.log(err);
-        logging.log("An error has happened.", "ERROR");
-        res.send("ERR");
-        return;
-      }
-
-      res.status(codes.Accepted);
-      res.json(Response);
-    }
-  );
-};
-exports.joinGuild = (req, res) => {
-  // Find member based of id.
-  Members.find({ id: req.params.MemberID }, (err, Response) => {
-    if (err) {
-      res.status(codes.Bad_Request);
-      console.log(err);
-      logging.log("An error has happened.", "ERROR");
-      res.send("ERR");
-      return;
-    }
-    Response = Response[0];
-    var break_t = false;
-    
-    if(!Response) {
-      res.status(codes.Bad_Request);
-      console.log(err);
-      res.send("Invalid UserID.");
-      return;
-    }
-
-    Response.guilds.forEach(e => {
-      if(e == req.params.GuildID) {
-        res.status(codes.Conflict);
-        res.send("User already within guild.");
+// Get the guilds by member id the user is in.
+async function getGuilds(memberID) {
+  var result = await Members.find({ id: memberID });
   
-        break_t = true;
-        return;
-      }
-    });
-    if(break_t) return;
-
-    logging.log("User isnt within guild.");
-
-    // Invite code verification here via 
-    req.params.InviteCode;
-
-    Response.guilds.push(req.params.GuildID);
-    
-    Members.findOneAndUpdate(
-      { id: req.params.MemberID },
-      Response,
-      { new: true },
-      (err, Response) => {
-        if (err) {
-          res.status(codes.Bad_Request);
-          console.log(err);
-          logging.log("An error has happened.", "ERROR");
-          res.send("ERR");
-          return;
-        }
-        res.status(codes.Accepted);
-        res.send("Success.");
-      }
-    );
-    return;
+  return ({ 
+    HTTP_CODE: codes.Ok,
+    HTTP_JSON: result[0].guilds,
   });
-};
+}
+// Create a new guild.
+async function newGuild(ownerID, guildName) {
+    // Build json to parse for the new guild.
+    var guildJSON = {
+      id: `${allocateNewGuildID()}`,
+      name: guildName,
+      ownerID: ownerID,
+    };
+  
+    // Create and save guild.
+    let tmp_NewGuild = new Guilds(guildJSON);
+    var response = await tmp_NewGuild.save()
+    .catch(e => {
+      console.log(e);
+      logging.log("ERROR - newGuild function");
 
-exports.createNewMember = (req, res) => {
-  let tmp_NewMember = new Members(req.body);
-  tmp_NewMember.save((err, Response) => {
-    if (err) {
-      res.status(codes.Bad_Request);
-      res.send(err);
-      return;
-    }
-    res.status(codes.Ok);
-    var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    logging.log(`[ ${ip} ] - /Members`);
-    res.json(Response);
-  });
-};
-exports.getMemberRecord = (req, res) => {
-  Members.find({ id: req.params.MemberID }, (err, Response) => {
-    if (err) {
-      res.status(codes.Bad_Request);
-      res.send(err);
-      return;
-    }
-    res.json(Response);
-  });
-};
-exports.updateMember = (req, res) => {
-  Members.findOneAndUpdate(
-    { id: req.params.MemberID },
-    req.body,
-    { new: true },
-    (err, Response) => {
-      if (err) {
-        res.status(codes.Bad_Request);
-        res.send(err);
-        return;
-      }
-
-      res.status(codes.Accepted);
-      res.json(Response);
-    }
-  );
-};
-exports.deleteMember = (req, res) => {
-  Members.find({ id: req.params.MemberID }, (err, Response) => {
-    if (err) {
-      res.send(err);
-      return;
-    }
-    if (!Response || Response[0] == undefined || Response == []) {
-      var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-      logging.log(`[ ${ip} ] - Tried to delete a member that doesnt exist.`);
-      res.status(codes.Not_Found);
-      res.json({
-        message: "Member doesnt exist.",
-        error_code: codes.Not_Found,
+      return ({ 
+        HTTP_CODE: codes.Bad_Request,
+        HTTP_JSON: {response: "ERR"},
       });
-      return;
-    }
-    Members.deleteOne({ id: req.params.MemberID }, (err, DeleteResponse) => {
-      if (err) res.send(err);
-
-      var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-      logging.log(`[ ${ip} ] - Deleted member ${Response[0].Tag}.`);
-
-      res.status(codes.Accepted);
-      res.json({ message: `Member ${Response[0].Tag} successfully deleted` });
+    }); 
+  
+    // Automatically join guild after creating it.
+    var ress = await joinGuild(ownerID, guildJSON.id, "FIRST");
+  
+    return ({ 
+      HTTP_CODE: ress.HTTP_CODE,
+      HTTP_JSON: ress.HTTP_JSON,
+    });
+}
+// Join a guild.
+async function joinGuild(memberID, guildID, InviteCode) {
+  // get the user object.
+  var member = await Members.find({ id: memberID }).catch(err => {
+    logging.log("An error has happened.", "ERROR");
+    console.log(err);
+    return ({ 
+      HTTP_CODE: codes.Bad_Request,
+      HTTP_JSON: {response: "ERR"},
     });
   });
+
+  // Clean and check member object.
+  member = member[0];
+  if(!member) {
+    return { 
+      HTTP_CODE: codes.Bad_Request,
+      HTTP_JSON: {response: "Invalid UserID."},
+    };
+  }
+
+  // Check if user is already within the guild.
+  var alreadyInGuild = false;
+  member.guilds.forEach(e => {
+    if(e == guildID) {
+      alreadyInGuild = true;
+      logging.log("User already within guild.");
+      return ({ 
+        HTTP_CODE: codes.Conflict,
+        HTTP_JSON: {response: "User already within guild."},
+      });
+    }
+  });
+  if(alreadyInGuild) {
+    return { 
+      HTTP_CODE: codes.Conflict,
+      HTTP_JSON: {response: "User already within guild."},
+    };
+  }
+  logging.log("User isnt within guild.");
+
+  // TODO: Invite code verification here via 
+  InviteCode;
+
+  // Add new member to guild object.
+  member.guilds.push(guildID);
+
+  // Update database with new object.
+  await Members.findOneAndUpdate({ id: memberID }, member, { new: true })
+    .catch(err => {
+      logging.log("An error has happened.", "ERROR");
+      console.log(err);
+      
+      return { 
+        HTTP_CODE: codes.Bad_Request,
+        HTTP_JSON: {response: "ERR"},
+      };     
+    });
+
+  // Return success code.
+  return { 
+    HTTP_CODE: codes.Accepted,
+    HTTP_JSON: {response: "Success."},
+  };
+}
+
+
+exports.getGuilds = async (req, res) => {
+  let startTimestamp = (new Date()).getTime();
+
+  var memberID = req.params.MemberID;
+
+  var ress = await getGuilds(memberID);
+  res.status(ress.HTTP_CODE);
+  res.send  (ress.HTTP_JSON);
+
+  let end = (new Date()).getTime()
+  var duration = end-startTimestamp;
+
+  var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  logging.log(`[ ${duration}ms ] - [ ${ip} ] - /guild/${memberID}` );
+
+};
+exports.createGuild = async (req, res) => {
+  let startTimestamp = (new Date()).getTime();
+
+  var ownerID = req.params.MemberID;
+  var guildName = req.params.MemberID;
+
+  var ress = await newGuild(ownerID, guildName);
+  res.status(ress.HTTP_CODE);
+  res.send  (ress.HTTP_JSON);
+
+  let end = (new Date()).getTime()
+  var duration = end-startTimestamp;
+
+  var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  logging.log(`[ ${duration}ms ] - [ ${ip} ] - POST /guild/${ownerID} - name: ${guildName}` );
+};
+exports.joinGuild = async (req, res)  => {
+  let startTimestamp = (new Date()).getTime();
+
+  var memberID = req.params.MemberID;
+  var guildID = req.params.GuildID;
+  var GuildInvite = req.params.GuildInvite;
+
+  var ress = await joinGuild(memberID, guildID, GuildInvite);
+  res.status(ress.HTTP_CODE);
+  res.send  (ress.HTTP_JSON);
+
+  let end = (new Date()).getTime()
+  var duration = end-startTimestamp;
+
+  var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  logging.log(`[ ${duration}ms ] - [ ${ip} ] - POST /guild/${memberID}/${guildID}/${GuildInvite}` );
+
+
 };
