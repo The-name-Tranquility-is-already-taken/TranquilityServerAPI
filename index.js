@@ -8,7 +8,7 @@ const express = require("express"),
   mongoose = require("mongoose");
 
 const uri = process.env.mongodb;
-require("./api/models/models"); // created model loading here
+require("./api/models/MemberModel"); // created model loading here
 require("./api/models/GuildModel"); // created model loading here
 
 // mongoose instance connection url connection
