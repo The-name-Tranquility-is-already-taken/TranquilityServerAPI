@@ -28,7 +28,7 @@ mongoose
 app.use(express.urlencoded({ extended: true }));
 app.use(express.json());
 
-const routes = require("./Utils/api/routes/routes");
+const routes = require("./api/routes/routes");
 routes(app); // register the routes
 
 app.get("*", (req, res) => {

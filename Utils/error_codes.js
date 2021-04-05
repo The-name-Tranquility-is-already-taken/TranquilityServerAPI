@@ -4,5 +4,6 @@ exports.codes = {
     Accepted        : 202,
     Bad_Request     : 400,
     Unauthorized    : 401,
-    Not_Found       : 404
+    Not_Found       : 404,
+    Conflict        : 409,
 };
