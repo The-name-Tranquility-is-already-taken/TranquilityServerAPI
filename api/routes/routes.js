@@ -25,14 +25,14 @@ module.exports = (app) => {
       .get(auth, GuildGatewayController.getGuildsUserCanAccess)
       .post(auth, GuildGatewayController.createGuild);
 
-      // Routes for joining guilds.
-  app .route("/api/guild/:MemberID/:GuildID/:GuildInvite")
-      .get(GuildGatewayController.joinGuild);
+  // Routes for joining guilds.
+  app
+    .route("/api/guild/:MemberID/:GuildID/:GuildInvite")
+    .get(GuildGatewayController.joinGuild);
 
   /*
     Authentication gateway for authentication
     /api/auth/:MemberID?hash=base64hash???
   */
-  app .route("/api/auth/:MemberID")
-      .get(AuthGateways.login);
+  app.route("/api/auth/:MemberID").get(AuthGateways.login);
 };
