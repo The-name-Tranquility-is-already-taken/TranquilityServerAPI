@@ -97,10 +97,10 @@ exports.deleteMember = (req, res) => {
       if (err) res.send(err);
 
       var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-      logging.log(`[ ${ip} ] - Deleted member ${Response[0].Tag}.`);
+      logging.log(`[ ${ip} ] - Deleted member ${req.params.MemberID}.`);
 
       res.status(codes.Accepted);
-      res.json({ message: `Member ${Response[0].Tag} successfully deleted` });
+      res.json({ message: `Member ${req.params.MemberID} successfully deleted` });
     });
   });
 };
