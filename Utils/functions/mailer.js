@@ -16,8 +16,8 @@ module.exports.sendMail = async (to_t, content, subject = "Tranquility") => {
       from: process.env.EMAIL,
       to: to_t,
       subject: `${subject}`,
-      // text: 'That was easy!',
       html: `${content}`, // html body
+      // text: 'That was easy!',
     };
     
     transporter.sendMail(mailOptions, function(error, info){

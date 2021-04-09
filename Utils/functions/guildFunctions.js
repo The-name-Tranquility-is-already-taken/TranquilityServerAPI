@@ -20,20 +20,20 @@ module.exports.newGuild = async (ownerID, guildName) => {
       /*var ress = */await joinGuild(ownerID, guildJSON.id, "FIRST");
     
       return ("Ok.");
-  }
+}
   
-  // Get the guilds by member id the user is in.
-  module.exports.getGuildsUserCanAccess = async (memberID) => {
+// Get the guilds by member id the user is in.
+module.exports.getGuildsUserCanAccess = async (memberID) => {
       var result = await Members.find({ id: memberID });
       
       if(!result[0]) {
         return undefined;
       }
       return (result[0].guilds);
-  }
+}
   
-    // Join a guild.
-    module.exports.joinGuild = async (memberID, guildID, InviteCode) => {
+// Join a guild.
+module.exports.joinGuild = async (memberID, guildID, InviteCode) => {
       // get the user object.
       var member = await Members.find({ id: memberID });
     
@@ -68,4 +68,4 @@ module.exports.newGuild = async (ownerID, guildName) => {
     
       // Return success code.
       return ("Ok.");
-  }
+}
