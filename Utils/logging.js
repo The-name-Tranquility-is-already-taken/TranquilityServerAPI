@@ -1,4 +1,5 @@
 require("colors");
+const sendMail = require("./functions/mailer").sendMail;
 
 logLevel = "ALL";
 function getLogLevelNum(level) {
@@ -23,7 +24,20 @@ function log(message, type = "DEBUG") {
   time = getDateTime().yellow;
 
   StartMessage = "";
-  if (type == "ERROR") StartMessage = `[${time}] - [` + type.red + `]`;
+  if (type == "ERROR") {
+    StartMessage = `[${time}] - [` + type.red + `]`;
+    sendMail(process.env.ADMIN_EMAIL, 
+      `
+    Time: ${getDateTime()}
+    <br>
+    <br>
+    <div>
+    ${message}
+    </div>
+    `,
+    "Tranquility - Server API Error"
+    )
+  }
   else if (type == "GENERIC") StartMessage = `[${time}] - [` + type.green + `]`;
   else if (type == "DEBUG") StartMessage = `[${time}] - [` + type.gray + `]`;
   else if (type == "TESTING")

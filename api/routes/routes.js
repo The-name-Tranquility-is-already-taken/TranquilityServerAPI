@@ -10,6 +10,11 @@ module.exports = (app) => {
       // .get(auth, MemberList.listMembers)
       .post(auth, MemberList.createNewMember);
 
+  // Public API
+  app .route("/api/member/register")
+      // .get(auth, MemberList.listMembers)
+      .post(auth, MemberList.createNewMember);
+
   app .route("/api/member/:MemberID")
       .get(auth, MemberList.getMemberRecord)
       .put(auth, MemberList.updateMember)

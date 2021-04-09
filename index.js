@@ -3,6 +3,8 @@ const jwt = require('jsonwebtoken');
 //       JSON Payload    Secret       Expiration Date
 console.log(jwt.sign({userID: "1"} , "CUCK", { expiresIn: 60 * 60 }));
 
+const sendMail = require("./Utils/functions/mailer").sendMail;
+// sendMail("conni@spookiebois.club", "SUPPPPP");
 
 const logging = require("./Utils/logging");
 
@@ -29,6 +31,7 @@ mongoose
   })
   .catch((err) => {
     console.log(Error, "Failed to connect to DB\nErrror :" + err.message);
+    logging.log(err ,"ERROR");
   });
 
 app.use(express.urlencoded({ extended: true }));
