@@ -1,8 +1,10 @@
 "use strict";
 const mongoose = require("mongoose");
+const Snowflake = require("../../Utils/snowflake").GenerateID;
+
 const Schema = mongoose.Schema;
 const GuildSchema = new Schema({
-  id: { type: String, required: "A Guild ID is needed" },
+  id: { type: String, default: Snowflake },
   createdDate: { type: Date, default: Date.now },
   name: { type: String, required: "Guilds Name Tag" },
   description: {
