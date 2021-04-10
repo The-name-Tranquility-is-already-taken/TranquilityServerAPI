@@ -76,13 +76,6 @@ exports.createNewMember = async(req, res) => {
 };
 
 exports.getMemberRecord = (req, res) => {
-  // Members.find({ id: req.params.MemberID }, (err, Response) => {
-  //   if (err) {
-  //     res.status(codes.Bad_Request);
-  //     res.send(err);
-  //   }
-  //   res.json(Response);
-  // });
   res.json(getMemberRecord(req.params.MemberID));
 };
 exports.updateMember = (req, res) => {
