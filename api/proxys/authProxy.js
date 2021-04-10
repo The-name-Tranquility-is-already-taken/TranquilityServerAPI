@@ -38,7 +38,7 @@ module.exports.authWrapper = (req, res, next) => {
   }
   const submittedToken = req.headers.authorization.split(' ')[1];
 
-  console.log(`Token Valid: ${isTokenValid(req.params.MemberID, submittedToken)}`);
+  console.log(`Token Valid: ${isTokenValid(req.params.id, submittedToken)}`);
   try {
     var tokenSecret = users[0].tokenSecret;
 

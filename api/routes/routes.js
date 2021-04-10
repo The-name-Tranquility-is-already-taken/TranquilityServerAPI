@@ -6,14 +6,14 @@ module.exports = (app) => {
   const auth = require('../proxys/authProxy').authWrapper;
 
   // Public API
-  app .route("/api/member")
-      // .get(auth, MemberList.listMembers)
-      .post(auth, MemberList.createNewMember);
+  //app .route("/api/member")
+      //.get(auth, MemberList.listMembers)
+      //.post(auth, MemberList.createNewMember);
 
   // Public API
   app .route("/api/member/register")
       // .get(auth, MemberList.listMembers)
-      .post(auth, MemberList.createNewMember);
+      .post(MemberList.createNewMember);
 
   app .route("/api/member/:MemberID")
       .get(auth, MemberList.getMemberRecord)
