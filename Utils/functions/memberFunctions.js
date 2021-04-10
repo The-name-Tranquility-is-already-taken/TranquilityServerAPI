@@ -10,6 +10,8 @@ const hashing = require("../hashing");
 const SnowflakeFnc = require("../snowflake").GenerateID;
 const TokenFunc = require("../token");
 const BCrypt = require(`bcrypt`);
+const crypto = require('crypto');
+
 /**
  * Get a list of all members within database.
  * @returns {Array} List of members/status text.
@@ -47,6 +49,8 @@ module.exports.createNewMember = async(body) => {
     let tmp_NewMember = new Members(buildJson);
   
     await tmp_NewMember.save();
+
+    return { id: buildJson.id };
 };
 
 /**
@@ -58,14 +62,14 @@ module.exports.memberLogin = async(body) => {
     var response = (await Members.find( { email: body.email } ))[0];
     if(!response)
         return "Un-Authenticated";
-    //var hashedPassword = hashing.hash(body.password); // TODO
-    console.log(response);
-    console.log(`User hash          : ${response.hash}\nEntered password   : ${body.password}`);
+        
     if(BCrypt.compareSync(body.password,response.hash)) {
-        var token = TokenFunc.createToken(response.id,"SECRET");
-        response.tokenSecret = "SECRET";
+        const secret = crypto.randomBytes(64).toString('hex');
+        const token = TokenFunc.createToken(response.id,secret);
+        response.tokenSecret = secret;
         await Members.findOneAndUpdate({ id: response.id },response,{ new: true });
-        return token;
+
+        return { id: response.id, token: token };
     } else{
         return "Un-Authenticated";
     }

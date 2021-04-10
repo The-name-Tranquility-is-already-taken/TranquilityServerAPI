@@ -13,14 +13,19 @@ async function isTokenValid(userID, submittedToken) {
   //logging.log(`Token Validation - userId: ${userID} - MemberSecret: ${memberSecret}`, "GENERIC");
 
   // Decode submitted token using stored member secret.
-  const decodedToken = jwt.verify(submittedToken, memberSecret);
-  
-  // Get user id from within JSON Token
-  const tokenUserID = decodedToken.MemberID;
+  try {
+    const decodedToken = jwt.verify(submittedToken, memberSecret);
 
-  if (userID && userID == tokenUserID) {
-    return true;
-  } else {
+    // Get user id from within JSON Token
+    const tokenUserID = decodedToken.MemberID;
+
+    if (userID && userID == tokenUserID) {
+      return true;
+    } else {
+      return false;
+    }
+  } catch(err) {
+    logging.log(err, "GENERIC");
     return false;
   }
 }
@@ -33,9 +38,8 @@ module.exports.authWrapper = async (req, res, next) => {
     return;
   }
   const submittedToken = req.headers.authorization.split(' ')[1];
-  console.log(submittedToken);
+  
   var valid = await isTokenValid(req.params.MemberID, submittedToken);
-  console.log(`Token Valid: ${valid}`);
   if(valid) {
     next();
   }else {
@@ -44,28 +48,4 @@ module.exports.authWrapper = async (req, res, next) => {
     });
   }
   return valid;
-  /*
-  try {
-    var tokenSecret = users[0].tokenSecret;
-
-
-    // Decode token using stored secret.
-    const decodedToken = jwt.verify(submittedToken, tokenSecret);
-
-    // Get user id from within JSON Token
-    const userId = decodedToken.userId;
-
-    // Validate the decoded token has the same ID of the body id.
-    if (req.body.userId && req.body.userId !== userId) {
-      throw 'Invalid user ID';
-    } else {
-      next();
-    }
-  } catch {
-    res.status(401).json({
-      error: new Error('Invalid request!')
-    });
-  }
-  */
-
 };

@@ -60,9 +60,13 @@ exports.createNewMember = async(req, res) => {
     res.send  ("err"); 
     return; 
   });
-
+  if(response.includes("exists")) {
+    res.status(codes.Conflict);
+    res.send  ({ error: response }); 
+    return;
+  }
   res.status(codes.Ok);
-  res.json({ response: response });
+  res.json({ response: { id: response } });
 
   let end = (new Date()).getTime()
   var duration = end-startTimestamp;
