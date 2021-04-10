@@ -10,3 +10,9 @@ const uid = new UniqueID(config);
 module.exports.GenerateID = () => {
     return uid.getUniqueID();
 }
+
+module.exports.getStringText = (SnowFlake) => {
+
+    var timestamp = uid.getTimestampFromID(SnowFlake);
+
+}

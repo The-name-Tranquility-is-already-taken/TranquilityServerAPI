@@ -2,12 +2,12 @@ const mongoose = require("mongoose");
 const Guilds = mongoose.model("Guilds");
 const Members = mongoose.model("Members");
 
-const allocateNewGuildID = require("../functions/coreServerFunctions").allocateNewGuildID;
+const guildSnowflake = require("../snowflake").GenerateID;
 
 module.exports.newGuild = async (ownerID, guildName) => {
       // Build json to parse for the new guild.
       var guildJSON = {
-        id: `${allocateNewGuildID()}`,
+        id: `${guildSnowflake()}`,
         name: guildName,
         ownerID: ownerID,
       };
@@ -32,13 +32,7 @@ module.exports.getGuildsUserCanAccess = async (memberID) => {
       return (result[0].guilds);
 }
   
-/**
- * Join a guild 
- * @param {string} memberID MemberID of the user to join the guild as.
- * @param {string} guildID GuildID to join
- * @param {string} InviteCode InviteCode to join using.
- * @returns {string} status text.
-*/
+// Join a guild.
 module.exports.joinGuild = async (memberID, guildID, InviteCode) => {
       // get the user object.
       var member = await Members.find({ id: memberID });
