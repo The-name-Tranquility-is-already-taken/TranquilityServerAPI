@@ -1,13 +1,19 @@
 require("colors");
 const sendMail = require("./functions/mailer").sendMail;
 
-logLevel = "ALL";
+logLevel = "LEGITALL";
 function getLogLevelNum(level) {
   if (level == "TESTING") return 0;
   if (level == "GENERIC") return 1;
   if (level == "ERROR") return 2;
   if (level == "DEBUG") return 3;
   if (level == "ALL") return 4;
+
+  // Debugging stuff.
+  if (level == "TIMINGS") return 5;
+
+  if (level == "LEGITALL") return 100;
+
   log("Unsure what log level " + level.red + " belongs to.", "GENERIC");
   return 4;
 }
@@ -42,7 +48,7 @@ function log(message, type = "DEBUG") {
   else if (type == "DEBUG") StartMessage = `[${time}] - [` + type.gray + `]`;
   else if (type == "TESTING")
     StartMessage = `[${time}] - [` + type.magenta + `]`;
-  else StartMessage = `[${time}] - [` + type.gray + `]`;
+  else StartMessage = `[${time}] - [` + type.blue + `]`;
 
   left = maxSize - StartMessage.length;
   function balence() {

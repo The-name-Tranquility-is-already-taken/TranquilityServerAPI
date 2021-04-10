@@ -5,16 +5,22 @@ module.exports = (app) => {
   const AuthGateways = require("../gatewayFunctions/authGateway");
   const auth = require('../proxys/authProxy').authWrapper;
 
-  // Public API
-  //app .route("/api/member")
-      //.get(auth, MemberList.listMembers)
-      //.post(auth, MemberList.createNewMember);
 
-  // Public API
+/** 
+ *  Un-Authenticated Routes Routes
+ */
+                  //app .route("/api/member")
+                      //.get(auth, MemberList.listMembers)
+                      //.post(auth, MemberList.createNewMember);
+
   app .route("/api/member/register")
       // .get(auth, MemberList.listMembers)
       .post(MemberList.createNewMember);
 
+
+/** 
+ *  Authenticated Routes
+ */
   app .route("/api/member/:MemberID")
       .get(auth, MemberList.getMemberRecord)
       .put(auth, MemberList.updateMember)
@@ -24,6 +30,7 @@ module.exports = (app) => {
   app .route("/api/guild/:MemberID")
       .get(auth, GuildGatewayController.getGuildsUserCanAccess)
       .post(auth, GuildGatewayController.createGuild);
+
 
   // Routes for joining guilds.
   app

@@ -7,7 +7,6 @@ const mongoose = require("mongoose"),
 const memberFunctions = require("../../Utils/functions/memberFunctions");
 
 const tokenMan = require("./../../Utils/token");
-
 const logging = require("../../Utils/logging");
   
 
@@ -54,14 +53,16 @@ exports.listMembers = async (req, res) => {
 exports.createNewMember = async(req, res) => {
   let startTimestamp = (new Date()).getTime();
 
-  var memberArray = await memberFunctions.createNewMember(req.body).catch(err => {
+  var response = await memberFunctions.createNewMember(req.body).catch(err => {
     console.log("ERR: ", err);
 
     res.status(codes.Bad_Request);
-    res.send  ("err");  
+    res.send  ("err"); 
+    return; 
   });
+
   res.status(codes.Ok);
-  res.json(memberArray);
+  res.json({ response: response });
 
   let end = (new Date()).getTime()
   var duration = end-startTimestamp;

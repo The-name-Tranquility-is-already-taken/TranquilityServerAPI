@@ -1,8 +1,11 @@
-const jwt = require('jsonwebtoken');
+const monitoring = require("./Utils/monitor");
+const hashing = require("./Utils/hashing");
 
-//       JSON Payload    Secret       Expiration Date
-console.log(jwt.sign({userID: "1"} , "CUCK", { expiresIn: 60 * 60 }));
+// if(!process.env.saltRounds) {
+//   hashing.setup();
+// }
 
+monitoring.output();
 // const sendMail = require("./Utils/functions/mailer").sendMail;
 // sendMail("conni@spookiebois.club", "SUPPPPP");
 
