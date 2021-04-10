@@ -1,18 +1,19 @@
 "use strict";
-const { UniqueID } = require('nodejs-snowflake');
-const config =
-{
-    returnNumber: false,
-    customEpoch: 1617278400 // the servers EPOCH time (the time we first created the repo)
-};
-const uid = new UniqueID(config);
 
+/**
+ * Generate a unique snowflake for use in any way seen fit.
+ * @returns {string} Unique snowflake
+*/
 module.exports.GenerateID = () => {
-    return uid.getUniqueID();
+
 }
 
-module.exports.getStringText = (SnowFlake) => {
+/**
+ * Convert snowflake to string Date/Time
+ * @param {string} SNowflake A Snowflake genrated using GenerateID()
+ * @returns {string} Date/Time of snowflake creation
+*/
+module.exports.getString = (Snowflake) => {
 
-    var timestamp = uid.getTimestampFromID(SnowFlake);
 
 }

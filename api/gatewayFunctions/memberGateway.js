@@ -4,18 +4,13 @@ const codes = require("../../Utils/error_codes").codes;
 const mongoose = require("mongoose"),
   Members = mongoose.model("Members");
 
-const logging = require("../../Utils/logging");
+const memberFunctions = require("../../Utils/functions/memberFunctions");
 
-// Returns an array containing all memberData
-async function listAllMembers() {
-  var memberArray = await Members.find({}).catch(err => {
-    if (err) {
-      console.log(err);
-      logging.log("List all members had an error", "ERROR");
-    }
-  });
-  return memberArray;
-}
+const tokenMan = require("./../../Utils/token");
+
+const logging = require("../../Utils/logging");
+  
+
 
 async function getMemberRecord(memberID) {
   var member = await Members.find({ id: memberID }).catch(err => {
@@ -31,27 +26,50 @@ exports.getMemberInfo = async (memberID) => {
   return await getMemberRecord(memberID);
 }
 
+/**
+ * Get all members within database.
+ * @param {any} req 
+ * @param {any} res 
+*/
 exports.listMembers = async (req, res) => {
-  var memberArray = await listAllMembers();
-  var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  logging.log(`[ ${ip} ] - /Members`);
+  let startTimestamp = (new Date()).getTime();
 
-  res.json(memberArray);
-};
-exports.createNewMember = (req, res) => {
-  let tmp_NewMember = new Members(req.body);
-  tmp_NewMember.save((err, Response) => {
-    if (err) {
-      res.status(codes.Bad_Request);
-      res.send(err);
-      return;
-    }
-    res.status(codes.Ok);
-    var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-    logging.log(`[ ${ip} ] - /Members`);
-    res.json(Response);
+  var memberArray = await memberFunctions.getAllMembers().catch(err => {
+    console.log("ERR: ", err);
+
+    res.status(codes.Bad_Request);
+    res.send  ("err");  
   });
+  res.status(codes.Ok);
+  res.json(memberArray);
+
+  let end = (new Date()).getTime()
+  var duration = end-startTimestamp;
+
+  var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  logging.log(`[ ${duration}ms ] - [ ${ip} ] - List members` );
 };
+
+
+exports.createNewMember = async(req, res) => {
+  let startTimestamp = (new Date()).getTime();
+
+  var memberArray = await memberFunctions.createNewMember(req.body).catch(err => {
+    console.log("ERR: ", err);
+
+    res.status(codes.Bad_Request);
+    res.send  ("err");  
+  });
+  res.status(codes.Ok);
+  res.json(memberArray);
+
+  let end = (new Date()).getTime()
+  var duration = end-startTimestamp;
+
+  var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  logging.log(`[ ${duration}ms ] - [ ${ip} ] - List members` );
+};
+
 exports.getMemberRecord = (req, res) => {
   // Members.find({ id: req.params.MemberID }, (err, Response) => {
   //   if (err) {

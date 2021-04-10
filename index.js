@@ -3,7 +3,7 @@ const jwt = require('jsonwebtoken');
 //       JSON Payload    Secret       Expiration Date
 console.log(jwt.sign({userID: "1"} , "CUCK", { expiresIn: 60 * 60 }));
 
-const sendMail = require("./Utils/functions/mailer").sendMail;
+// const sendMail = require("./Utils/functions/mailer").sendMail;
 // sendMail("conni@spookiebois.club", "SUPPPPP");
 
 const logging = require("./Utils/logging");
