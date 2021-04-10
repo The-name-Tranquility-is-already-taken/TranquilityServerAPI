@@ -56,6 +56,8 @@ module.exports.createNewMember = async(body) => {
 */
 module.exports.memberLogin = async(body) => {
     var response = (await Members.find( { email: body.email } ))[0];
+    if(!response)
+        return "Un-Authenticated";
     //var hashedPassword = hashing.hash(body.password); // TODO
     console.log(response);
     console.log(`User hash          : ${response.hash}\nEntered password   : ${body.password}`);

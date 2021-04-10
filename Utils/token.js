@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
-
-var leaseTime = 60 * 60;
+//done in seconds = 30 days
+const leaseTime = ((60 * 60) * 24) * 30;
 
 
 /**
