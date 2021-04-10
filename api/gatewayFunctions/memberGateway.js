@@ -123,3 +123,21 @@ exports.deleteMember = (req, res) => {
     });
   });
 };
+exports.login = async(req, res) => {
+  let startTimestamp = (new Date()).getTime();
+
+  var response = await memberFunctions.memberLogin(req.body).catch(err => {
+    console.log("ERR: ", err);
+    res.status(codes.Bad_Request);
+    res.send("err"); 
+    return; 
+  });
+
+  res.status(codes.Ok);
+  res.json({ response: response });
+
+  let end = (new Date()).getTime()
+  var duration = end-startTimestamp;
+  var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+  logging.log(`[ ${duration}ms ] - [ ${ip} ] - List members` );
+};

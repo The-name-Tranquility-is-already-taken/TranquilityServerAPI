@@ -8,7 +8,8 @@ const Members = mongoose.model("Members");
 
 const hashing = require("../hashing");
 const SnowflakeFnc = require("../snowflake").GenerateID;
-
+const TokenFunc = require("../token");
+const BCrypt = require(`bcrypt`);
 /**
  * Get a list of all members within database.
  * @returns {Array} List of members/status text.
@@ -54,19 +55,16 @@ module.exports.createNewMember = async(body) => {
  * @returns {string} status text.
 */
 module.exports.memberLogin = async(body) => {
-    var hashedPassword = hashing.hash(body.password); // TODO
-
-    var buildJson = {
-      tag: body.tag,
-      hash: hashedPassword,
-      phoneNumber: body.phoneNumber,
-      email: body.email,
-    };
-    let tmp_NewMember = new Members(buildJson);
-    console.log("---------------------");
-    console.log("-tmp_NewMember-");
-    console.log(tmp_NewMember);
-    console.log("---------------------");
-  
-    await tmp_NewMember.save();
+    var response = (await Members.find( { email: body.email } ))[0];
+    //var hashedPassword = hashing.hash(body.password); // TODO
+    console.log(response);
+    console.log(`User hash          : ${response.hash}\nEntered password   : ${body.password}`);
+    if(BCrypt.compareSync(body.password,response.hash)) {
+        var token = TokenFunc.createToken(response.id,"SECRET");
+        response.tokenSecret = "SECRET";
+        await Members.findOneAndUpdate({ id: response.id },response,{ new: true });
+        return token;
+    } else{
+        return "Un-Authenticated";
+    }
 };

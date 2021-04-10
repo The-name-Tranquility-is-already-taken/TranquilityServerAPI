@@ -17,6 +17,9 @@ module.exports = (app) => {
       // .get(auth, MemberList.listMembers)
       .post(MemberList.createNewMember);
 
+  app .route("/api/member/login")
+      // .get(auth, MemberList.listMembers)
+      .post(MemberList.login);
 
 /** 
  *  Authenticated Routes

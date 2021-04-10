@@ -1,26 +1,22 @@
 const jwt = require('jsonwebtoken');
 const getUserInfo = require("../gatewayFunctions/memberGateway").getMemberInfo;
 const logging = require("../../Utils/logging");
-
-var users = [
-  {
-    userID: 1,
-    tokenSecret: "CUCK"
-  }
-];
+const codes = require("../../Utils/error_codes").codes;
 
 async function isTokenValid(userID, submittedToken) {
   var member = await getUserInfo(userID);
   member = member[0];
+  if(!member)
+    return false;
 
   memberSecret = member.tokenSecret;
-  logging.log(`Token Validation - userId: ${userID} - MemberSecret: ${memberSecret}`, "GENERIC");
+  //logging.log(`Token Validation - userId: ${userID} - MemberSecret: ${memberSecret}`, "GENERIC");
 
   // Decode submitted token using stored member secret.
   const decodedToken = jwt.verify(submittedToken, memberSecret);
-
+  
   // Get user id from within JSON Token
-  const tokenUserID = decodedToken.userId;
+  const tokenUserID = decodedToken.MemberID;
 
   if (userID && userID == tokenUserID) {
     return true;
@@ -29,16 +25,26 @@ async function isTokenValid(userID, submittedToken) {
   }
 }
 
-module.exports.authWrapper = (req, res, next) => {
+module.exports.authWrapper = async (req, res, next) => {
   if(!req.headers.authorization) {
-    res.status(401).json({
-      error: 'UnAuthorised!'
+    res.status(codes.Unauthorized).json({
+      error: 'Un-Authorised!'
     });
     return;
   }
   const submittedToken = req.headers.authorization.split(' ')[1];
-
-  console.log(`Token Valid: ${isTokenValid(req.params.id, submittedToken)}`);
+  console.log(submittedToken);
+  var valid = await isTokenValid(req.params.MemberID, submittedToken);
+  console.log(`Token Valid: ${valid}`);
+  if(valid) {
+    next();
+  }else {
+    res.status(codes.Unauthorized).json({
+      error: 'Un-Authorised!'
+    });
+  }
+  return valid;
+  /*
   try {
     var tokenSecret = users[0].tokenSecret;
 
@@ -60,4 +66,6 @@ module.exports.authWrapper = (req, res, next) => {
       error: new Error('Invalid request!')
     });
   }
+  */
+
 };

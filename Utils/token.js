@@ -1,6 +1,5 @@
 const jwt = require('jsonwebtoken');
 
-var secret = "bdiubsofnmsdpfsm";
 var leaseTime = 60 * 60;
 
 
@@ -8,6 +7,6 @@ var leaseTime = 60 * 60;
  * 
  * @returns {string} 
 */
-module.exports.createToken = (MemberID) => {
-    return jwt.sign({MemberID: MemberID} , secret, { expiresIn: leaseTime });
+module.exports.createToken = (memberID,secret) => {
+    return jwt.sign({MemberID: memberID} , secret, { expiresIn: leaseTime });
 }
