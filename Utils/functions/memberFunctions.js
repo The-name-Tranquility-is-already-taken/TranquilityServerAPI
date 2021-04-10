@@ -2,26 +2,46 @@ const mongoose = require("mongoose");
 const Guilds = mongoose.model("Guilds");
 const Members = mongoose.model("Members");
 
-const guildSnowflake = require("../snowflake").GenerateID;
+const memberSnowflake = require("../snowflake").GenerateID;
 
+/**
+ * Get the guilds by member id the user is in. 
+ * @param {string} ownerID MemberID of the user that created the guild.
+ * @param {string} guildName Name of the new guild.
+ * @returns {string} Status text.
+*/
 module.exports.newGuild = async (ownerID, guildName) => {
-      // Build json to parse for the new guild.
-      var guildJSON = {
-        id: `${guildSnowflake()}`,
-        name: guildName,
-        ownerID: ownerID,
-      };
-    
-      // Create and save guild.
-      let tmp_NewGuild = new Guilds(guildJSON);
-      /* var response = */await tmp_NewGuild.save();
-    
-      // Automatically join guild after creating it.
-      /*var ress = */await joinGuild(ownerID, guildJSON.id, "FIRST");
-    
-      return ("Ok.");
+    // Build json to parse for the new guild.
+    var guildJSON = {
+      id: `${guildSnowflake()}`,
+      name: guildName,
+      ownerID: ownerID,
+    };
+  
+    // Create and save guild.
+    let tmp_NewGuild = new Guilds(guildJSON);
+    /* var response = */await tmp_NewGuild.save();
+  
+    // Automatically join guild after creating it.
+    /*var ress = */await joinGuild(ownerID, guildJSON.id, "FIRST");
+  
+    return ("Ok.");
 }
   
+/**
+ * Get a list of all members within database.
+ * @returns {Array} List of members/status text.
+*/
+module.exports.getAllMembers = async() => {
+    var memberArray = await Members.find({}).catch(err => {
+      if (err) {
+        console.log(err);
+        logging.log("List all members had an error", "ERROR");
+      }
+    });
+    return memberArray;
+}
+
 // Get the guilds by member id the user is in.
 module.exports.getGuildsUserCanAccess = async (memberID) => {
       var result = await Members.find({ id: memberID });
