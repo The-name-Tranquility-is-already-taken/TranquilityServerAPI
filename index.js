@@ -34,7 +34,7 @@ mongoose
   })
   .catch((err) => {
     console.log(Error, "Failed to connect to DB\nErrror :" + err.message);
-    logging.log(err ,"ERROR");
+    logging.log(err, "ERROR");
   });
 
 app.use(express.urlencoded({ extended: true }));

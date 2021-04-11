@@ -6,11 +6,11 @@ const guildSnowflake = require("../snowflake").GenerateID;
 const logging = require("../logging");
 
 /**
- * Get the guilds by member id the user is in. 
+ * Get the guilds by member id the user is in.
  * @param {string} ownerID MemberID of the user that created the guild.
  * @param {string} guildName Name of the new guild.
  * @returns {string} Status text.
-*/
+ */
 module.exports.newGuild = async (ownerID, guildName) => {
       // Build json to parse for the new guild.
       var guildJSON = {
@@ -33,26 +33,28 @@ module.exports.newGuild = async (ownerID, guildName) => {
 }
   
 /**
- * Get the guilds by member id the user is in. 
- * @param {string} memberID MemberID of the user get guild of.
+ * Get the guilds by member id the user is in.
+ * @param {string} memberID MemberID of the user get
+ *     guild of.
  * @returns {Array} Returns a list of guild objects.
-*/
+ */
 module.exports.getGuildsUserCanAccess = async (memberID) => {
-      var result = await Members.find({ id: memberID });
-      
-      if(!result[0]) {
-        return undefined;
-      }
-      return (result[0].guilds);
-}
-  
+  var result = await Members.find({ id: memberID });
+
+  if (!result[0]) {
+    return undefined;
+  }
+  return result[0].guilds;
+};
+
 /**
- * Join a guild 
- * @param {string} memberID MemberID of the user to join the guild as.
+ * Join a guild
+ * @param {string} memberID MemberID of the user to
+ *     join the guild as.
  * @param {string} guildID GuildID to join
  * @param {string} InviteCode InviteCode to join using.
  * @returns {string} status text.
-*/
+ */
 module.exports.joinGuild = async (memberID, guildID, InviteCode) => {
       // get the user object.
       var member = await Members.find({ id: memberID });
