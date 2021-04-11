@@ -32,7 +32,8 @@ function log(message, type = "DEBUG") {
   StartMessage = "";
   if (type == "ERROR") {
     StartMessage = `[${time}] - [` + type.red + `]`;
-    sendMail(process.env.ADMIN_EMAIL, 
+    sendMail(
+      process.env.ADMIN_EMAIL,
       `
     Time: ${getDateTime()}
     <br>
@@ -41,10 +42,10 @@ function log(message, type = "DEBUG") {
     ${message}
     </div>
     `,
-    "Tranquility - Server API Error"
-    )
-  }
-  else if (type == "GENERIC") StartMessage = `[${time}] - [` + type.green + `]`;
+      "Tranquility - Server API Error"
+    );
+  } else if (type == "GENERIC")
+    StartMessage = `[${time}] - [` + type.green + `]`;
   else if (type == "DEBUG") StartMessage = `[${time}] - [` + type.gray + `]`;
   else if (type == "TESTING")
     StartMessage = `[${time}] - [` + type.magenta + `]`;
