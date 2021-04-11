@@ -59,7 +59,8 @@ exports.createNewMember = async (req, res) => {
       res.send("err");
       return;
     });
-  if (response.includes("exists")) {
+    console.log(typeof response);
+  if (typeof response != "object" && response.includes("exists")) {
     res.status(codes.Conflict);
     res.send({ error: response });
     return;

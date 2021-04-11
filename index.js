@@ -1,5 +1,6 @@
 const monitoring = require("./Utils/monitor");
-const hashing = require("./Utils/hashing");
+// const hashing = require("./Utils/hashing");
+const path = require("path");
 
 // if(!process.env.saltRounds) {
 //   hashing.setup();
@@ -35,7 +36,7 @@ mongoose
   .then((res) => {
     logging.log("DB Connected!");
     monitoring.log("DB Connected", (new Date().getTime()) - startTimestamp);
-  })
+  })  
   .catch((err) => {
     console.log(Error, "Failed to connect to DB\nErrror :" + err.message);
     logging.log(err, "ERROR");

@@ -4,6 +4,7 @@ module.exports = (app) => {
   const GuildGatewayController = require("../gatewayFunctions/guildGateway");
   const AuthGateways = require("../gatewayFunctions/authGateway");
   const auth = require("../proxys/authProxy").authWrapper;
+  const monitoring = require("./../../Utils/monitor");
 
   /**
    *  Un-Authenticated Routes Routes
@@ -44,12 +45,17 @@ module.exports = (app) => {
 
   /*
     Authentication gateway for authentication
-    /api/auth/:MemberID?hash=base64hash???
   */
-  app.route("/api/auth/:MemberID").get(AuthGateways.login);
+  app .route("/api/auth/:MemberID")
+      .get(AuthGateways.login);
 
 
+/**
+ * Monitoring API
+ */
 
+  app .route("/api/monitoring/data")
+      .get(monitoring.data);
 
   
 };
