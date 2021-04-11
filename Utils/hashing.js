@@ -6,28 +6,29 @@ const bcrypt = require('bcrypt');
 var saltRounds = 8;
 
 function hashTiming(curSalt) {
-    let startTimestamp = (new Date()).getTime();
+  let startTimestamp = (new Date()).getTime();
 
-    // Generate Salt
-    const salt = bcrypt.genSaltSync(curSalt);
+  // Generate Salt
+  const salt = bcrypt.genSaltSync(curSalt);
 
-    // Hash Password
-    bcrypt.hashSync("fdsbtyuktrdfghytr", salt); 
-    
-    return (new Date()).getTime()-startTimestamp;
+  // Hash Password
+  bcrypt.hashSync("fdsbtyuktrdfghytr", salt);
+
+  return (new Date()).getTime() - startTimestamp;
 }
 
-module.exports.setup = () => {
-    var timeTaken = -1;
+module.exports.setup =
+    () => {
+      var timeTaken = -1;
 
-    var maxTimeAllowed = 1000;
-    var leaway = 150;
+      var maxTimeAllowed = 1000;
+      var leaway = 150;
 
-    var bestRounds  = -1;
-    var bestTiming  = -1;
+      var bestRounds = -1;
+      var bestTiming = -1;
 
-    for(var curSalt = 1;curSalt <= 1000; ++curSalt) {
-        
+      for (var curSalt = 1; curSalt <= 1000; ++curSalt) {
+
         var test1 = hashTiming(curSalt);
         var test2 = hashTiming(curSalt);
         var test3 = hashTiming(curSalt);
@@ -36,40 +37,40 @@ module.exports.setup = () => {
         timeTaken /= 3;
         timeTaken = Math.round(timeTaken);
 
-        console.log(`testing ${curSalt} - times taken: ${test1}ms, ${test2}ms, ${test3}ms - average: ${timeTaken}ms`);
+        console.log(`testing ${curSalt} - times taken: ${test1}ms, ${
+            test2}ms, ${test3}ms - average: ${timeTaken}ms`);
 
-        if(timeTaken <= maxTimeAllowed + leaway) {
-            if(timeTaken > bestTiming) {
-                bestRounds  = curSalt;
-                bestTiming  = timeTaken;
-            }
+        if (timeTaken <= maxTimeAllowed + leaway) {
+          if (timeTaken > bestTiming) {
+            bestRounds = curSalt;
+            bestTiming = timeTaken;
+          }
         } else {
-            break;
+          break;
         }
+      }
+      console.log(
+          `Setting salt rounds to ${bestRounds} - time taken: ${bestTiming}ms`)
+      saltRounds = bestRounds;
     }
-    console.log(`Setting salt rounds to ${bestRounds} - time taken: ${bestTiming}ms`)
-    saltRounds = bestRounds;
-}
 
 const hash = (text) => {
-    
-    let startTimestamp = (new Date()).getTime();
+  let startTimestamp = (new Date()).getTime();
 
-    // Generate Salt
-    const salt = bcrypt.genSaltSync(saltRounds);
+  // Generate Salt
+  const salt = bcrypt.genSaltSync(saltRounds);
 
-    // Hash Password
-    const hash = bcrypt.hashSync(text, salt); 
-    
-    let end = (new Date()).getTime()
-    var duration = end-startTimestamp;
+  // Hash Password
+  const hash = bcrypt.hashSync(text, salt);
 
-    logging.log(`Taken: ${duration}ms - salt: ${salt} - hash: ${hash}`, "TIMINGS");
-    monitor.log("hashing", duration);
+  let end = (new Date()).getTime()
+  var duration = end - startTimestamp;
 
-    return hash;
+  logging.log(`Taken: ${duration}ms - salt: ${salt} - hash: ${hash}`,
+              "TIMINGS");
+  monitor.log("hashing", duration);
+
+  return hash;
 };
 
-module.exports.hash = (text) => {
-    return(hash(text));
-}
+module.exports.hash = (text) => { return (hash(text)); }

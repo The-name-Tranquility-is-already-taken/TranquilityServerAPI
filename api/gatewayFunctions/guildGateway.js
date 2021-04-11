@@ -10,13 +10,14 @@ exports.getGuildsUserCanAccess = async (req, res) => {
 
   var memberID = req.params.MemberID;
 
-  var ress = await guildFunctions.getGuildsUserCanAccess(memberID).catch(err => {
-    console.log("ERR: ", err);
+  var ress =
+      await guildFunctions.getGuildsUserCanAccess(memberID).catch(err => {
+        console.log("ERR: ", err);
 
-    res.status(codes.Bad_Request);
-    res.send  ("err");  
-  });
-  if(!ress) {
+        res.status(codes.Bad_Request);
+        res.send("err");
+      });
+  if (!ress) {
     res.status(codes.Not_Found);
   } else {
     res.status(codes.Ok);
@@ -24,11 +25,10 @@ exports.getGuildsUserCanAccess = async (req, res) => {
   res.send(ress);
 
   let end = (new Date()).getTime()
-  var duration = end-startTimestamp;
+  var duration = end - startTimestamp;
 
   var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  logging.log(`[ ${duration}ms ] - [ ${ip} ] - /guild/${memberID}` );
-
+  logging.log(`[ ${duration}ms ] - [ ${ip} ] - /guild/${memberID}`);
 };
 exports.createGuild = async (req, res) => {
   let startTimestamp = (new Date()).getTime();
@@ -40,18 +40,19 @@ exports.createGuild = async (req, res) => {
     console.log("ERR: ", err);
 
     res.status(codes.Bad_Request);
-    res.send  ("err");  
+    res.send("err");
   });
   res.status(ress.HTTP_CODE);
-  res.send  (ress.HTTP_JSON);
+  res.send(ress.HTTP_JSON);
 
   let end = (new Date()).getTime()
-  var duration = end-startTimestamp;
+  var duration = end - startTimestamp;
 
   var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  logging.log(`[ ${duration}ms ] - [ ${ip} ] - POST /guild/${ownerID} - name: ${guildName}` );
+  logging.log(`[ ${duration}ms ] - [ ${ip} ] - POST /guild/${ownerID} - name: ${
+      guildName}`);
 };
-exports.joinGuild = async (req, res)  => {
+exports.joinGuild = async (req, res) => {
   let startTimestamp = (new Date()).getTime();
 
   var memberID = req.params.MemberID;
@@ -62,14 +63,15 @@ exports.joinGuild = async (req, res)  => {
     console.log("ERR: ", err);
 
     res.status(codes.Bad_Request);
-    res.send  ("err");  
+    res.send("err");
   });
   res.status(codes.Ok);
   res.send("Joined.");
 
   let end = (new Date()).getTime()
-  var duration = end-startTimestamp;
+  var duration = end - startTimestamp;
 
   var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  logging.log(`[ ${duration}ms ] - [ ${ip} ] - POST /guild/${memberID}/${guildID}/${GuildInvite}` );
+  logging.log(`[ ${duration}ms ] - [ ${ip} ] - POST /guild/${memberID}/${
+      guildID}/${GuildInvite}`);
 };

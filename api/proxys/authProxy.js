@@ -6,11 +6,12 @@ const codes = require("../../Utils/error_codes").codes;
 async function isTokenValid(userID, submittedToken) {
   var member = await getUserInfo(userID);
   member = member[0];
-  if(!member)
+  if (!member)
     return false;
 
   memberSecret = member.tokenSecret;
-  //logging.log(`Token Validation - userId: ${userID} - MemberSecret: ${memberSecret}`, "GENERIC");
+  // logging.log(`Token Validation - userId: ${userID} - MemberSecret:
+  // ${memberSecret}`, "GENERIC");
 
   // Decode submitted token using stored member secret.
   try {
@@ -24,28 +25,24 @@ async function isTokenValid(userID, submittedToken) {
     } else {
       return false;
     }
-  } catch(err) {
+  } catch (err) {
     logging.log(err, "GENERIC");
     return false;
   }
 }
 
 module.exports.authWrapper = async (req, res, next) => {
-  if(!req.headers.authorization) {
-    res.status(codes.Unauthorized).json({
-      error: 'Un-Authorised!'
-    });
+  if (!req.headers.authorization) {
+    res.status(codes.Unauthorized).json({error : 'Un-Authorised!'});
     return;
   }
   const submittedToken = req.headers.authorization.split(' ')[1];
-  
+
   var valid = await isTokenValid(req.params.MemberID, submittedToken);
-  if(valid) {
+  if (valid) {
     next();
-  }else {
-    res.status(codes.Unauthorized).json({
-      error: 'Un-Authorised!'
-    });
+  } else {
+    res.status(codes.Unauthorized).json({error : 'Un-Authorised!'});
   }
   return valid;
 };
