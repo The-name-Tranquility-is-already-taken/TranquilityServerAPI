@@ -28,8 +28,8 @@ module.exports.getAllMembers = async () => {
  * @returns {string} status text. Ok/Failed/Already Exists
  */
 module.exports.createNewMember = async (body) => {
-  var email_check = await Members.find({ email: body.email });
-  var tag_check = await Members.find({ tag: body.tag });
+  var email_check = await Members.find({email : body.email});
+  var tag_check = await Members.find({tag : body.tag});
 
   if (email_check.length > 0) {
     return "email exists";
@@ -41,17 +41,17 @@ module.exports.createNewMember = async (body) => {
   var hashedPassword = hashing.hash(body.password); // TODO
 
   var buildJson = {
-    id: SnowflakeFnc(),
-    tag: body.tag,
-    hash: hashedPassword,
-    phoneNumber: body.phoneNumber,
-    email: body.email,
+    id : SnowflakeFnc(),
+    tag : body.tag,
+    hash : hashedPassword,
+    phoneNumber : body.phoneNumber,
+    email : body.email,
   };
   let tmp_NewMember = new Members(buildJson);
 
   await tmp_NewMember.save();
 
-  return { id: buildJson.id };
+  return {id : buildJson.id};
 };
 
 /**
@@ -60,18 +60,19 @@ module.exports.createNewMember = async (body) => {
  * @returns {string} status text.
  */
 module.exports.memberLogin = async (body) => {
-  var response = (await Members.find({ email: body.email }))[0];
-  if (!response) return "Un-Authenticated";
+  var response = (await Members.find({email : body.email}))[0];
+  if (!response)
+    return "Un-Authenticated";
 
   if (BCrypt.compareSync(body.password, response.hash)) {
     const secret = crypto.randomBytes(64).toString("hex");
     const token = TokenFunc.createToken(response.id, secret);
     response.tokenSecret = secret;
-    await Members.findOneAndUpdate({ id: response.id }, response, {
-      new: true,
+    await Members.findOneAndUpdate({id : response.id}, response, {
+      new : true,
     });
 
-    return { id: response.id, token: token };
+    return {id : response.id, token : token};
   } else {
     return "Un-Authenticated";
   }

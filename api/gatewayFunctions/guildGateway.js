@@ -10,14 +10,13 @@ exports.getGuildsUserCanAccess = async (req, res) => {
 
   var memberID = req.params.MemberID;
 
-  var ress = await guildFunctions
-    .getGuildsUserCanAccess(memberID)
-    .catch((err) => {
-      console.log("ERR: ", err);
+  var ress =
+      await guildFunctions.getGuildsUserCanAccess(memberID).catch((err) => {
+        console.log("ERR: ", err);
 
-      res.status(codes.Bad_Request);
-      res.send("err");
-    });
+        res.status(codes.Bad_Request);
+        res.send("err");
+      });
   if (!ress) {
     res.status(codes.Not_Found);
   } else {
@@ -50,9 +49,8 @@ exports.createGuild = async (req, res) => {
   var duration = end - startTimestamp;
 
   var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  logging.log(
-    `[ ${duration}ms ] - [ ${ip} ] - POST /guild/${ownerID} - name: ${guildName}`
-  );
+  logging.log(`[ ${duration}ms ] - [ ${ip} ] - POST /guild/${ownerID} - name: ${
+      guildName}`);
 };
 exports.joinGuild = async (req, res) => {
   let startTimestamp = new Date().getTime();
@@ -61,14 +59,13 @@ exports.joinGuild = async (req, res) => {
   var guildID = req.params.GuildID;
   var GuildInvite = req.params.GuildInvite;
 
-  await guildFunctions
-    .joinGuild(memberID, guildID, GuildInvite)
-    .catch((err) => {
-      console.log("ERR: ", err);
+  await guildFunctions.joinGuild(memberID, guildID, GuildInvite)
+      .catch((err) => {
+        console.log("ERR: ", err);
 
-      res.status(codes.Bad_Request);
-      res.send("err");
-    });
+        res.status(codes.Bad_Request);
+        res.send("err");
+      });
   res.status(codes.Ok);
   res.send("Joined.");
 
@@ -76,7 +73,6 @@ exports.joinGuild = async (req, res) => {
   var duration = end - startTimestamp;
 
   var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  logging.log(
-    `[ ${duration}ms ] - [ ${ip} ] - POST /guild/${memberID}/${guildID}/${GuildInvite}`
-  );
+  logging.log(`[ ${duration}ms ] - [ ${ip} ] - POST /guild/${memberID}/${
+      guildID}/${GuildInvite}`);
 };

@@ -1,12 +1,12 @@
 var data = [
   {
-    name: "hashing",
-    data: [],
-    averageTimes: {
-      all: -1, // Time in ms
+    name : "hashing",
+    data : [],
+    averageTimes : {
+      all : -1, // Time in ms
     },
-    totalTime: 0,
-    callCount: 0,
+    totalTime : 0,
+    callCount : 0,
   },
 ];
 
@@ -26,10 +26,11 @@ module.exports.log = (module_t, timeTaken) => {
   data.forEach((e) => {
     if (e.name == module_t) {
       var shouldHalf = false;
-      if (data[i].averageTimes.all != -1) shouldHalf = true;
+      if (data[i].averageTimes.all != -1)
+        shouldHalf = true;
 
       // Submit data
-      data[i].data.push({ timeTaken: timeTaken });
+      data[i].data.push({timeTaken : timeTaken});
       data[i].averageTimes.all += timeTaken;
       data[i].totalTime += timeTaken;
       data[i].callCount += 1;
