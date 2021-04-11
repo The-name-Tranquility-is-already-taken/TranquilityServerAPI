@@ -20,7 +20,7 @@ function getLogLevelNum(level) {
 exports.getLogLevelNum = (level) => {
   return getLogLevelNum(level);
 };
-function log(message, type = "DEBUG") {
+async function log(message, type = "DEBUG") {
   if (getLogLevelNum(type) > getLogLevelNum(logLevel)) {
     return;
   }
@@ -63,8 +63,8 @@ function log(message, type = "DEBUG") {
   }
   console.log(StartMessage + balence() + "-> " + message);
 }
-exports.log = (message, type = "DEBUG") => {
-  return log(message, type);
+exports.log = async (message, type = "DEBUG") => {
+  log(message, type);
 };
 function char_count(str, letter) {
   var letter_Count = 0;

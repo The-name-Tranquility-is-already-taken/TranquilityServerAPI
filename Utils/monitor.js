@@ -1,13 +1,23 @@
-var data = [
-  {
-    name: "hashing",
-    data: [],
-    averageTimes: {
-      all: -1, // Time in ms
-    },
-    totalTime: 0,
-    callCount: 0,
+const template = (name_t) => ({
+  name: name_t,
+  data: [],
+  averageTimes: {
+    all: -1, // Time in ms
   },
+  totalTime: 0,
+  callCount: 0,
+});
+
+var data = [
+  // {
+  //   name: "hashing",
+  //   data: [],
+  //   averageTimes: {
+  //     all: -1, // Time in ms
+  //   },
+  //   totalTime: 0,
+  //   callCount: 0,
+  // },
 ];
 
 module.exports.output = () => {
@@ -20,7 +30,9 @@ module.exports.output = () => {
   });
 };
 
-module.exports.log = (module_t, timeTaken) => {
+module.exports.log = async (module_t, timeTaken) => {
+  timeTaken = parseInt(timeTaken);
+
   var i = 0;
   var found = false;
   data.forEach((e) => {
@@ -30,7 +42,7 @@ module.exports.log = (module_t, timeTaken) => {
 
       // Submit data
       data[i].data.push({ timeTaken: timeTaken });
-      data[i].averageTimes.all += timeTaken;
+      data[i].averageTimes.all += timeTaken + 1;
       data[i].totalTime += timeTaken;
       data[i].callCount += 1;
 
@@ -41,5 +53,7 @@ module.exports.log = (module_t, timeTaken) => {
     }
   });
   if (!found) {
+    data.push(template(module_t));
+    this.log(module_t, timeTaken);
   }
 };

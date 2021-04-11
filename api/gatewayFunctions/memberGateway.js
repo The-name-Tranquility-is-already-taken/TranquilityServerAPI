@@ -7,6 +7,7 @@ const mongoose = require("mongoose"),
 const memberFunctions = require("../../Utils/functions/memberFunctions");
 
 const logging = require("../../Utils/logging");
+const monitoring = require("../../Utils/monitor");
 
 async function getMemberRecord(memberID) {
   var member = await Members.find({ id: memberID }).catch((err) => {
@@ -133,8 +134,8 @@ exports.login = async (req, res) => {
   res.status(codes.Ok);
   res.json({ response: response });
 
-  let end = new Date().getTime();
-  var duration = end - startTimestamp;
-  var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  logging.log(`[ ${duration}ms ] - [ ${ip} ] - List members`);
+  var duration = (new Date().getTime()) - startTimestamp;
+  monitoring.log("login - valid", duration)
+
+  // var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 };
