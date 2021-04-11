@@ -45,4 +45,9 @@ module.exports = (app) => {
     /api/auth/:MemberID?hash=base64hash???
   */
   app.route("/api/auth/:MemberID").get(AuthGateways.login);
+
+
+
+
+  
 };

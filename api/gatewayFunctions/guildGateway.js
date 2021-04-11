@@ -34,16 +34,16 @@ exports.createGuild = async (req, res) => {
   let startTimestamp = (new Date()).getTime();
 
   var ownerID = req.params.MemberID;
-  var guildName = req.params.MemberID;
+  var guildName = req.body.name;
 
-  var ress = await guildFunctions.newGuild(ownerID, guildName).catch(err => {
+  var response = await guildFunctions.newGuild(ownerID, guildName).catch(err => {
     console.log("ERR: ", err);
 
     res.status(codes.Bad_Request);
     res.send  ("err");  
   });
-  res.status(ress.HTTP_CODE);
-  res.send  (ress.HTTP_JSON);
+  res.status(codes.Ok);
+  res.json({ response: response });
 
   let end = (new Date()).getTime()
   var duration = end-startTimestamp;
@@ -58,14 +58,14 @@ exports.joinGuild = async (req, res)  => {
   var guildID = req.params.GuildID;
   var GuildInvite = req.params.GuildInvite;
 
-  await guildFunctions.joinGuild(memberID, guildID, GuildInvite).catch(err => {
+  var response = await guildFunctions.joinGuild(memberID, guildID, GuildInvite).catch(err => {
     console.log("ERR: ", err);
 
     res.status(codes.Bad_Request);
     res.send  ("err");  
   });
   res.status(codes.Ok);
-  res.send("Joined.");
+  res.send({ response : response});
 
   let end = (new Date()).getTime()
   var duration = end-startTimestamp;

@@ -3,6 +3,7 @@ const Guilds = mongoose.model("Guilds");
 const Members = mongoose.model("Members");
 
 const guildSnowflake = require("../snowflake").GenerateID;
+const logging = require("../logging");
 
 /**
  * Get the guilds by member id the user is in. 
@@ -23,8 +24,11 @@ module.exports.newGuild = async (ownerID, guildName) => {
       /* var response = */await tmp_NewGuild.save();
     
       // Automatically join guild after creating it.
-      /*var ress = */await joinGuild(ownerID, guildJSON.id, "FIRST");
+      var ress = await this.joinGuild(ownerID, guildJSON.id, "FIRST");
     
+      if(ress != "Joined") {
+        return "Failed";
+      }
       return ("Ok.");
 }
   
@@ -71,7 +75,7 @@ module.exports.joinGuild = async (memberID, guildID, InviteCode) => {
       if(alreadyInGuild) {
         return ("User already within guild.");
       }
-      logging.log("User isnt within guild.");
+      //logging.log("User isnt within guild.");
     
       // TODO: Invite code verification here via 
       InviteCode;
@@ -83,5 +87,5 @@ module.exports.joinGuild = async (memberID, guildID, InviteCode) => {
       await Members.findOneAndUpdate({ id: memberID }, member, { new: true });
     
       // Return success code.
-      return ("Ok.");
+      return ("Joined");
 }
