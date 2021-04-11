@@ -51,14 +51,13 @@ exports.createNewMember = async (req, res) => {
   let startTimestamp = new Date().getTime();
 
   var response = await memberFunctions.createNewMember(req.body)
-    .catch((err) => {
+  .catch((err) => {
       console.log("ERR: ", err);
 
       res.status(codes.Bad_Request);
       res.send("err");
       return;
-    });
-    console.log(typeof response);
+  });
   if (typeof response != "object" && response.includes("exists")) {
     res.status(codes.Conflict);
     res.send({ error: response });

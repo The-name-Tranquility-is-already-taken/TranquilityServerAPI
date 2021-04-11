@@ -27,14 +27,16 @@ module.exports.getAllMembers = async () => {
  * @returns {string} status text. Ok/Failed/Already Exists
  */
 module.exports.createNewMember = async (body) => {
-  var email_check = await Members.find({ email: body.email });
-  var tag_check = await Members.find({ tag: body.tag });
-
-  if (email_check.length > 0) {
-    return "email exists";
-  }
-  if (tag_check.length > 0) {
-    return "username exists";
+  var check = await Members.find( {$or:[{email: body.email},{tag: body.tag}]} );
+  
+  check = check[0];
+  
+  if(check) {
+    if(check.email == body.email) {
+      return "email exists";
+    } else if(check.tag == body.tag) {
+      return "username exists";
+    }
   }
 
   var hashedPassword = hashing.hash(body.password); // TODO
