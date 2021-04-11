@@ -1,5 +1,3 @@
-const logging = require("./logging")
-
 const template = (name_t) => ({
   name: name_t,
   data: [],
@@ -11,7 +9,6 @@ const template = (name_t) => ({
 });
 
 var data = [];
-var times = [];
 
 module.exports.output = () => {
   data.forEach((entry) => {
@@ -23,25 +20,27 @@ module.exports.output = () => {
   });
 };
 
-function flipArray(array) {
-  console.log(array.length);
-}
-
 function getSpecificDataSet(name) {
   var Times = [];
   var Ms = [];
-  // data.forEach((entry) => {
-  //   if(entry.name == name) {
-  //     var i = 0;
-  //     entry.data.forEach(e => {
-  //       Times.push(entry.data[i].timeStamp);
-  //       Ms.push(entry.data[i].timeTaken);
-  //       ++i;  
-  //     });
-  //   }
-  // });
+  data.forEach(entry => {
+    // console.log("Entry name: ", entry.name, " - ", name);
+    if(entry.name == name) {
+      // console.log("Pushing");
 
-  return(Ms);
+      var i = 0;
+      entry.data.forEach(r => {
+        Times.push(entry.data[i].timeStamp);
+        Ms.push(entry.data[i].timeTaken);
+        ++i;
+      });
+    }
+  });
+
+  // console.log(data);
+  // console.log([ Times, Ms ]);
+
+  return([ Times, Ms ]);
 }
 
 module.exports.data = (req, res) => {
@@ -64,92 +63,35 @@ module.exports.data = (req, res) => {
   }
 
   var all = [];
-  [
-    // {
-    //     label: 'login - valid',
-    //     backgroundColor: 'rgb(255, 99, 132)',
-    //     borderColor: 'rgb(255, 99, 132)',
-    //     data: Object.entries(times).map( (item) => item[1]),
-    // }
-  ];
 
-  data.forEach((entry) => {
-    all.push(createDataSet(entry.name, getSpecificDataSet(entry.name)));
+  var dat = getSpecificDataSet(req.body.target);
+  var times = dat[0];
 
-  });
-
-  console.log("-------------------------------------------------------------------");
   console.log(times);
-  // console.log(data);
-  
-  var fTimes = [];
+  var dataSet = createDataSet(req.body.target, getSpecificDataSet(req.body.target)[1]);
+  console.log(dataSet);
 
-  times.forEach(time => {
-    logging.log(`Building for: ${time}`);
-    fTimes.push(time);
-    data.forEach(entry => {
-      logging.log(`Checking - ${entry.name}`);
-      var foundOne = false;
-      entry.data.forEach(timeRecord => {
-        if(timeRecord.timeStamp == time) {
-          logging.log(`Had entry- ${time}`);
-          if(foundOne) {
-            logging.log("Had multiple!!!!!", "ERROR");
-            return;
-          }
-          foundOne = true;
-          var vvvv = 0;
-          all.forEach(thing => {
-            if(thing.label == entry.name) {
-              console.log("Time: ", timeRecord.timeTaken);
-              all[vvvv].data.push(timeRecord.timeTaken);
-            }
-            ++vvvv;
-          });
-        }
-      });
+  all.push(dataSet);
 
-      if(!foundOne) {
-        console.log(entry.name + " -Didnt have a record.")
-        var vvvv = 0;
-        all.forEach(thing => {
-          if(thing.label == entry.name) {
-            console.log("Time: ", "NA");
-            all[vvvv].data.push(0);
-            console.log("Should have added a black record:", all[vvvv].data);
-          }
-          ++vvvv;
-        });
-      }
-    });
-  });
-  
-  console.log(fTimes);
-  console.log(all);
+  console.log("All:",all[0]);
 
-  //all.push(createDataSet("Valid Logins", getSpecificDataSet("login - valid")));
-
-  //console.log({ all: all, times: times });
-  res.json({ all: all, times: times });
-
+  //console.log ({ all: all, times: times });
+  res.json    ({ all: all[0], times: times });
 
 };
 
-module.exports.log = async (module_t, timeTaken, timeStamp_t = new Date().getTime()) => {
+module.exports.log = async (module_t, timeTaken) => {
   timeTaken = parseInt(timeTaken);
 
   var i = 0;
   var found = false;
   data.forEach((e) => {
     if (e.name == module_t) {
-      console.log("New log: ", module_t, " - ", timeTaken );
-      times.push(timeStamp_t);
-    
       var shouldHalf = false;
       if (data[i].averageTimes.all != -1) shouldHalf = true;
 
       // Submit data
-      data[i].data.push({ timeTaken: timeTaken, timeStamp: timeStamp_t });
+      data[i].data.push({ timeTaken: timeTaken, timeStamp: getDateTime() });
       data[i].averageTimes.all += timeTaken + 1;
       data[i].totalTime += timeTaken;
       data[i].callCount += 1;
@@ -163,7 +105,7 @@ module.exports.log = async (module_t, timeTaken, timeStamp_t = new Date().getTim
   });
   if (!found) {
     data.push(template(module_t));
-    this.log(module_t, timeTaken, timeStamp_t);
+    this.log(module_t, timeTaken);
   }
 };
 
