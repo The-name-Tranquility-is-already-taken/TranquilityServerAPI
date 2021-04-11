@@ -50,8 +50,7 @@ exports.listMembers = async (req, res) => {
 exports.createNewMember = async (req, res) => {
   let startTimestamp = new Date().getTime();
 
-  var response = await memberFunctions
-    .createNewMember(req.body)
+  var response = await memberFunctions.createNewMember(req.body)
     .catch((err) => {
       console.log("ERR: ", err);
 
@@ -68,16 +67,14 @@ exports.createNewMember = async (req, res) => {
   res.status(codes.Ok);
   res.json({ response: { id: response } });
 
-  let end = new Date().getTime();
-  var duration = end - startTimestamp;
-
-  var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-  logging.log(`[ ${duration}ms ] - [ ${ip} ] - List members`);
+  var duration = (new Date().getTime()) - startTimestamp;
+  monitoring.log("createNewMember - gateway", duration)
 };
 
 exports.getMemberRecord = (req, res) => {
   res.json(getMemberRecord(req.params.MemberID));
 };
+
 exports.updateMember = (req, res) => {
   Members.findOneAndUpdate(
     { id: req.params.MemberID },

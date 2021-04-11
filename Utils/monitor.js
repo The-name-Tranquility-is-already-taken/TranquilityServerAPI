@@ -75,7 +75,6 @@ module.exports.data = (req, res) => {
 
   console.log("All:",all[0]);
 
-  //console.log ({ all: all, times: times });
   res.json    ({ all: all[0], times: times });
 
 };
@@ -106,7 +105,12 @@ module.exports.log = async (module_t, timeTaken) => {
   if (!found) {
     data.push(template(module_t));
     this.log(module_t, timeTaken);
+  } else {
+    for(var i = 0; i <= 10; ++i) console.log(" ");
+    this.output();
+
   }
+
 };
 
 function getDateTime() {

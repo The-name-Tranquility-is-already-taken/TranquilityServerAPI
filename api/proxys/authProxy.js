@@ -37,7 +37,6 @@ async function isTokenValid(userID, submittedToken) {
 }
 
 module.exports.authWrapper = async (req, res, next) => {
-  const monitoring = require("./Utils/monitor");
   let startTimestamp = new Date().getTime();
 
   if (!req.headers.authorization) {

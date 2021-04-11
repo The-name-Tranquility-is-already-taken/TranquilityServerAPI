@@ -1,4 +1,6 @@
 "use strict";
+const monitoring = require("./monitor");
+
 // Declare snowflakey
 const snowflakey = require("snowflakey");
 // Create the worker instance
@@ -16,16 +18,21 @@ const Worker = new snowflakey.Worker({
  * Generate a unique snowflake for use in any way seen fit.
  * @returns {string} Unique snowflake
  */
-module.exports.GenerateID = () => {
-  const flake = Worker.generate();
-  console.log(`Created snowflake: ${flake}`);
-  console.log(
-    `Creation date    : ${snowflakey.lookup(flake, Worker.options.epoch)}`
-  );
-  console.log(
-    `Deconstructed    : ${Worker.deconstruct(flake).timestamp.valueOf()}`
-  );
+module.exports.GenerateID = (log = true) => {
+  let startTimestamp = new Date().getTime();
 
+  const flake = Worker.generate();
+  if(log) {
+    console.log(`Created snowflake: ${flake}`);
+    console.log(
+      `Creation date    : ${snowflakey.lookup(flake, Worker.options.epoch)}`
+    );
+    console.log(
+      `Deconstructed    : ${Worker.deconstruct(flake).timestamp.valueOf()}`
+    );
+  }
+
+  monitoring.log("generateSnowFlake", (new Date().getTime()) - startTimestamp);
   return flake;
 };
 
