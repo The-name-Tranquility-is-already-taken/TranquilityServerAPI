@@ -6,7 +6,6 @@ const mongoose = require("mongoose"),
 
 const memberFunctions = require("../../Utils/functions/memberFunctions");
 
-const tokenMan = require("./../../Utils/token");
 const logging = require("../../Utils/logging");
 
 async function getMemberRecord(memberID) {

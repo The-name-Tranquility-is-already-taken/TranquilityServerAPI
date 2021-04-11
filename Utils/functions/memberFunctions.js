@@ -4,7 +4,6 @@
  */
 
 const mongoose = require("mongoose");
-const Guilds = mongoose.model("Guilds");
 const Members = mongoose.model("Members");
 
 const hashing = require("../hashing");
