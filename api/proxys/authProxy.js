@@ -6,8 +6,7 @@ const codes = require("../../Utils/error_codes").codes;
 async function isTokenValid(userID, submittedToken) {
   var member = await getUserInfo(userID);
   member = member[0];
-  if (!member)
-    return false;
+  if (!member) return false;
 
   memberSecret = member.tokenSecret;
   // logging.log(`Token Validation - userId: ${userID} - MemberSecret:
@@ -33,7 +32,7 @@ async function isTokenValid(userID, submittedToken) {
 
 module.exports.authWrapper = async (req, res, next) => {
   if (!req.headers.authorization) {
-    res.status(codes.Unauthorized).json({error : "Un-Authorised!"});
+    res.status(codes.Unauthorized).json({ error: "Un-Authorised!" });
     return;
   }
   const submittedToken = req.headers.authorization.split(" ")[1];
@@ -42,7 +41,7 @@ module.exports.authWrapper = async (req, res, next) => {
   if (valid) {
     next();
   } else {
-    res.status(codes.Unauthorized).json({error : "Un-Authorised!"});
+    res.status(codes.Unauthorized).json({ error: "Un-Authorised!" });
   }
   return valid;
 };
