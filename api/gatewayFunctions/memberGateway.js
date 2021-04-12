@@ -1,8 +1,7 @@
 "use strict";
 const codes = require("../../Utils/error_codes").codes;
 
-const mongoose = require("mongoose"),
-  Members = mongoose.model("Members");
+const mongoose = require("mongoose"), Members = mongoose.model("Members");
 
 const memberFunctions = require("../../Utils/functions/memberFunctions");
 
@@ -10,7 +9,7 @@ const logging = require("../../Utils/logging");
 const monitoring = require("../../Utils/monitor");
 
 async function getMemberRecord(memberID) {
-  var member = await Members.find({ id: memberID }).catch((err) => {
+  var member = await Members.find({id : memberID}).catch((err) => {
     if (err) {
       console.log(err);
       logging.log("getMemberRecord had an error", "ERROR");
@@ -19,9 +18,8 @@ async function getMemberRecord(memberID) {
   return member;
 }
 
-exports.getMemberInfo = async (memberID) => {
-  return await getMemberRecord(memberID);
-};
+exports.getMemberInfo =
+    async (memberID) => { return await getMemberRecord(memberID); };
 
 /**
  * Get all members within database.
@@ -50,47 +48,43 @@ exports.listMembers = async (req, res) => {
 exports.createNewMember = async (req, res) => {
   let startTimestamp = new Date().getTime();
 
-  var response = await memberFunctions.createNewMember(req.body)
-  .catch((err) => {
-      console.log("ERR: ", err);
+  var response =
+      await memberFunctions.createNewMember(req.body).catch((err) => {
+        console.log("ERR: ", err);
 
-      res.status(codes.Bad_Request);
-      res.send("err");
-      return;
-  });
+        res.status(codes.Bad_Request);
+        res.send("err");
+        return;
+      });
   if (typeof response != "object" && response.includes("exists")) {
     res.status(codes.Conflict);
-    res.send({ error: response });
+    res.send({error : response});
     return;
   }
   res.status(codes.Ok);
-  res.json({ response: { id: response } });
+  res.json({response : {id : response}});
 
-  monitoring.log("createNewMember - gateway", (new Date().getTime()) - startTimestamp)
+  monitoring.log("createNewMember - gateway",
+                 (new Date().getTime()) - startTimestamp)
 };
 
-exports.getMemberRecord = (req, res) => {
-  res.json(getMemberRecord(req.params.MemberID));
-};
+exports.getMemberRecord =
+    (req, res) => { res.json(getMemberRecord(req.params.MemberID)); };
 
 exports.updateMember = (req, res) => {
-  Members.findOneAndUpdate(
-    { id: req.params.MemberID },
-    req.body,
-    { new: true },
-    (err, Response) => {
-      if (err) {
-        res.status(codes.Bad_Request);
-        res.send(err);
-      }
+  Members.findOneAndUpdate({id : req.params.MemberID}, req.body, {new : true},
+                           (err, Response) => {
+                             if (err) {
+                               res.status(codes.Bad_Request);
+                               res.send(err);
+                             }
 
-      res.status(codes.Accepted);
-      res.json(Response);
-    }
-  );
+                             res.status(codes.Accepted);
+                             res.json(Response);
+                           });
 };
 exports.deleteMember = (req, res) => {
-  Members.find({ id: req.params.MemberID }, (err, Response) => {
+  Members.find({id : req.params.MemberID}, (err, Response) => {
     if (err) {
       res.send(err);
     }
@@ -99,20 +93,21 @@ exports.deleteMember = (req, res) => {
       logging.log(`[ ${ip} ] - Tried to delete a member that doesnt exist.`);
       res.status(codes.Not_Found);
       res.json({
-        message: "Member doesnt exist.",
-        error_code: codes.Not_Found,
+        message : "Member doesnt exist.",
+        error_code : codes.Not_Found,
       });
       return;
     }
-    Members.deleteOne({ id: req.params.MemberID }, (err, DeleteResponse) => {
-      if (err) res.send(err);
+    Members.deleteOne({id : req.params.MemberID}, (err, DeleteResponse) => {
+      if (err)
+        res.send(err);
 
       var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
       logging.log(`[ ${ip} ] - Deleted member ${req.params.MemberID}.`);
 
       res.status(codes.Accepted);
       res.json({
-        message: `Member ${req.params.MemberID} successfully deleted`,
+        message : `Member ${req.params.MemberID} successfully deleted`,
       });
     });
   });
@@ -128,7 +123,7 @@ exports.login = async (req, res) => {
   });
 
   res.status(codes.Ok);
-  res.json({ response: response });
+  res.json({response : response});
 
   monitoring.log("login - valid", (new Date().getTime()) - startTimestamp)
 
