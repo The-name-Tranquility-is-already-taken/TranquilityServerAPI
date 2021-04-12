@@ -66,8 +66,7 @@ exports.createNewMember = async (req, res) => {
   res.status(codes.Ok);
   res.json({ response: { id: response } });
 
-  var duration = (new Date().getTime()) - startTimestamp;
-  monitoring.log("createNewMember - gateway", duration)
+  monitoring.log("createNewMember - gateway", (new Date().getTime()) - startTimestamp)
 };
 
 exports.getMemberRecord = (req, res) => {
@@ -131,8 +130,7 @@ exports.login = async (req, res) => {
   res.status(codes.Ok);
   res.json({ response: response });
 
-  var duration = (new Date().getTime()) - startTimestamp;
-  monitoring.log("login - valid", duration)
+  monitoring.log("login - valid", (new Date().getTime()) - startTimestamp)
 
   // var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 };

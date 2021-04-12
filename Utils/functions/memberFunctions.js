@@ -3,6 +3,7 @@
  * callers.
  */
 
+const monitoring = require("../monitor");
 const mongoose = require("mongoose");
 const Members = mongoose.model("Members");
 
@@ -39,7 +40,7 @@ module.exports.createNewMember = async (body) => {
     }
   }
 
-  var hashedPassword = hashing.hash(body.password); // TODO
+  var hashedPassword = hashing.hash(body.password);
 
   var buildJson = {
     id: SnowflakeFnc(),
@@ -61,16 +62,26 @@ module.exports.createNewMember = async (body) => {
  * @returns {string} status text.
  */
 module.exports.memberLogin = async (body) => {
+  let startTimestamp = new Date().getTime();
+  
   var response = (await Members.find({ email: body.email }))[0];
+
+  monitoring.log("memberLogin - find user from email", (new Date().getTime()) - startTimestamp)
+
   if (!response) return "Un-Authenticated";
 
+  startTimestamp = new Date().getTime();
   if (BCrypt.compareSync(body.password, response.hash)) {
+    monitoring.log("memberLogin - BCrypt.compareSync", (new Date().getTime()) - startTimestamp)
+
     const secret = crypto.randomBytes(64).toString("hex");
+
     const token = TokenFunc.createToken(response.id, secret);
     response.tokenSecret = secret;
-    await Members.findOneAndUpdate({ id: response.id }, response, {
-      new: true,
-    });
+
+    startTimestamp = new Date().getTime();
+    await Members.findOneAndUpdate({ id: response.id }, response, { new: true, });
+    monitoring.log("memberLogin - update db with new tokenSecret", (new Date().getTime()) - startTimestamp);
 
     return { id: response.id, token: token };
   } else {

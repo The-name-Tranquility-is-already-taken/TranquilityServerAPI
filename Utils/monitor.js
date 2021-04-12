@@ -67,13 +67,13 @@ module.exports.data = (req, res) => {
   var dat = getSpecificDataSet(req.body.target);
   var times = dat[0];
 
-  console.log(times);
+  //console.log(times);
   var dataSet = createDataSet(req.body.target, getSpecificDataSet(req.body.target)[1]);
-  console.log(dataSet);
+  //console.log(dataSet);
 
   all.push(dataSet);
 
-  console.log("All:",all[0]);
+  //console.log("All:",all[0]);
 
   res.json    ({ all: all[0], times: times });
 
@@ -105,12 +105,7 @@ module.exports.log = async (module_t, timeTaken) => {
   if (!found) {
     data.push(template(module_t));
     this.log(module_t, timeTaken);
-  } else {
-    for(var i = 0; i <= 10; ++i) console.log(" ");
-    this.output();
-
   }
-
 };
 
 function getDateTime() {
