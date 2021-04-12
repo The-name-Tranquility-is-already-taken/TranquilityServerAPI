@@ -11,7 +11,7 @@
 
 Script to allow multiple data streams
 
-```
+```js
 let template = `
     <canvas id="myChart"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
