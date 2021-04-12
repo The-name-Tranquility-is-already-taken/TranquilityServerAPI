@@ -28,8 +28,9 @@ module.exports.getAllMembers = async () => {
  * @returns {string} status text. Ok/Failed/Already Exists
  */
 module.exports.createNewMember = async (body) => {
-  var check =
-      await Members.find({$or : [ {email : body.email}, {tag : body.tag} ]});
+  var check = await Members.find({
+    $or: [{ email: body.email }, { tag: body.tag }],
+  });
 
   check = check[0];
 
@@ -44,17 +45,17 @@ module.exports.createNewMember = async (body) => {
   var hashedPassword = hashing.hash(body.password);
 
   var buildJson = {
-    id : SnowflakeFnc(),
-    tag : body.tag,
-    hash : hashedPassword,
-    phoneNumber : body.phoneNumber,
-    email : body.email,
+    id: SnowflakeFnc(),
+    tag: body.tag,
+    hash: hashedPassword,
+    phoneNumber: body.phoneNumber,
+    email: body.email,
   };
   let tmp_NewMember = new Members(buildJson);
 
   await tmp_NewMember.save();
 
-  return {id : buildJson.id};
+  return { id: buildJson.id };
 };
 
 /**
@@ -65,17 +66,21 @@ module.exports.createNewMember = async (body) => {
 module.exports.memberLogin = async (body) => {
   let startTimestamp = new Date().getTime();
 
-  var response = (await Members.find({email : body.email}))[0];
+  var response = (await Members.find({ email: body.email }))[0];
 
-  monitoring.log("memberLogin - find user from email",
-                 (new Date().getTime()) - startTimestamp)
+  monitoring.log(
+    "memberLogin - find user from email",
+    new Date().getTime() - startTimestamp
+  );
 
   if (!response) return "Un-Authenticated";
 
   startTimestamp = new Date().getTime();
   if (BCrypt.compareSync(body.password, response.hash)) {
-    monitoring.log("memberLogin - BCrypt.compareSync",
-                   (new Date().getTime()) - startTimestamp)
+    monitoring.log(
+      "memberLogin - BCrypt.compareSync",
+      new Date().getTime() - startTimestamp
+    );
 
     const secret = crypto.randomBytes(64).toString("hex");
 
@@ -83,13 +88,15 @@ module.exports.memberLogin = async (body) => {
     response.tokenSecret = secret;
 
     startTimestamp = new Date().getTime();
-    await Members.findOneAndUpdate({id : response.id}, response, {
-      new : true,
+    await Members.findOneAndUpdate({ id: response.id }, response, {
+      new: true,
     });
-    monitoring.log("memberLogin - update db with new tokenSecret",
-                   (new Date().getTime()) - startTimestamp);
+    monitoring.log(
+      "memberLogin - update db with new tokenSecret",
+      new Date().getTime() - startTimestamp
+    );
 
-    return {id : response.id, token : token};
+    return { id: response.id, token: token };
   } else {
     return "Un-Authenticated";
   }
