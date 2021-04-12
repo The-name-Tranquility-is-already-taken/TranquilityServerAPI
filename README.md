@@ -10,7 +10,8 @@
 # # Post mon
 
 Script to allow multiple data streams
- 
+
+```
 let template = `
     <canvas id="myChart"></canvas>
     <script src="https://cdn.jsdelivr.net/npm/chart.js@2.8.0"></script>
@@ -43,3 +44,4 @@ pm.visualizer.set(template, {
     // Pass the response body parsed as JSON as `data`
     response: pm.response.json()
 });
+```
