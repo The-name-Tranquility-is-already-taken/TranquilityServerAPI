@@ -14,9 +14,9 @@ const logging = require("../logging");
 module.exports.newGuild = async (ownerID, guildName) => {
   // Build json to parse for the new guild.
   var guildJSON = {
-    id : `${guildSnowflake()}`,
-    name : guildName,
-    ownerID : ownerID,
+    id: `${guildSnowflake()}`,
+    name: guildName,
+    ownerID: ownerID,
   };
 
   // Create and save guild.
@@ -39,7 +39,7 @@ module.exports.newGuild = async (ownerID, guildName) => {
  * @returns {Array} Returns a list of guild objects.
  */
 module.exports.getGuildsUserCanAccess = async (memberID) => {
-  var result = await Members.find({id : memberID});
+  var result = await Members.find({ id: memberID });
 
   if (!result[0]) {
     return undefined;
@@ -57,7 +57,7 @@ module.exports.getGuildsUserCanAccess = async (memberID) => {
  */
 module.exports.joinGuild = async (memberID, guildID, InviteCode) => {
   // get the user object.
-  var member = await Members.find({id : memberID});
+  var member = await Members.find({ id: memberID });
 
   // Clean and check member object.
   member = member[0];
@@ -86,7 +86,7 @@ module.exports.joinGuild = async (memberID, guildID, InviteCode) => {
   member.guilds.push(guildID);
 
   // Update database with new object.
-  await Members.findOneAndUpdate({id : memberID}, member, {new : true});
+  await Members.findOneAndUpdate({ id: memberID }, member, { new: true });
 
   // Return success code.
   return "Joined";
