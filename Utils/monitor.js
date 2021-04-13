@@ -23,13 +23,13 @@ module.exports.output = () => {
 function getSpecificDataSet(name) {
   var Times = [];
   var Ms = [];
-  data.forEach(entry => {
+  data.forEach((entry) => {
     // console.log("Entry name: ", entry.name, " - ", name);
-    if(entry.name == name) {
+    if (entry.name == name) {
       // console.log("Pushing");
 
       var i = 0;
-      entry.data.forEach(r => {
+      entry.data.forEach((r) => {
         Times.push(entry.data[i].timeStamp);
         Ms.push(entry.data[i].timeTaken);
         ++i;
@@ -40,26 +40,20 @@ function getSpecificDataSet(name) {
   // console.log(data);
   // console.log([ Times, Ms ]);
 
-  return([ Times, Ms ]);
+  return [Times, Ms];
 }
 
 module.exports.data = (req, res) => {
-  var colours = [
-    {
-      bg: 'rgb(255, 99, 132)',
-      border: 'rgb(255, 99, 132)'
-    }
-  ]
-  
+  var colours = [{ bg: "rgb(255, 99, 132)", border: "rgb(255, 99, 132)" }];
+
   var curColour = 0;
   function createDataSet(label, times) {
-    return({
+    return {
       label: label,
       backgroundColor: colours[curColour].bg,
       borderColor: colours[curColour].border,
       data: times,
-
-    })
+    };
   }
 
   var all = [];
@@ -67,16 +61,18 @@ module.exports.data = (req, res) => {
   var dat = getSpecificDataSet(req.body.target);
   var times = dat[0];
 
-  //console.log(times);
-  var dataSet = createDataSet(req.body.target, getSpecificDataSet(req.body.target)[1]);
-  //console.log(dataSet);
+  // console.log(times);
+  var dataSet = createDataSet(
+    req.body.target,
+    getSpecificDataSet(req.body.target)[1]
+  );
+  // console.log(dataSet);
 
   all.push(dataSet);
 
-  //console.log("All:",all[0]);
+  // console.log("All:",all[0]);
 
-  res.json    ({ all: all[0], times: times });
-
+  res.json({ all: all[0], times: times });
 };
 
 module.exports.log = async (module_t, timeTaken) => {
@@ -119,7 +115,7 @@ function getDateTime() {
 
   var sec = date.getSeconds();
   sec = (sec < 10 ? "0" : "") + sec;
-  
+
   // var year = date.getFullYear();
 
   // var month = date.getMonth() + 1;
@@ -128,5 +124,7 @@ function getDateTime() {
   // var day = date.getDate();
   // day = (day < 10 ? "0" : "") + day;
 
-  return /*year + ":" + month + ":" + day + " - " + */hour + ":" + min + "." + sec;
+  return (
+    /*year + ":" + month + ":" + day + " - " + */ hour + ":" + min + "." + sec
+  );
 }

@@ -28,14 +28,16 @@ module.exports.getAllMembers = async () => {
  * @returns {string} status text. Ok/Failed/Already Exists
  */
 module.exports.createNewMember = async (body) => {
-  var check = await Members.find( {$or:[{email: body.email},{tag: body.tag}]} );
-  
+  var check = await Members.find({
+    $or: [{ email: body.email }, { tag: body.tag }],
+  });
+
   check = check[0];
-  
-  if(check) {
-    if(check.email == body.email) {
+
+  if (check) {
+    if (check.email == body.email) {
       return "email exists";
-    } else if(check.tag == body.tag) {
+    } else if (check.tag == body.tag) {
       return "username exists";
     }
   }
@@ -63,16 +65,22 @@ module.exports.createNewMember = async (body) => {
  */
 module.exports.memberLogin = async (body) => {
   let startTimestamp = new Date().getTime();
-  
+
   var response = (await Members.find({ email: body.email }))[0];
 
-  monitoring.log("memberLogin - find user from email", (new Date().getTime()) - startTimestamp)
+  monitoring.log(
+    "memberLogin - find user from email",
+    new Date().getTime() - startTimestamp
+  );
 
   if (!response) return "Un-Authenticated";
 
   startTimestamp = new Date().getTime();
   if (BCrypt.compareSync(body.password, response.hash)) {
-    monitoring.log("memberLogin - BCrypt.compareSync", (new Date().getTime()) - startTimestamp)
+    monitoring.log(
+      "memberLogin - BCrypt.compareSync",
+      new Date().getTime() - startTimestamp
+    );
 
     const secret = crypto.randomBytes(64).toString("hex");
 
@@ -80,8 +88,13 @@ module.exports.memberLogin = async (body) => {
     response.tokenSecret = secret;
 
     startTimestamp = new Date().getTime();
-    await Members.findOneAndUpdate({ id: response.id }, response, { new: true, });
-    monitoring.log("memberLogin - update db with new tokenSecret", (new Date().getTime()) - startTimestamp);
+    await Members.findOneAndUpdate({ id: response.id }, response, {
+      new: true,
+    });
+    monitoring.log(
+      "memberLogin - update db with new tokenSecret",
+      new Date().getTime() - startTimestamp
+    );
 
     return { id: response.id, token: token };
   } else {

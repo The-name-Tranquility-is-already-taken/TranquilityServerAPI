@@ -50,14 +50,15 @@ exports.listMembers = async (req, res) => {
 exports.createNewMember = async (req, res) => {
   let startTimestamp = new Date().getTime();
 
-  var response = await memberFunctions.createNewMember(req.body)
-  .catch((err) => {
+  var response = await memberFunctions
+    .createNewMember(req.body)
+    .catch((err) => {
       console.log("ERR: ", err);
 
       res.status(codes.Bad_Request);
       res.send("err");
       return;
-  });
+    });
   if (typeof response != "object" && response.includes("exists")) {
     res.status(codes.Conflict);
     res.send({ error: response });
@@ -66,7 +67,10 @@ exports.createNewMember = async (req, res) => {
   res.status(codes.Ok);
   res.json({ response: { id: response } });
 
-  monitoring.log("createNewMember - gateway", (new Date().getTime()) - startTimestamp)
+  monitoring.log(
+    "createNewMember - gateway",
+    new Date().getTime() - startTimestamp
+  );
 };
 
 exports.getMemberRecord = (req, res) => {
@@ -130,7 +134,7 @@ exports.login = async (req, res) => {
   res.status(codes.Ok);
   res.json({ response: response });
 
-  monitoring.log("login - valid", (new Date().getTime()) - startTimestamp)
+  monitoring.log("login - valid", new Date().getTime() - startTimestamp);
 
   // var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
 };

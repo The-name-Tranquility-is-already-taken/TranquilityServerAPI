@@ -62,7 +62,7 @@ const hash = (text) => {
   // Hash Password
   const hash = bcrypt.hashSync(text, salt);
 
-  monitor.log("hashing", (new Date().getTime()) - startTimestamp);
+  monitor.log("hashing", new Date().getTime() - startTimestamp);
 
   return hash;
 };
