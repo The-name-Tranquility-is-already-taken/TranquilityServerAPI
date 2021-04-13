@@ -33,7 +33,7 @@ data.response.all.forEach(e => {
         var ctx = document.getElementById('myChart').getContext('2d');
         var chart = new Chart(ctx, {
             type: 'line',
-            data: data_t,   
+            data: data_t,
 
             // Configuration options go here
             options: {}
