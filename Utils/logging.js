@@ -1,19 +1,26 @@
 require("colors");
+const sendMail = require("./functions/mailer").sendMail;
 
-logLevel = "ALL";
+logLevel = "LEGITALL";
 function getLogLevelNum(level) {
   if (level == "TESTING") return 0;
   if (level == "GENERIC") return 1;
   if (level == "ERROR") return 2;
   if (level == "DEBUG") return 3;
   if (level == "ALL") return 4;
+
+  // Debugging stuff.
+  if (level == "TIMINGS") return 5;
+
+  if (level == "LEGITALL") return 100;
+
   log("Unsure what log level " + level.red + " belongs to.", "GENERIC");
   return 4;
 }
 exports.getLogLevelNum = (level) => {
   return getLogLevelNum(level);
 };
-function log(message, type = "DEBUG") {
+async function log(message, type = "DEBUG") {
   if (getLogLevelNum(type) > getLogLevelNum(logLevel)) {
     return;
   }
@@ -23,12 +30,26 @@ function log(message, type = "DEBUG") {
   time = getDateTime().yellow;
 
   StartMessage = "";
-  if (type == "ERROR") StartMessage = `[${time}] - [` + type.red + `]`;
-  else if (type == "GENERIC") StartMessage = `[${time}] - [` + type.green + `]`;
+  if (type == "ERROR") {
+    StartMessage = `[${time}] - [` + type.red + `]`;
+    sendMail(
+      process.env.ADMIN_EMAIL,
+      `
+    Time: ${getDateTime()}
+    <br>
+    <br>
+    <div>
+    ${message}
+    </div>
+    `,
+      "Tranquility - Server API Error"
+    );
+  } else if (type == "GENERIC")
+    StartMessage = `[${time}] - [` + type.green + `]`;
   else if (type == "DEBUG") StartMessage = `[${time}] - [` + type.gray + `]`;
   else if (type == "TESTING")
     StartMessage = `[${time}] - [` + type.magenta + `]`;
-  else StartMessage = `[${time}] - [` + type.gray + `]`;
+  else StartMessage = `[${time}] - [` + type.blue + `]`;
 
   left = maxSize - StartMessage.length;
   function balence() {
@@ -42,8 +63,8 @@ function log(message, type = "DEBUG") {
   }
   console.log(StartMessage + balence() + "-> " + message);
 }
-exports.log = (message, type = "DEBUG") => {
-  return log(message, type);
+exports.log = async (message, type = "DEBUG") => {
+  log(message, type);
 };
 function char_count(str, letter) {
   var letter_Count = 0;

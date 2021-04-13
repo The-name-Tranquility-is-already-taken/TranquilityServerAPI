@@ -1,3 +1,16 @@
+const monitoring = require("./Utils/monitor");
+// const hashing = require("./Utils/hashing");
+const path = require("path");
+
+// if(!process.env.saltRounds) {
+//   hashing.setup();
+// }
+
+monitoring.output();
+
+// const sendMail = require("./Utils/functions/mailer").sendMail;
+// sendMail("conni@spookiebois.club", "SUPPPPP");
+
 const logging = require("./Utils/logging");
 
 require("dotenv").config();
@@ -12,17 +25,25 @@ require("./api/models/MemberModel"); // created model loading here
 require("./api/models/GuildModel"); // created model loading here
 
 // mongoose instance connection url connection
+let startTimestamp = new Date().getTime();
 mongoose
   .connect(uri, {
     useNewUrlParser: true,
     useCreateIndex: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
   })
   .then((res) => {
     logging.log("DB Connected!");
+    monitoring.log("DB Connected", new Date().getTime() - startTimestamp);
   })
   .catch((err) => {
     console.log(Error, "Failed to connect to DB\nErrror :" + err.message);
+    logging.log(err, "ERROR");
+    monitoring.log(
+      "DB Connection failed",
+      new Date().getTime() - startTimestamp
+    );
   });
 
 app.use(express.urlencoded({ extended: true }));
