@@ -14,28 +14,9 @@ const GuildSchema = new Schema({
         required: "Guilds description Tag",
     },
     channels: { type: Array, required: "Channels Array" },
-    // [
-    //   {
-    //     "channelID": 323131,
-    //     "channelName": 4234234,
-    //     "buckets": [
-    //       {
-    //         "id": 1,
-    //       },
-    //       {
-    //         "id": 2,
-    //       },
-    //       { 
-    //         "id": 3, 
-    //         "active": true
-    //       }
-    //     ]
-    //   }
-    // ],
     members: {
         type: Array,
         required: "Members lists are kinda importent my guy :/",
     },
-
 });
 module.exports = mongoose.model("Guilds", GuildSchema);

@@ -22,7 +22,7 @@ module.exports.GenerateID = (log = true) => {
   let startTimestamp = new Date().getTime();
 
   const flake = Worker.generate();
-  if(log) {
+  if (log) {
     console.log(`Created snowflake: ${flake}`);
     console.log(
       `Creation date    : ${snowflakey.lookup(flake, Worker.options.epoch)}`
@@ -32,7 +32,7 @@ module.exports.GenerateID = (log = true) => {
     );
   }
 
-  monitoring.log("generateSnowFlake", (new Date().getTime()) - startTimestamp);
+  monitoring.log("generateSnowFlake", new Date().getTime() - startTimestamp);
   return flake;
 };
 

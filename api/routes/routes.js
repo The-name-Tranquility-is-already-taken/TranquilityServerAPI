@@ -46,16 +46,11 @@ module.exports = (app) => {
   /*
     Authentication gateway for authentication
   */
-  app .route("/api/auth/:MemberID")
-      .get(AuthGateways.login);
+  app.route("/api/auth/:MemberID").get(AuthGateways.login);
 
+  /**
+   * Monitoring API
+   */
 
-/**
- * Monitoring API
- */
-
-  app .route("/api/monitoring/data")
-      .get(monitoring.data);
-
-  
+  app.route("/api/monitoring/data").get(monitoring.data);
 };
