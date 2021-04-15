@@ -24,7 +24,7 @@ var testingNumber = "+447729686551";
  * @param {Int} MemberID MemberID of the user to generate the code for
  */
 module.exports.generate2FA_Code = async (MemberID) => {
-    var code = "ABCD"; // Hardcoded for now
+    var code = Math.random().toString(36).substring(2,5) + Math.random().toString(36).substring(2,5);
 
     var user = await Members.find({id: MemberID});
     user = user[0];
