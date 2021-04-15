@@ -20,9 +20,6 @@ module.exports = (app) => {
     app.route("/api/member/login")
         .get(memberGateway.login);
 
-    // start verification process    
-    app.route("/api/auth/:MemberID/verify/phone")
-        .post(authenticationGateway.verifPhone);
 
     //#endregion 
 
@@ -30,21 +27,23 @@ module.exports = (app) => {
      *  Authenticated Routes
      */
     //#region Authenticated Routes
-    app
-        .route("/api/member/:MemberID")
+
+    // start verification process    
+    app.route("/api/auth/:MemberID/verify/phone/:PhoneNumber")
+        .post(authWrapper, authenticationGateway.verifPhone);
+
+    app.route("/api/member/:MemberID")
         .get(authWrapper, memberGateway.getMemberRecord)
         .put(authWrapper, memberGateway.updateMember)
         .delete(authWrapper, memberGateway.deleteMember);
 
     // Routes for getting all guilds a user has access to. and creating guilds.
-    app
-        .route("/api/guild/:MemberID")
+    app.route("/api/guild/:MemberID")
         .get(authWrapper, guildGateway.getGuildsUserCanAccess)
         .post(authWrapper, guildGateway.createGuild);
 
     // Routes for joining guilds.
-    app
-        .route("/api/guild/:MemberID/:GuildID/:GuildInvite")
+    app.route("/api/guild/:MemberID/:GuildID/:GuildInvite")
         .get(guildGateway.joinGuild);
     //#endregion
 

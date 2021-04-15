@@ -113,7 +113,6 @@ module.exports.generate2FA_Code = (MemberID, expiresTime, PhoneNumber) => {
         timestamp: expiresTime,
         phonenumber: PhoneNumber,
     };
-    logging.log("Returning", "DEBUG");
     tmpCodeCache.push(tmp);
     return (tmp);
 }
