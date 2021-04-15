@@ -8,8 +8,8 @@ const leaseTime = 60 * 60 * 24 * 30;
  * @returns {string}
  */
 module.exports.createToken = (memberID, secret) => {
-    var signed = jwt.sign({ MemberID: memberID }, secret, {
-        expiresIn: leaseTime,
-    });
-    return signed;
+  var signed = jwt.sign({MemberID : memberID}, secret, {
+    expiresIn : leaseTime,
+  });
+  return signed;
 };
