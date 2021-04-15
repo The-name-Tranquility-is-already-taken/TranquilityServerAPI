@@ -1,11 +1,11 @@
 const template = (name_t) => ({
-  name : name_t,
-  data : [],
-  averageTimes : {
-    all : -1, // Time in ms
+  name: name_t,
+  data: [],
+  averageTimes: {
+    all: -1, // Time in ms
   },
-  totalTime : 0,
-  callCount : 0,
+  totalTime: 0,
+  callCount: 0,
 });
 
 var data = [];
@@ -23,13 +23,13 @@ module.exports.output = () => {
 function getSpecificDataSet(name) {
   var Times = [];
   var Ms = [];
-  data.forEach(entry => {
+  data.forEach((entry) => {
     // console.log("Entry name: ", entry.name, " - ", name);
     if (entry.name == name) {
       // console.log("Pushing");
 
       var i = 0;
-      entry.data.forEach(r => {
+      entry.data.forEach((r) => {
         Times.push(entry.data[i].timeStamp);
         Ms.push(entry.data[i].timeTaken);
         ++i;
@@ -40,22 +40,21 @@ function getSpecificDataSet(name) {
   // console.log(data);
   // console.log([ Times, Ms ]);
 
-  return ([ Times, Ms ]);
+  return [Times, Ms];
 }
 
 module.exports.data = (req, res) => {
-  var colours = [ {bg : 'rgb(255, 99, 132)', border : 'rgb(255, 99, 132)'} ];
+  var colours = [{ bg: "rgb(255, 99, 132)", border: "rgb(255, 99, 132)" }];
 
   var curColour = 0;
 
   function createDataSet(label, times) {
-    return ({
-      label : label,
-      backgroundColor : colours[curColour].bg,
-      borderColor : colours[curColour].border,
-      data : times,
-
-    })
+    return {
+      label: label,
+      backgroundColor: colours[curColour].bg,
+      borderColor: colours[curColour].border,
+      data: times,
+    };
   }
 
   var all = [];
@@ -64,15 +63,17 @@ module.exports.data = (req, res) => {
   var times = dat[0];
 
   // console.log(times);
-  var dataSet =
-      createDataSet(req.body.target, getSpecificDataSet(req.body.target)[1]);
+  var dataSet = createDataSet(
+    req.body.target,
+    getSpecificDataSet(req.body.target)[1]
+  );
   // console.log(dataSet);
 
   all.push(dataSet);
 
   // console.log("All:",all[0]);
 
-  res.json({all : all[0], times : times});
+  res.json({ all: all[0], times: times });
 };
 
 module.exports.log = async (module_t, timeTaken) => {
@@ -83,11 +84,10 @@ module.exports.log = async (module_t, timeTaken) => {
   data.forEach((e) => {
     if (e.name == module_t) {
       var shouldHalf = false;
-      if (data[i].averageTimes.all != -1)
-        shouldHalf = true;
+      if (data[i].averageTimes.all != -1) shouldHalf = true;
 
       // Submit data
-      data[i].data.push({timeTaken : timeTaken, timeStamp : getDateTime()});
+      data[i].data.push({ timeTaken: timeTaken, timeStamp: getDateTime() });
       data[i].averageTimes.all += timeTaken + 1;
       data[i].totalTime += timeTaken;
       data[i].callCount += 1;
@@ -125,6 +125,7 @@ function getDateTime() {
   // var day = date.getDate();
   // day = (day < 10 ? "0" : "") + day;
 
-  return /*year + ":" + month + ":" + day + " - " + */ hour + ":" + min + "." +
-         sec;
+  return (
+    /*year + ":" + month + ":" + day + " - " + */ hour + ":" + min + "." + sec
+  );
 }

@@ -17,19 +17,22 @@ module.exports = (app) => {
   /**
    *  Authenticated Routes
    */
-  app.route("/api/member/:MemberID")
-      .get(auth, MemberList.getMemberRecord)
-      .put(auth, MemberList.updateMember)
-      .delete(auth, MemberList.deleteMember);
+  app
+    .route("/api/member/:MemberID")
+    .get(auth, MemberList.getMemberRecord)
+    .put(auth, MemberList.updateMember)
+    .delete(auth, MemberList.deleteMember);
 
   // Routes for getting all guilds a user has access to. and creating guilds.
-  app.route("/api/guild/:MemberID")
-      .get(auth, GuildGatewayController.getGuildsUserCanAccess)
-      .post(auth, GuildGatewayController.createGuild);
+  app
+    .route("/api/guild/:MemberID")
+    .get(auth, GuildGatewayController.getGuildsUserCanAccess)
+    .post(auth, GuildGatewayController.createGuild);
 
   // Routes for joining guilds.
-  app.route("/api/guild/:MemberID/:GuildID/:GuildInvite")
-      .get(GuildGatewayController.joinGuild);
+  app
+    .route("/api/guild/:MemberID/:GuildID/:GuildInvite")
+    .get(GuildGatewayController.joinGuild);
 
   /*
     Authentication gateway for authentication
