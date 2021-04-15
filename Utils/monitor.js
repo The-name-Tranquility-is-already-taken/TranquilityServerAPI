@@ -75,8 +75,6 @@ module.exports.data = (req, res) => {
     //console.log("All:",all[0]);
 
     res.json({ all: all[0], times: times });
-
-    res.json({ all: all[0], times: times });
 };
 
 module.exports.log = async(module_t, timeTaken) => {
