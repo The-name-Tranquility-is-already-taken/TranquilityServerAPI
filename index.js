@@ -8,6 +8,8 @@ const path = require("path");
 
 monitoring.output();
 
+const sendText = require("./Utils/functions/texter").sendText;
+sendText("+447434731840", "PP");
 // const sendMail = require("./Utils/functions/mailer").sendMail;
 // sendMail("conni@spookiebois.club", "SUPPPPP");
 
