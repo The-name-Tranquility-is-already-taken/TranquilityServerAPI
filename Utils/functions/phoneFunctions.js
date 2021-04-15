@@ -18,7 +18,6 @@ const logging = require("../logging");
 // 2FA Codes only last for 3Minutes so we shouldnt have to worry about non-volitile storage
 var tmpCodeCache = [{ memberID: 1, code: "ISH", timestamp: 1244444444444444444444444443 }];
 
-var testingNumber = "+447729686551";
 /**
  * Generate random 2FA code
  */
