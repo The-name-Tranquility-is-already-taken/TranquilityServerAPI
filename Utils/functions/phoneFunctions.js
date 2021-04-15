@@ -6,7 +6,7 @@
 const monitoring = require("../monitor");
 const mongoose = require("mongoose");
 const Members = mongoose.model("Members");
-const sendText = require("../monitor").sendText;
+const logging = require("../logging");
 
 //  const hashing = require("../hashing");
 //  const SnowflakeFnc = require("../snowflake").GenerateID;
@@ -16,30 +16,114 @@ const sendText = require("../monitor").sendText;
 
 
 // 2FA Codes only last for 3Minutes so we shouldnt have to worry about non-volitile storage
-var tmpCodeCache = [];
+var tmpCodeCache = [{ memberID: 1, code: "ISH", timestamp: 1244444444444444444444444443 }];
 
 var testingNumber = "+447729686551";
 /**
- * Generate 2FA code and send it to the Member based off the MemberID
- * @param {Int} MemberID MemberID of the user to generate the code for
+ * Generate random 2FA code
  */
-module.exports.generate2FA_Code = async(MemberID) => {
-    var code = "ABCD"; // Hardcoded for now
-    return;
+module.exports.generate2FA_Code = (MemberID, expiresTime) => {
+    console.log("Starting.");
+    let currentTimeStamp = new Date().getTime();
+
+    if (expiresTime > currentTimeStamp) logging.log("Valid expiration time passed", "DEBUG");
+    else {
+        logging.log("Invalid time passed", "ERROR");
+        return;
+    }
+    var unique = true;
+    var code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
+    var expiredIndexs = [];
+    index = 0;
+
+    // Loop through all currently active 2FA Codes 
+    // Look to see if generated code exists if it doesnt return and push it
+    // At the same time check if the 2FA Codes are expired or not and if they are push them
+    // to an array called expiredIndexs to be removed after the scan is complete
+    tmpCodeCache.forEach(e => {
+        if (e.timestamp >= currentTimeStamp) {
+            console.log("Expired..", e);
+            console.log(`Code Timestamp : ${e.timestamp}`);
+            console.log(`Cur Timestamp  : ${currentTimeStamp}`);
+            console.log(`Time difference: ${e.timestamp - currentTimeStamp}`);
+            if (e.timestamp - currentTimeStamp < 0) {
+                console.log("Its less than 0???");
+            }
+
+            expiredIndexs.push(index);
+        }
+        if (e.code == code) {
+            console.log("Not unique", e);
+            unique = false
+        }
+        ++index;
+    });
+    //flip the indexs so that as they are removed the indexs dont change
+    expiredIndexs.reverse();
+
+    // Remove old records.
+    var curIndx = 0;
+    var newCodes = [];
+    tmpCodeCache.forEach(record => {
+        if (!expiredIndexs.includes(curIndx)) {
+            newCodes.push(record);
+        }
+        ++curIndx;
+    });
+    tmpCodeCache = newCodes;
+
+    // If the 2FA Code was unique then return/push it.
+    if (unique) {
+        var tmp = {
+            memberID: MemberID,
+            code: code,
+            timestamp: expiresTime
+        };
+        logging.log("Returning", "DEBUG");
+        tmpCodeCache.push(tmp);
+        return (tmp);
+    }
+
+    // Do the same as the previous code except dont check if the codes re valid
+    console.log(tmpCodeCache);
+    while (true) {
+        var unique = true;
+        var code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
+
+        tmpCodeCache.forEach(e => {
+            if (e.code == code) {
+                console.log("Not unique");
+                unique = false
+            }
+        });
+        if (unique) {
+            var tmp = {
+                memberID: MemberID,
+                code: code,
+                timestamp: expiresTime
+            };
+            tmpCodeCache.push(tmp);
+            return (tmp);
+        }
+    }
 }
 
+var leaseCodeMins = 1;
 module.exports.setupPhone2FA = async(MemberID) => {
     // Get the 2FA code that should be used
-    var code = this.generate2FA_Code();
-
+    let currentTimeStamp = new Date().getTime();
+    var expireTime = currentTimeStamp + (leaseCodeMins * 60000);
+    var code = this.generate2FA_Code(MemberID, expireTime);
 
     var user = await Members.find({ id: MemberID });
     user = user[0];
 
     if (!user) return ("err");
 
-    sendText(user.phoneNumber, `Your 2FA Code is ${code}`);
+    //sendText(user.phoneNumber, `Your 2FA Code is ${code}`);
 
+    console.log(`Your 2FA Code is ${code}`);
+    return (`Your 2FA Code is ${code} expires at timestamp ${expireTime}`);
 }
 
 /**
