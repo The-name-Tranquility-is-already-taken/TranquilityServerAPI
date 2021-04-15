@@ -22,7 +22,12 @@ function Sleep(ms) {
 var expiredIndexs = [];
 
 // 2FA Codes only last for 3Minutes so we shouldnt have to worry about non-volitile storage
-var tmpCodeCache = [{ memberID: 1, code: "ISH", timestamp: 12 }];
+var tmpCodeCache = [{
+    memberID: 1,
+    code: "ISH",
+    timestamp: 12,
+    phonenumber: 07423235
+}];
 
 function doesCodeExistInCache(checkCode, currentTimeStamp = new Date().getTime()) {
     var index = 0;
@@ -74,7 +79,7 @@ function genCode(currentTimeStamp = new Date().getTime()) {
 /**
  * Generate random 2FA code
  */
-module.exports.generate2FA_Code = (MemberID, expiresTime) => {
+module.exports.generate2FA_Code = (MemberID, expiresTime, PhoneNumber) => {
     let currentTimeStamp = new Date().getTime();
 
     if (expiresTime < currentTimeStamp) {
@@ -105,7 +110,8 @@ module.exports.generate2FA_Code = (MemberID, expiresTime) => {
     var tmp = {
         memberID: MemberID,
         code: code,
-        timestamp: expiresTime
+        timestamp: expiresTime,
+        phonenumber: PhoneNumber,
     };
     logging.log("Returning", "DEBUG");
     tmpCodeCache.push(tmp);
@@ -113,19 +119,14 @@ module.exports.generate2FA_Code = (MemberID, expiresTime) => {
 }
 
 var leaseCodeMins = 1;
-module.exports.setupPhone2FA = async(MemberID) => {
+module.exports.setupPhone2FA = async(MemberID, PhoneNumber) => {
     // Get the 2FA code that should be used
     let currentTimeStamp = new Date().getTime();
     var expireTime = currentTimeStamp + (leaseCodeMins * 60000);
 
-    var code = this.generate2FA_Code(MemberID, expireTime);
+    var code = this.generate2FA_Code(MemberID, expireTime, PhoneNumber);
 
-    var user = await Members.find({ id: MemberID });
-    user = user[0];
-
-    if (!user) return ("err");
-
-    //sendText(user.phoneNumber, `Your 2FA Code is ${code}`);
+    sendText(PhoneNumber, `Your 2FA Code is ${code}`);
 
     console.log(`Your 2FA Code is ${code.code}`);
     return (`Your 2FA Code is ${code.code} expires at timestamp ${expireTime}`);

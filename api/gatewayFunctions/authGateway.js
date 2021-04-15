@@ -52,8 +52,10 @@ exports.reauth = (req, res) => {
  */
 exports.verifPhone = async(req, res) => {
     let startTimestamp = new Date().getTime();
+    var phonenumber = req.params.PhoneNumber;
+    var memberID = req.params.MemberID;
 
-    var response = await phoneFunctions.setupPhone2FA(req.params.MemberID).catch((err) => {
+    var response = await phoneFunctions.setupPhone2FA(memberID, phonenumber).catch((err) => {
         //console.log("ERR: ", err);
         logging.log(err, "ERROR");
         return ("err");

@@ -27,29 +27,28 @@ module.exports.getAllMembers = async() => {
  * @param {json} body res.body from http request.
  * @returns {string} status text. Ok/Failed/Already Exists
  */
-module.exports.createNewMember = async(body) => {
+module.exports.createNewMember = async(tag, email, password) => {
     var check = await Members.find({
-        $or: [{ email: body.email }, { tag: body.tag }],
+        $or: [{ email: email }, { tag: tag }],
     });
 
     check = check[0];
 
     if (check) {
-        if (check.email == body.email) {
-            return "email exists";
-        } else if (check.tag == body.tag) {
-            return "username exists";
+        if (check.email == email) {
+            throw "email exists";
+        } else if (check.tag == tag) {
+            throw "username exists";
         }
     }
 
-    var hashedPassword = hashing.hash(body.password);
+    var hashedPassword = hashing.hash(password);
 
     var buildJson = {
         id: SnowflakeFnc(),
-        tag: body.tag,
+        tag: tag,
         hash: hashedPassword,
-        phoneNumber: body.phoneNumber,
-        email: body.email,
+        email: email,
     };
     let tmp_NewMember = new Members(buildJson);
 
