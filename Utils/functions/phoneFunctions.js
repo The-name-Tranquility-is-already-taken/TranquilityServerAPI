@@ -86,8 +86,8 @@ module.exports.generate2FA_Code = (MemberID, expiresTime) => {
     // Do the same as the previous code except dont check if the codes re valid
     console.log(tmpCodeCache);
     while (true) {
-        var unique = true;
-        var code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
+        unique = true;
+        code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
 
         tmpCodeCache.forEach(e => {
             if (e.code == code) {
@@ -96,7 +96,7 @@ module.exports.generate2FA_Code = (MemberID, expiresTime) => {
             }
         });
         if (unique) {
-            var tmp = {
+            tmp = {
                 memberID: MemberID,
                 code: code,
                 timestamp: expiresTime
