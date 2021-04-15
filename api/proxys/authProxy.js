@@ -1,7 +1,7 @@
 const jwt = require("jsonwebtoken");
 const getUserInfo = require("../gatewayFunctions/memberGateway").getMemberInfo;
 const logging = require("../../Utils/logging");
-const codes = require("../../Utils/error_codes").codes;
+const codes = require("../../Utils/misc/error_codes").codes;
 const monitoring = require("../../Utils/monitor");
 
 async function isTokenValid(userID, submittedToken) {

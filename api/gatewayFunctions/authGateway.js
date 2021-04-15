@@ -1,5 +1,5 @@
 "use strict";
-const codes = require("../../Utils/error_codes").codes;
+const codes = require("../../Utils/misc/error_codes").codes;
 
 const mongoose = require("mongoose");
 const Members = mongoose.model("Members");
@@ -27,9 +27,7 @@ const phoneFunctions = require("../../Utils/functions/phoneFunctions");
 // };
 
 exports.reauth = (req, res) => {
-    logging.log(
-        `Trying to login as. ${req.params.MemberID} - providing hash: -${req.body.hash}-`
-    );
+    logging.log(`Trying to login as. ${req.params.MemberID} - providing hash: -${req.body.hash}-`);
     Members.find({ MemberID: req.params.MemberID, hash: req.body.hash },
         (err, Response) => {
             if (err) {
@@ -47,22 +45,31 @@ exports.reauth = (req, res) => {
     );
 };
 
+/**
+ * Gateway used to start the process of verifying ownership of a phone number
+ * @param {*} req 
+ * @param {*} res 
+ */
 exports.verifPhone = async(req, res) => {
     let startTimestamp = new Date().getTime();
 
     var response = await phoneFunctions.setupPhone2FA(req.params.MemberID).catch((err) => {
-        console.log("ERR: ", err);
-        res.status(codes.Bad_Request);
-        res.send("err");
-        return;
+        //console.log("ERR: ", err);
+        logging.log(err, "ERROR");
+        return ("err");
     });
 
-    res.status(codes.Ok);
+    if (response == "err") {
+        res.status(codes.Bad_Request);
+    } else {
+        res.status(codes.Ok);
+    }
     res.json({ response: response });
 
     monitoring.log("verifPhone", new Date().getTime() - startTimestamp);
+};
 
-}
+
 exports.verifEmail = (req, res) => {
 
-}
+};
