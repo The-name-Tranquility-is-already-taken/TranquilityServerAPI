@@ -51,8 +51,8 @@ module.exports = (app) => {
     //     .get(AuthGateways.login);
 
 
-    // app.route("/api/auth/:MemberID/verify/phone")
-    //     .post(AuthGateways.phoneVerif);
+    app.route("/api/auth/:MemberID/verify/phone")
+        .post(AuthGateways.verifPhone);
     // app.route("/api/auth/:MemberID/verify/email")
     //     .post(AuthGateways.emailVerif);
 

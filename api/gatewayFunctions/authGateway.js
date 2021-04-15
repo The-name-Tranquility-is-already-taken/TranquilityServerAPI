@@ -5,6 +5,7 @@ const mongoose = require("mongoose");
 const Members = mongoose.model("Members");
 
 const logging = require("../../Utils/logging");
+const monitoring = require("../../Utils/monitor");
 const phoneFunctions = require("../../Utils/functions/phoneFunctions");
 
 // exports.login = async(req, res) => {
@@ -49,7 +50,7 @@ exports.reauth = (req, res) => {
 exports.verifPhone = async(req, res) => {
     let startTimestamp = new Date().getTime();
 
-    var response = await phoneFunctions.memberLogin(req.body).catch((err) => {
+    var response = await phoneFunctions.setupPhone2FA(req.params.MemberID).catch((err) => {
         console.log("ERR: ", err);
         res.status(codes.Bad_Request);
         res.send("err");
@@ -59,7 +60,7 @@ exports.verifPhone = async(req, res) => {
     res.status(codes.Ok);
     res.json({ response: response });
 
-    monitoring.log("login - valid", new Date().getTime() - startTimestamp);
+    monitoring.log("verifPhone", new Date().getTime() - startTimestamp);
 
 }
 exports.verifEmail = (req, res) => {
