@@ -10,8 +10,11 @@ async function isTokenValid(userID, submittedToken) {
   var member = await getUserInfo(userID);
   member = member[0];
   if (!member) {
-    logging.log(`isTokenValid - member failed to be found.`, "DEBUG",
-                "isTokenValid");
+    logging.log(
+      `isTokenValid - member failed to be found.`,
+      "DEBUG",
+      "isTokenValid"
+    );
     return false;
   }
 
@@ -45,9 +48,11 @@ module.exports.authWrapper = async (req, res, next) => {
   let startTimestamp = new Date().getTime();
 
   if (!req.headers.authorization) {
-    res.status(codes.Unauthorized).json({error : "Un-Authorised! 1"});
-    monitoring.log("authWrapper - failed to pass headers",
-                   new Date().getTime() - startTimestamp);
+    res.status(codes.Unauthorized).json({ error: "Un-Authorised! 1" });
+    monitoring.log(
+      "authWrapper - failed to pass headers",
+      new Date().getTime() - startTimestamp
+    );
     return;
   }
   const submittedToken = req.headers.authorization.split(" ")[1];
@@ -57,9 +62,12 @@ module.exports.authWrapper = async (req, res, next) => {
 
   if (!valid) {
     monitoring.log("authWrapper - invalid token", timeTaken);
-    logging.log("Debug authentication failed as the token is invalid.", "DEBUG",
-                "authWrapper");
-    res.status(codes.Unauthorized).json({error : "Un-Authorised!"});
+    logging.log(
+      "Debug authentication failed as the token is invalid.",
+      "DEBUG",
+      "authWrapper"
+    );
+    res.status(codes.Unauthorized).json({ error: "Un-Authorised!" });
     return false;
   }
   monitoring.log("authWrapper - valid", timeTaken);
