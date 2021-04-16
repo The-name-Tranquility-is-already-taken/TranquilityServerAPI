@@ -63,7 +63,7 @@ module.exports = (app) => {
      */
     //#region SMS Gateways
 
-    app.route("/api/sms/new")
+    app.route("/api/verify/phone/start")
         .post(smsGateway.verifyPhoneOwnership);
 
     //#endregion

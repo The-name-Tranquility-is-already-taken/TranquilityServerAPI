@@ -70,6 +70,7 @@ exports.createNewMember = async(req, res) => {
     }
     res.json({ response: { id: response } });
 
+
     monitoring.log(
         "createNewMember - gateway",
         new Date().getTime() - startTimestamp
@@ -139,7 +140,7 @@ exports.login = async(req, res) => {
     var response = await memberFunctions.memberLogin(req.body).catch((err) => {
         console.log("ERR: ", err);
         res.status(codes.Bad_Request);
-        return ("err");
+        return "err";
     });
 
     if (response == "err") {
