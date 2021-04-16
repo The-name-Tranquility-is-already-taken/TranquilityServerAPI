@@ -2,6 +2,7 @@ require("colors");
 const sendMail = require("./functions/mailer").sendMail;
 
 logLevel = "LEGITALL";
+
 function getLogLevelNum(level) {
   if (level == "TESTING") return 0;
   if (level == "GENERIC") return 1;
@@ -20,7 +21,7 @@ function getLogLevelNum(level) {
 exports.getLogLevelNum = (level) => {
   return getLogLevelNum(level);
 };
-async function log(message, type = "DEBUG") {
+async function log(message, type = "DEBUG", callingFunction = "N/A") {
   if (getLogLevelNum(type) > getLogLevelNum(logLevel)) {
     return;
   }
@@ -29,9 +30,14 @@ async function log(message, type = "DEBUG") {
 
   time = getDateTime().yellow;
 
-  StartMessage = "";
+  if (callingFunction == "N/A") {
+    StartMessage = `[${time}] - [`;
+  } else {
+    StartMessage = `[${time}] - [${callingFunction.blue}] - [`;
+  }
+
   if (type == "ERROR") {
-    StartMessage = `[${time}] - [` + type.red + `]`;
+    StartMessage += type.red + `]`;
     sendMail(
       process.env.ADMIN_EMAIL,
       `
@@ -44,14 +50,13 @@ async function log(message, type = "DEBUG") {
     `,
       "Tranquility - Server API Error"
     );
-  } else if (type == "GENERIC")
-    StartMessage = `[${time}] - [` + type.green + `]`;
-  else if (type == "DEBUG") StartMessage = `[${time}] - [` + type.gray + `]`;
-  else if (type == "TESTING")
-    StartMessage = `[${time}] - [` + type.magenta + `]`;
-  else StartMessage = `[${time}] - [` + type.blue + `]`;
+  } else if (type == "GENERIC") StartMessage += type.green + `]`;
+  else if (type == "DEBUG") StartMessage += type.gray + `]`;
+  else if (type == "TESTING") StartMessage += type.magenta + `]`;
+  else StartMessage += type.blue + `]`;
 
   left = maxSize - StartMessage.length;
+
   function balence() {
     tmp = "";
     space = " ";
@@ -63,9 +68,10 @@ async function log(message, type = "DEBUG") {
   }
   console.log(StartMessage + balence() + "-> " + message);
 }
-exports.log = async (message, type = "DEBUG") => {
-  log(message, type);
+exports.log = async (message, type = "DEBUG", callingFunction = "N/A") => {
+  log(message, type, callingFunction);
 };
+
 function char_count(str, letter) {
   var letter_Count = 0;
   for (var position = 0; position < str.length; position++) {
@@ -78,6 +84,7 @@ function char_count(str, letter) {
 exports.char_count = (str, letter) => {
   return char_count(str, letter);
 };
+
 function getDateTime() {
   var date = new Date();
 

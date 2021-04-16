@@ -1,14 +1,18 @@
 const monitor = require("./monitor");
-const logging = require("./logging");
 const bcrypt = require("bcrypt");
 
 var saltRounds = 8;
 
-function hashTiming(curSalt) {
+/**
+ * Used for benchmarking hasing speeds
+ * @param {Integer} saltRounds
+ * @returns
+ */
+function hashTiming(saltRounds_t) {
   let startTimestamp = new Date().getTime();
 
   // Generate Salt
-  const salt = bcrypt.genSaltSync(curSalt);
+  const salt = bcrypt.genSaltSync(saltRounds_t);
 
   // Hash Password
   bcrypt.hashSync("fdsbtyuktrdfghytr", salt);

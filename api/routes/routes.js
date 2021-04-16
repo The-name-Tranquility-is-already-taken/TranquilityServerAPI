@@ -1,69 +1,68 @@
 "use strict";
 module.exports = (app) => {
-    const MemberList = require("../gatewayFunctions/memberGateway");
-    const GuildGatewayController = require("../gatewayFunctions/guildGateway");
-    const AuthGateways = require("../gatewayFunctions/authGateway");
-    const auth = require("../proxys/authProxy").authWrapper;
-    const monitoring = require("./../../Utils/monitor");
+  const memberGateway = require("../gatewayFunctions/memberGateway");
+  const guildGateway = require("../gatewayFunctions/guildGateway");
+  const authenticationGateway = require("../gatewayFunctions/authGateway");
+  const smsGateway = require("../gatewayFunctions/smsGateway.js");
 
+  const authWrapper = require("../proxys/authProxy").authWrapper;
 
+  const monitoringUtils = require("./../../Utils/monitor");
 
-    /**
-     *  Un-Authenticated Routes Routes
-     */
+  /**
+   *  Un-Authenticated Routes
+   */
+  //#region Un-Authenticated Routes
 
-    app
-        .route("/api/member/register")
-        .post(MemberList.createNewMember);
+  app.route("/api/member/register").post(memberGateway.createNewMember);
 
-    app
-        .route("/api/member/login")
-        .get(MemberList.login);
+  app.route("/api/member/login").get(memberGateway.login);
 
+  //#endregion
 
-    /**
-     *  Authenticated Routes
-     */
-    app
-        .route("/api/member/:MemberID")
-        .get(auth, MemberList.getMemberRecord)
-        .put(auth, MemberList.updateMember)
-        .delete(auth, MemberList.deleteMember);
+  /**
+   *  Authenticated Routes
+   */
+  //#region Authenticated Routes
 
-    // Routes for getting all guilds a user has access to. and creating guilds.
-    app
-        .route("/api/guild/:MemberID")
-        .get(auth, GuildGatewayController.getGuildsUserCanAccess)
-        .post(auth, GuildGatewayController.createGuild);
+  // start verification process
+  app
+    .route("/api/auth/:MemberID/verify/phone/:PhoneNumber")
+    .post(authWrapper, authenticationGateway.verifPhone);
 
-    // Routes for joining guilds.
-    app
-        .route("/api/guild/:MemberID/:GuildID/:GuildInvite")
-        .get(GuildGatewayController.joinGuild);
+  app
+    .route("/api/member/:MemberID")
+    .get(authWrapper, memberGateway.getMemberRecord)
+    .put(authWrapper, memberGateway.updateMember)
+    .delete(authWrapper, memberGateway.deleteMember);
 
+  // Routes for getting all guilds a user has access to. and creating guilds.
+  app
+    .route("/api/guild/:MemberID")
+    .get(authWrapper, guildGateway.getGuildsUserCanAccess)
+    .post(authWrapper, guildGateway.createGuild);
 
+  // Routes for joining guilds.
+  app
+    .route("/api/guild/:MemberID/:GuildID/:GuildInvite")
+    .get(guildGateway.joinGuild);
+  //#endregion
 
+  /**
+   * Monitoring API
+   */
+  //#region Monitoring API
 
-    /*
-      Authentication gateway for authentication
-    */
-    app.route("/api/auth/:MemberID")
-        .get(AuthGateways.login);
+  app.route("/api/monitoring/data").get(monitoringUtils.data);
 
+  //#endregion
 
-    // app.route("/api/auth/:MemberID/verify/phone")
-    //     .post(AuthGateways.phoneVerif);
-    // app.route("/api/auth/:MemberID/verify/email")
-    //     .post(AuthGateways.emailVerif);
+  /**
+   *  SMS Gateways
+   */
+  //#region SMS Gateways
 
+  app.route("/api/verify/phone/start").post(smsGateway.verifyPhoneOwnership);
 
-
-    /**
-     * Monitoring API
-     */
-
-    app.route("/api/monitoring/data")
-        .get(monitoring.data);
-
-
+  //#endregion
 };
