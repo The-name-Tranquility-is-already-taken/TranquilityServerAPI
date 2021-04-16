@@ -10,7 +10,7 @@ const MemberSchema = new Schema({
   // Filled in during account creation/modification
   tag: { type: String, required: "A user tag is needed" },
   hash: { type: String, required: "Hash of password is needed" },
-  phoneNumber: { type: String, required: "Need a phone number" },
+  phoneNumber: { type: String, default: "NA" },
   email: { type: String, required: "Need an email for the user" },
   guilds: { type: Array, required: "Default guilds array is needed" },
 
