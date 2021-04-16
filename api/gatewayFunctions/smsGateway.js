@@ -6,20 +6,19 @@
 exports.verifPhone = async (req, res) => {
   let startTimestamp = new Date().getTime();
 
-  var response = await phoneFunctions
-    .setupPhone2FA(req.params.MemberID)
-    .catch((err) => {
-      console.log("ERR: ", err);
-      res.status(codes.Bad_Request);
-      return "err";
-    });
+  var response =
+      await phoneFunctions.setupPhone2FA(req.params.MemberID).catch((err) => {
+        console.log("ERR: ", err);
+        res.status(codes.Bad_Request);
+        return "err";
+      });
 
   if (response == "err") {
     res.status(codes.Bad_Request);
   } else {
     res.status(codes.Ok);
   }
-  res.json({ response: response });
+  res.json({response : response});
 
   monitoring.log("verifPhone", new Date().getTime() - startTimestamp);
 };
@@ -32,19 +31,18 @@ exports.verifPhone = async (req, res) => {
 exports.verifyPhoneOwnership = async (req, res) => {
   let startTimestamp = new Date().getTime();
 
-  var response = await phoneFunctions
-    .setupPhone2FA(req.params.MemberID)
-    .catch((err) => {
-      console.log("ERR: ", err);
-      return "err";
-    });
+  var response =
+      await phoneFunctions.setupPhone2FA(req.params.MemberID).catch((err) => {
+        console.log("ERR: ", err);
+        return "err";
+      });
 
   if (response == "err") {
     res.status(codes.Bad_Request);
   } else {
     res.status(codes.Ok);
   }
-  res.json({ response: response });
+  res.json({response : response});
 
   monitoring.log("verifyPhoneOwnership", new Date().getTime() - startTimestamp);
 };

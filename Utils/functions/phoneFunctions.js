@@ -17,22 +17,18 @@ const {
 //  const BCrypt = require(`bcrypt`);
 //  const crypto = require("crypto");
 
-function Sleep(ms) {
-  return new Promise((resolve) => setTimeout(resolve, ms));
-}
+function Sleep(ms) { return new Promise((resolve) => setTimeout(resolve, ms)); }
 
 var expiredIndexs = [];
 
 // 2FA Codes only last for 3Minutes so we shouldnt have to worry about
 // non-volitile storage
 var tmpCodeCache = [
-  { memberID: 1, code: "ISH", timestamp: 12, phonenumber: 07423235 },
+  {memberID : 1, code : "ISH", timestamp : 12, phonenumber : 07423235},
 ];
 
-function doesCodeExistInCache(
-  checkCode,
-  currentTimeStamp = new Date().getTime()
-) {
+function doesCodeExistInCache(checkCode,
+                              currentTimeStamp = new Date().getTime()) {
   var index = 0;
   var inCache = false;
   tmpCodeCache.forEach((e) => {
@@ -113,10 +109,10 @@ module.exports.generate2FA_Code = (MemberID, expiresTime, PhoneNumber) => {
 
   // If the 2FA Code was unique then return/push it.
   var tmp = {
-    memberID: MemberID,
-    code: code,
-    timestamp: expiresTime,
-    phonenumber: PhoneNumber,
+    memberID : MemberID,
+    code : code,
+    timestamp : expiresTime,
+    phonenumber : PhoneNumber,
   };
   tmpCodeCache.push(tmp);
   return tmp;

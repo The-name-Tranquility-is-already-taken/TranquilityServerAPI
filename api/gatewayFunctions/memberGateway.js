@@ -1,8 +1,7 @@
 "use strict";
 const codes = require("../../Utils/misc/error_codes").codes;
 
-const mongoose = require("mongoose"),
-  Members = mongoose.model("Members");
+const mongoose = require("mongoose"), Members = mongoose.model("Members");
 
 const memberFunctions = require("../../Utils/functions/memberFunctions");
 
@@ -12,7 +11,7 @@ const monitoring = require("../../Utils/monitor");
 const formattingData = require("./../../Utils/functions/dataHandler");
 
 async function getMemberRecord(memberID) {
-  var member = await Members.find({ id: memberID }).catch((err) => {
+  var member = await Members.find({id : memberID}).catch((err) => {
     if (err) {
       console.log(err);
       logging.log("getMemberRecord had an error", "ERROR");
@@ -21,9 +20,8 @@ async function getMemberRecord(memberID) {
   return member;
 }
 
-exports.getMemberInfo = async (memberID) => {
-  return await getMemberRecord(memberID);
-};
+exports.getMemberInfo =
+    async (memberID) => { return await getMemberRecord(memberID); };
 
 /**
  * Get all members within database.
@@ -52,16 +50,17 @@ exports.listMembers = async (req, res) => {
 exports.createNewMember = async (req, res) => {
   let startTimestamp = new Date().getTime();
 
-  var response = await memberFunctions
-    .createNewMember(req.body.tag, req.body.email, req.body.password)
-    .catch((err) => {
-      console.log("ERR: ", err);
-      res.status(codes.Bad_Request);
-      return "error";
-    });
+  var response =
+      await memberFunctions
+          .createNewMember(req.body.tag, req.body.email, req.body.password)
+          .catch((err) => {
+            console.log("ERR: ", err);
+            res.status(codes.Bad_Request);
+            return "error";
+          });
   if (typeof response != "object" && response.includes("exists")) {
     res.status(codes.Conflict);
-    res.send({ error: response });
+    res.send({error : response});
     return;
   }
   if (response == "err") {
@@ -69,12 +68,10 @@ exports.createNewMember = async (req, res) => {
   } else {
     res.status(codes.Ok);
   }
-  res.json({ response: { id: response } });
+  res.json({response : {id : response}});
 
-  monitoring.log(
-    "createNewMember - gateway",
-    new Date().getTime() - startTimestamp
-  );
+  monitoring.log("createNewMember - gateway",
+                 new Date().getTime() - startTimestamp);
 };
 
 exports.getMemberRecord = async (req, res) => {
@@ -84,8 +81,7 @@ exports.getMemberRecord = async (req, res) => {
   member = member[0];
 
   res.json(
-    formattingData.formatMemberData(member, formattingData.dataFormats.USER)
-  );
+      formattingData.formatMemberData(member, formattingData.dataFormats.USER));
 };
 
 exports.updateMember = (req, res) => {
@@ -133,12 +129,10 @@ exports.deleteMember = async (req, res) => {
   } else {
     res.status(codes.Ok);
   }
-  res.json({ response: response });
+  res.json({response : response});
 
-  monitoring.log(
-    "deleteMember - completed",
-    new Date().getTime() - startTimestamp
-  );
+  monitoring.log("deleteMember - completed",
+                 new Date().getTime() - startTimestamp);
 };
 exports.login = async (req, res) => {
   let startTimestamp = new Date().getTime();
@@ -154,7 +148,7 @@ exports.login = async (req, res) => {
   } else {
     res.status(codes.Ok);
   }
-  res.json({ response: response });
+  res.json({response : response});
 
   monitoring.log("login - valid", new Date().getTime() - startTimestamp);
 };
