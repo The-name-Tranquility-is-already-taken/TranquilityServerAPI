@@ -38,9 +38,8 @@ module.exports.setup = () => {
     timeTaken /= 3;
     timeTaken = Math.round(timeTaken);
 
-    console.log(
-      `testing ${curSalt} - times taken: ${test1}ms, ${test2}ms, ${test3}ms - average: ${timeTaken}ms`
-    );
+    console.log(`testing ${curSalt} - times taken: ${test1}ms, ${test2}ms, ${
+        test3}ms - average: ${timeTaken}ms`);
 
     if (timeTaken <= maxTimeAllowed + leaway) {
       if (timeTaken > bestTiming) {
@@ -52,8 +51,7 @@ module.exports.setup = () => {
     }
   }
   console.log(
-    `Setting salt rounds to ${bestRounds} - time taken: ${bestTiming}ms`
-  );
+      `Setting salt rounds to ${bestRounds} - time taken: ${bestTiming}ms`);
   saltRounds = bestRounds;
 };
 
@@ -71,6 +69,4 @@ const hash = (text) => {
   return hash;
 };
 
-module.exports.hash = (text) => {
-  return hash(text);
-};
+module.exports.hash = (text) => { return hash(text); };
