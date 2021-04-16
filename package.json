@@ -6,7 +6,8 @@
     "scripts": {
         "prestart": "npm install",
         "start": "echo starting",
-        "poststart": "node index.js"
+        "poststart": "node index.js",
+        "test": "nodemon index.js"
     },
     "repository": {
         "type": "git",

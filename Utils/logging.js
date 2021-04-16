@@ -2,39 +2,45 @@ require("colors");
 const sendMail = require("./functions/mailer").sendMail;
 
 logLevel = "LEGITALL";
+
 function getLogLevelNum(level) {
-  if (level == "TESTING") return 0;
-  if (level == "GENERIC") return 1;
-  if (level == "ERROR") return 2;
-  if (level == "DEBUG") return 3;
-  if (level == "ALL") return 4;
+    if (level == "TESTING") return 0;
+    if (level == "GENERIC") return 1;
+    if (level == "ERROR") return 2;
+    if (level == "DEBUG") return 3;
+    if (level == "ALL") return 4;
 
-  // Debugging stuff.
-  if (level == "TIMINGS") return 5;
+    // Debugging stuff.
+    if (level == "TIMINGS") return 5;
 
-  if (level == "LEGITALL") return 100;
+    if (level == "LEGITALL") return 100;
 
-  log("Unsure what log level " + level.red + " belongs to.", "GENERIC");
-  return 4;
+    log("Unsure what log level " + level.red + " belongs to.", "GENERIC");
+    return 4;
 }
 exports.getLogLevelNum = (level) => {
-  return getLogLevelNum(level);
+    return getLogLevelNum(level);
 };
-async function log(message, type = "DEBUG") {
-  if (getLogLevelNum(type) > getLogLevelNum(logLevel)) {
-    return;
-  }
+async function log(message, type = "DEBUG", callingFunction = "N/A") {
+    if (getLogLevelNum(type) > getLogLevelNum(logLevel)) {
+        return;
+    }
 
-  maxSize = 45;
+    maxSize = 45;
 
-  time = getDateTime().yellow;
+    time = getDateTime().yellow;
 
-  StartMessage = "";
-  if (type == "ERROR") {
-    StartMessage = `[${time}] - [` + type.red + `]`;
-    sendMail(
-      process.env.ADMIN_EMAIL,
-      `
+    if (callingFunction == "N/A") {
+        StartMessage = `[${time}] - [`;
+    } else {
+        StartMessage = `[${time}] - [${callingFunction.blue}] - [`;
+    }
+
+    if (type == "ERROR") {
+        StartMessage += type.red + `]`;
+        sendMail(
+            process.env.ADMIN_EMAIL,
+            `
     Time: ${getDateTime()}
     <br>
     <br>
@@ -42,64 +48,69 @@ async function log(message, type = "DEBUG") {
     ${message}
     </div>
     `,
-      "Tranquility - Server API Error"
-    );
-  } else if (type == "GENERIC")
-    StartMessage = `[${time}] - [` + type.green + `]`;
-  else if (type == "DEBUG") StartMessage = `[${time}] - [` + type.gray + `]`;
-  else if (type == "TESTING")
-    StartMessage = `[${time}] - [` + type.magenta + `]`;
-  else StartMessage = `[${time}] - [` + type.blue + `]`;
+            "Tranquility - Server API Error"
+        );
+    } else if (type == "GENERIC")
+        StartMessage += type.green + `]`;
+    else if (type == "DEBUG")
+        StartMessage += type.gray + `]`;
+    else if (type == "TESTING")
+        StartMessage += type.magenta + `]`;
+    else
+        StartMessage += type.blue + `]`;
 
-  left = maxSize - StartMessage.length;
-  function balence() {
-    tmp = "";
-    space = " ";
-    while (left >= 0) {
-      left = left - 1;
-      tmp = tmp + space;
+    left = maxSize - StartMessage.length;
+
+    function balence() {
+        tmp = "";
+        space = " ";
+        while (left >= 0) {
+            left = left - 1;
+            tmp = tmp + space;
+        }
+        return tmp;
     }
-    return tmp;
-  }
-  console.log(StartMessage + balence() + "-> " + message);
+    console.log(StartMessage + balence() + "-> " + message);
 }
-exports.log = async (message, type = "DEBUG") => {
-  log(message, type);
+exports.log = async(message, type = "DEBUG", callingFunction = "N/A") => {
+    log(message, type, callingFunction);
 };
+
 function char_count(str, letter) {
-  var letter_Count = 0;
-  for (var position = 0; position < str.length; position++) {
-    if (str.charAt(position) == letter) {
-      letter_Count += 1;
+    var letter_Count = 0;
+    for (var position = 0; position < str.length; position++) {
+        if (str.charAt(position) == letter) {
+            letter_Count += 1;
+        }
     }
-  }
-  return letter_Count;
+    return letter_Count;
 }
 exports.char_count = (str, letter) => {
-  return char_count(str, letter);
+    return char_count(str, letter);
 };
+
 function getDateTime() {
-  var date = new Date();
+    var date = new Date();
 
-  var hour = date.getHours();
-  hour = (hour < 10 ? "0" : "") + hour;
+    var hour = date.getHours();
+    hour = (hour < 10 ? "0" : "") + hour;
 
-  var min = date.getMinutes();
-  min = (min < 10 ? "0" : "") + min;
+    var min = date.getMinutes();
+    min = (min < 10 ? "0" : "") + min;
 
-  var sec = date.getSeconds();
-  sec = (sec < 10 ? "0" : "") + sec;
+    var sec = date.getSeconds();
+    sec = (sec < 10 ? "0" : "") + sec;
 
-  var year = date.getFullYear();
+    var year = date.getFullYear();
 
-  var month = date.getMonth() + 1;
-  month = (month < 10 ? "0" : "") + month;
+    var month = date.getMonth() + 1;
+    month = (month < 10 ? "0" : "") + month;
 
-  var day = date.getDate();
-  day = (day < 10 ? "0" : "") + day;
+    var day = date.getDate();
+    day = (day < 10 ? "0" : "") + day;
 
-  return year + ":" + month + ":" + day + " - " + hour + ":" + min + ":" + sec;
+    return year + ":" + month + ":" + day + " - " + hour + ":" + min + ":" + sec;
 }
 exports.getDateTime = () => {
-  return getDateTime();
+    return getDateTime();
 };

@@ -23,11 +23,11 @@ exports.verifPhone = async(req, res) => {
 };
 
 /**
- * Gateway used to verify the ownership of a phone number
+ * Gateway used to start the phone number verificaion
  * @param {*} req 
  * @param {*} res 
  */
-exports.newSMS = async(req, res) => {
+exports.verifyPhoneOwnership = async(req, res) => {
     let startTimestamp = new Date().getTime();
 
     var response = await phoneFunctions.setupPhone2FA(req.params.MemberID).catch((err) => {
@@ -42,5 +42,5 @@ exports.newSMS = async(req, res) => {
     }
     res.json({ response: response });
 
-    monitoring.log("verifPhone", new Date().getTime() - startTimestamp);
+    monitoring.log("verifyPhoneOwnership", new Date().getTime() - startTimestamp);
 };

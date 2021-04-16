@@ -9,6 +9,8 @@ const memberFunctions = require("../../Utils/functions/memberFunctions");
 const logging = require("../../Utils/logging");
 const monitoring = require("../../Utils/monitor");
 
+const formattingData = require("./../../Utils/functions/dataHandler");
+
 async function getMemberRecord(memberID) {
     var member = await Members.find({ id: memberID }).catch((err) => {
         if (err) {
@@ -50,11 +52,11 @@ exports.listMembers = async(req, res) => {
 exports.createNewMember = async(req, res) => {
     let startTimestamp = new Date().getTime();
 
-    var response = await memberFunctions.createNewMember(req.body)
+    var response = await memberFunctions.createNewMember(req.body.tag, req.body.email, req.body.password)
         .catch((err) => {
             console.log("ERR: ", err);
             res.status(codes.Bad_Request);
-            return ("err");
+            return ("error");
         });
     if (typeof response != "object" && response.includes("exists")) {
         res.status(codes.Conflict);
@@ -74,12 +76,17 @@ exports.createNewMember = async(req, res) => {
     );
 };
 
-exports.getMemberRecord = (req, res) => {
-    res.json(getMemberRecord(req.params.MemberID));
+exports.getMemberRecord = async(req, res) => {
+    var MemberID = req.params.MemberID;
+
+    var member = await getMemberRecord(MemberID);
+    member = member[0];
+
+    res.json(formattingData.formatMemberData(member, formattingData.dataFormats.USER));
 };
 
 exports.updateMember = (req, res) => {
-    res.status(codes.Bad_Request);
+    res.status(codes.Ok);
     res.send("Disabled gateway.");
     // var response = Members.findOneAndUpdate({ id: req.params.MemberID },req.body, { new: true }
     //     console.log("ERR: ", err);
@@ -105,33 +112,26 @@ exports.updateMember = (req, res) => {
     //     }
     // );
 };
-exports.deleteMember = (req, res) => {
-    Members.find({ id: req.params.MemberID }, (err, Response) => {
-        if (err) {
-            res.send(err);
-        }
-        if (!Response || Response[0] == undefined || Response == []) {
-            var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-            logging.log(`[ ${ip} ] - Tried to delete a member that doesnt exist.`);
-            res.status(codes.Not_Found);
-            res.json({
-                message: "Member doesnt exist.",
-                error_code: codes.Not_Found,
-            });
-            return;
-        }
-        Members.deleteOne({ id: req.params.MemberID }, (err, DeleteResponse) => {
-            if (err) res.send(err);
 
-            var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
-            logging.log(`[ ${ip} ] - Deleted member ${req.params.MemberID}.`);
+exports.deleteMember = async(req, res) => {
+    let startTimestamp = new Date().getTime();
 
-            res.status(codes.Accepted);
-            res.json({
-                message: `Member ${req.params.MemberID} successfully deleted`,
-            });
-        });
+    var memberID = req.params.MemberID;
+
+    var response = await memberFunctions.deleteMember(memberID).catch((err) => {
+        console.log("ERR: ", err);
+        res.status(codes.Bad_Request);
+        return ("err");
     });
+
+    if (response == "err") {
+        res.status(codes.Bad_Request);
+    } else {
+        res.status(codes.Ok);
+    }
+    res.json({ response: response });
+
+    monitoring.log("deleteMember - completed", new Date().getTime() - startTimestamp);
 };
 exports.login = async(req, res) => {
     let startTimestamp = new Date().getTime();

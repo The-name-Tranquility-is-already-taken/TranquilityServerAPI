@@ -9,11 +9,13 @@ async function isTokenValid(userID, submittedToken) {
 
     var member = await getUserInfo(userID);
     member = member[0];
-    if (!member) return false;
+    if (!member) {
+        logging.log(`isTokenValid - member failed to be found.`, "DEBUG", "isTokenValid");
+        return false;
+    }
 
     memberSecret = member.tokenSecret;
-    // logging.log(`Token Validation - userId: ${userID} - MemberSecret:
-    // ${memberSecret}`, "GENERIC");
+    //logging.log(`Token Validation - userId: ${userID} - MemberSecret: ${memberSecret}`, "GENERIC");
 
     // Decode submitted token using stored member secret.
     try {
@@ -22,25 +24,17 @@ async function isTokenValid(userID, submittedToken) {
         // Get user id from within JSON Token
         const tokenUserID = decodedToken.MemberID;
 
+        var timeTaken = new Date().getTime() - startTimestamp;
         if (userID && userID == tokenUserID) {
-            monitoring.log(
-                "isTokenValid - valid",
-                new Date().getTime() - startTimestamp
-            );
+            monitoring.log("isTokenValid - valid", timeTaken);
             return true;
-        } else {
-            monitoring.log(
-                "isTokenValid - invalid",
-                new Date().getTime() - startTimestamp
-            );
-            return false;
         }
+        monitoring.log("isTokenValid - invalid", timeTaken);
+        return false;
     } catch (err) {
-        logging.log(err, "ERROR");
-        monitoring.log(
-            "isTokenValid - error",
-            new Date().getTime() - startTimestamp
-        );
+        var timeTaken = new Date().getTime() - startTimestamp;
+        logging.log(err, "ERROR", "isTokenValid");
+        monitoring.log("isTokenValid - error", timeTaken);
         return false;
     }
 }
@@ -49,7 +43,7 @@ module.exports.authWrapper = async(req, res, next) => {
     let startTimestamp = new Date().getTime();
 
     if (!req.headers.authorization) {
-        res.status(codes.Unauthorized).json({ error: "Un-Authorised!" });
+        res.status(codes.Unauthorized).json({ error: "Un-Authorised! 1" });
         monitoring.log(
             "authWrapper - failed to pass headers",
             new Date().getTime() - startTimestamp
@@ -59,18 +53,18 @@ module.exports.authWrapper = async(req, res, next) => {
     const submittedToken = req.headers.authorization.split(" ")[1];
 
     var valid = await isTokenValid(req.params.MemberID, submittedToken);
-    if (valid) {
-        monitoring.log(
-            "authWrapper - valid",
-            new Date().getTime() - startTimestamp
-        );
-        next();
-    } else {
-        monitoring.log(
-            "authWrapper - invalid token",
-            new Date().getTime() - startTimestamp
-        );
+    var timeTaken = new Date().getTime() - startTimestamp;
+
+    if (!valid) {
+        monitoring.log("authWrapper - invalid token", timeTaken);
+        logging.log("Debug authentication failed as the token is invalid.", "DEBUG", "authWrapper");
         res.status(codes.Unauthorized).json({ error: "Un-Authorised!" });
+        return false;
     }
-    return valid;
+    monitoring.log(
+        "authWrapper - valid",
+        timeTaken
+    );
+    next();
+    return true;
 };
