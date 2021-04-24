@@ -1,5 +1,6 @@
-var maxChannelNameLength = 25;
+var config = require("./../../config");
 
+var maxChannelNameLength = 25;
 
 /**
  * Used to validate a channel name
@@ -16,12 +17,14 @@ exports.channelName = (channelName) => {
 
     // shorten the channel name if its to long!
     // Done first to prevent large strings crashing the server.
-    if (cleanedChannelName.length > maxChannelNameLength) {
-        //console.log("To long by", cleanedChannelName.length - maxChannelNameLength, "letters.");
-        actionsTaken.shortenChannelName = true;
-        isChanged = true;
+    if (config.channelName_Checks.shortenChannelName) {
+        if (cleanedChannelName.length > maxChannelNameLength) {
+            //console.log("To long by", cleanedChannelName.length - maxChannelNameLength, "letters.");
+            actionsTaken.shortenChannelName = true;
+            isChanged = true;
 
-        cleanedChannelName = cleanedChannelName.substr(0, maxChannelNameLength);
+            cleanedChannelName = cleanedChannelName.substr(0, maxChannelNameLength);
+        }
     }
 
     // Check each letter for disallowed chars.
@@ -29,16 +32,19 @@ exports.channelName = (channelName) => {
     var builtString = "";
     var lastCharHypen = "";
     cleanedChannelName.split("").forEach(letter => {
-        if (letter == " ") {
-            letter = "-";
-            if (lastCharHypen) letter = "";
-            lastCharHypen = true;
-            actionsTaken.replacedSpacesWithChar = true;
-            isChanged = true;
-        } else {
-            lastCharHypen = false;
-        }
 
+        if (config.channelName_Checks.replaceSpacesWithChar) {
+            if (letter == " ") {
+                // Letter is a space set it to a hypen
+                letter = "-";
+                if (lastCharHypen) letter = "";
+                lastCharHypen = true;
+                actionsTaken.replacedSpacesWithChar = true;
+                isChanged = true;
+            } else {
+                lastCharHypen = false;
+            }
+        }
 
         builtString += letter;
 
@@ -52,5 +58,3 @@ exports.channelName = (channelName) => {
         modified: isChanged,
     }
 }
-
-console.log(this.channelName("Ge  eral Char 1"));
