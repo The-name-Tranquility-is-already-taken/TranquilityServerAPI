@@ -11,25 +11,26 @@ const logging = require("../logging");
  * @param {string} guildName Name of the new guild.
  * @returns {string} Status text.
  */
-module.exports.newGuild = async (ownerID, guildName) => {
-  // Build json to parse for the new guild.
-  var guildJSON = {
-    id: `${guildSnowflake()}`,
-    name: guildName,
-    ownerID: ownerID,
-  };
+module.exports.newGuild = async(ownerID, guildName) => {
+    // Build json to parse for the new guild.
+    var guildJSON = {
+        id: `${guildSnowflake()}`,
+        name: guildName,
+        ownerID: ownerID,
+    };
 
-  // Create and save guild.
-  let tmp_NewGuild = new Guilds(guildJSON);
-  /* var response = */ await tmp_NewGuild.save();
+    // Create and save guild.
+    let tmp_NewGuild = new Guilds(guildJSON);
+    /* var response = */
+    await tmp_NewGuild.save();
 
-  // Automatically join guild after creating it.
-  var ress = await this.joinGuild(ownerID, guildJSON.id, "FIRST");
+    // Automatically join guild after creating it.
+    var ress = await this.joinGuild(ownerID, guildJSON.id, "FIRST");
 
-  if (ress != "Joined") {
-    return "Failed";
-  }
-  return "Ok.";
+    if (ress != "Joined") {
+        return "Failed";
+    }
+    return "Ok.";
 };
 
 /**
@@ -38,13 +39,13 @@ module.exports.newGuild = async (ownerID, guildName) => {
  *     guild of.
  * @returns {Array} Returns a list of guild objects.
  */
-module.exports.getGuildsUserCanAccess = async (memberID) => {
-  var result = await Members.find({ id: memberID });
+module.exports.getGuildsUserCanAccess = async(memberID) => {
+    var result = await Members.find({ id: memberID });
 
-  if (!result[0]) {
-    return undefined;
-  }
-  return result[0].guilds;
+    if (!result[0]) {
+        return undefined;
+    }
+    return result[0].guilds;
 };
 
 /**
@@ -55,39 +56,44 @@ module.exports.getGuildsUserCanAccess = async (memberID) => {
  * @param {string} InviteCode InviteCode to join using.
  * @returns {string} status text.
  */
-module.exports.joinGuild = async (memberID, guildID, InviteCode) => {
-  // get the user object.
-  var member = await Members.find({ id: memberID });
+module.exports.joinGuild = async(memberID, guildID, InviteCode) => {
+    // get the user object.
+    var member = await Members.find({ id: memberID });
 
-  // Clean and check member object.
-  member = member[0];
-  if (!member) {
-    return "Invalid UserID.";
-  }
-
-  // Check if user is already within the guild.
-  var alreadyInGuild = false;
-  member.guilds.forEach((e) => {
-    if (e == guildID) {
-      alreadyInGuild = true;
-      logging.log("User already within guild.");
-      return "User already within guild.";
+    // Clean and check member object.
+    member = member[0];
+    if (!member) {
+        return "Invalid UserID.";
     }
-  });
-  if (alreadyInGuild) {
-    return "User already within guild.";
-  }
-  // logging.log("User isnt within guild.");
 
-  // TODO: Invite code verification here via
-  InviteCode;
+    // Check if user is already within the guild.
+    var alreadyInGuild = false;
+    member.guilds.forEach((e) => {
+        if (e == guildID) {
+            alreadyInGuild = true;
+            logging.log("User already within guild.");
+            return "User already within guild.";
+        }
+    });
+    if (alreadyInGuild) {
+        return "User already within guild.";
+    }
+    // logging.log("User isnt within guild.");
 
-  // Add new member to guild object.
-  member.guilds.push(guildID);
+    // TODO: Invite code verification here via
+    InviteCode;
 
-  // Update database with new object.
-  await Members.findOneAndUpdate({ id: memberID }, member, { new: true });
+    // Add new member to guild object.
+    member.guilds.push(guildID);
 
-  // Return success code.
-  return "Joined";
+    // Update member object with new guild.
+    await Members.findOneAndUpdate({ id: memberID }, member, { new: true });
+
+    // Create member id in guilds.
+    await Guilds.findOneAndUpdate({ id: guildID }, { $push: { members: memberID } });
+
+
+
+    // Return success code.
+    return "Joined";
 };
