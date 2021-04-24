@@ -22,6 +22,7 @@ function getLogLevelNum(level) {
 exports.getLogLevelNum = (level) => {
     return getLogLevelNum(level);
 };
+
 async function log(message, type = "DEBUG", callingFunction = "N/A") {
     if (getLogLevelNum(type) > getLogLevelNum(logLevel)) {
         return;
@@ -74,6 +75,18 @@ async function log(message, type = "DEBUG", callingFunction = "N/A") {
 exports.log = async(message, type = "DEBUG", callingFunction = "N/A") => {
     log(message, type, callingFunction);
 };
+
+exports.error = async(message, callingFunction = "N/A") => {
+    log(message, "ERROR", callingFunction);
+}
+
+exports.warning = async(message, callingFunction = "N/A") => {
+    log(message, "WARNING", callingFunction);
+}
+
+exports.debug = async(message, callingFunction = "N/A") => {
+    log(message, "DEBUG", callingFunction);
+}
 
 function char_count(str, letter) {
     var letter_Count = 0;
