@@ -17,7 +17,7 @@ exports.channelName = (channelName) => {
     // shorten the channel name if its to long!
     // Done first to prevent large strings crashing the server.
     if (cleanedChannelName.length > maxChannelNameLength) {
-        console.log("To long by", cleanedChannelName.length - maxChannelNameLength, "letters.");
+        //console.log("To long by", cleanedChannelName.length - maxChannelNameLength, "letters.");
         actionsTaken.shortenChannelName = true;
         isChanged = true;
 

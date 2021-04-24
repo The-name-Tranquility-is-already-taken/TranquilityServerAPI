@@ -37,5 +37,74 @@ exports.createChannel = async(req, res) => {
     );
 
     monitoring.log("createChannelGateway", duration);
-
 };
+
+
+/**
+ * Used to get channels a user can access within a guild
+ */
+
+exports.getChannels = async(req, res) => {
+    var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+    let startTimestamp = new Date().getTime();
+
+    var MemberID = req.params.MemberID;
+    var GuildID = req.params.GuildID;
+
+    var response = await channelFunctions
+        .getChannelsForGuild(MemberID, GuildID)
+        .catch((err) => {
+            console.log("ERR: ", err);
+            return "err";
+        });
+    if (response == "err") {
+        res.status(codes.Bad_Request);
+    } else {
+        res.status(codes.Ok);
+    }
+    res.json({ response: response });
+
+    let end = new Date().getTime();
+    var duration = end - startTimestamp;
+    logging.log(
+        `[ ${duration}ms ] - [ ${ip} ] - GET /member/${MemberID}/guild/${GuildID}`
+    );
+
+    monitoring.log("getChannels", duration);
+}
+
+/**
+ * Used to get channels a user can access within a guild
+ */
+
+exports.deleteChannel = async(req, res) => {
+    var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
+
+    let startTimestamp = new Date().getTime();
+
+    var MemberID = req.params.MemberID;
+    var GuildID = req.params.GuildID;
+    var ChannelID = req.params.ChannelID;
+
+    var response = await channelFunctions
+        .deleteChannel(MemberID, GuildID, ChannelID)
+        .catch((err) => {
+            console.log("ERR: ", err);
+            return "err";
+        });
+    if (response == "err") {
+        res.status(codes.Bad_Request);
+    } else {
+        res.status(codes.Ok);
+    }
+    res.json({ response: response });
+
+    let end = new Date().getTime();
+    var duration = end - startTimestamp;
+    logging.log(
+        `[ ${duration}ms ] - [ ${ip} ] - GET /member/${MemberID}/guild/${GuildID}`
+    );
+
+    monitoring.log("deleteChannel", duration);
+}

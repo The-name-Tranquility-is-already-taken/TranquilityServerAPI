@@ -54,9 +54,12 @@ module.exports = (app) => {
      *  Channel Gateway
      */
     //#region Channel Gateways
-    app.route("/api/member/:MemberID/guild/:GuildID")
+    app.route("/api/member/:MemberID/guild/:GuildID/channel")
         .post(authWrapper, channelGateway.createChannel)
-        //#endregion
+        .get(authWrapper, channelGateway.getChannels);
+    app.route("/api/member/:MemberID/guild/:GuildID/channel/:ChannelID")
+        .delete(authWrapper, channelGateway.deleteChannel);
+    //#endregion
 
 
     //#region Guild Gateways

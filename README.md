@@ -6,3 +6,14 @@
 
 - For all HTTP Parmas the varible names have to be uppercase such that,
   req.params.MemberID `/guild/:MemberID/:GuildID/:GuildInvite`
+
+# Documentation
+
+## Member API
+https://documenter.getpostman.com/view/14329009/TzCL7ntF
+
+## Guild API
+https://documenter.getpostman.com/view/14329009/TzCQbRuk
+
+## Auth API
+https://documenter.getpostman.com/view/14329009/TzJx8wKc
