@@ -27,6 +27,6 @@
     "mongoose": "^5.12.4",
     "nodemailer": "^6.5.0",
     "snowflakey": "^0.2.0",
-    "twilio": "^3.60.0"
+    "twilio": "^3.61.0"
   }
 }
