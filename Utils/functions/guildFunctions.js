@@ -45,7 +45,7 @@ module.exports.getGuildsUserCanAccess = async(memberID) => {
     if (!result[0]) {
         return undefined;
     }
-    return result[0].guilds;
+    return { guilds: result[0].guilds };
 };
 
 /**

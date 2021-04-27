@@ -50,6 +50,8 @@ exports.listMembers = async(req, res) => {
 };
 
 exports.createNewMember = async(req, res) => {
+    console.log("Member");
+
     let startTimestamp = new Date().getTime();
 
     var response = await memberFunctions

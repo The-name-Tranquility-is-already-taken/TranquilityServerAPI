@@ -40,15 +40,16 @@ mongoose
     })
     .then((res) => {
         logging.log("DB Connected!");
-        monitoring.log("DB Connected", new Date().getTime() - startTimestamp);
+        monitoring.log("generic - DB Connected", new Date().getTime() - startTimestamp);
     })
     .catch((err) => {
         console.log(Error, "Failed to connect to DB\nErrror :" + err.message);
         logging.log(err, "ERROR");
         monitoring.log(
-            "DB Connection failed",
+            "generic - DB Connection failed",
             new Date().getTime() - startTimestamp
         );
+        process.exit(1);
     });
 
 app.use(express.urlencoded({ extended: true }));

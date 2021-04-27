@@ -37,14 +37,14 @@ module.exports.createNewMember = async(tag, email, password) => {
     check = check[0];
     console.log(check);
 
-    if (check) {
-        if (check.email == email || check.tag == tag) {
-            if (check.email == email && check.tag == tag) {
+    if(check) {
+        if(check.email == email || check.tag == tag) {
+            if(check.email == email && check.tag == tag) {
                 return "email and tag exists";
             } else {
-                if (check.email == email) {
+                if(check.email == email) {
                     return "email exists";
-                } else if (check.tag == tag) {
+                } else if(check.tag == tag) {
                     return "username exists";
                 }
             }
@@ -80,7 +80,7 @@ module.exports.deleteMember = async(MemberID) => {
         throw "err";
     });
 
-    if (!response || response[0] == undefined || response == []) {
+    if(!response || response[0] == undefined || response == []) {
         var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
         logging.log(`[ ${ip} ] - Tried to delete a member that doesnt exist.`);
         throw "Tried to delete a member that doesnt exist.";
@@ -113,16 +113,14 @@ module.exports.memberLogin = async(body) => {
     //     new Date().getTime() - startTimestamp
     // );
 
-    if (!response) return "Un-Authenticated";
-
-    startTimestamp = new Date().getTime();
+    if(!response) return "Un-Authenticated";
 
     var checkHashAgainstPassword = BCrypt.compareSync(
         body.password,
         response.hash
     );
 
-    if (checkHashAgainstPassword) {
+    if(checkHashAgainstPassword) {
         monitoring.log(
             "memberLogin - BCrypt.compareSync",
             new Date().getTime() - startTimestamp

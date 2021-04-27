@@ -28,7 +28,7 @@ async function log(message, type = "DEBUG", callingFunction = "N/A") {
         return;
     }
 
-    maxSize = 45;
+    maxSize = 55;
 
     time = getDateTime().yellow;
 

@@ -5,11 +5,12 @@ const codes = require("../../Utils/misc/error_codes").codes;
 const monitoring = require("../../Utils/monitor");
 
 async function isTokenValid(userID, submittedToken) {
+    var timeTaken;
     let startTimestamp = new Date().getTime();
 
     var member = await getUserInfo(userID);
     member = member[0];
-    if (!member) {
+    if(!member) {
         logging.log(
             `isTokenValid - member failed to be found.`,
             "DEBUG",
@@ -29,16 +30,16 @@ async function isTokenValid(userID, submittedToken) {
         // Get user id from within JSON Token
         const tokenUserID = decodedToken.MemberID;
 
-        var timeTaken = new Date().getTime() - startTimestamp;
-        if (userID && userID == tokenUserID) {
+        timeTaken = new Date().getTime() - startTimestamp;
+        if(userID && userID == tokenUserID) {
             console.log("Valid token.", submittedToken);
             monitoring.log("isTokenValid - valid", timeTaken);
             return true;
         }
         monitoring.log("isTokenValid - invalid", timeTaken);
         return false;
-    } catch (err) {
-        var timeTaken = new Date().getTime() - startTimestamp;
+    } catch(err) {
+        timeTaken = new Date().getTime() - startTimestamp;
         logging.log(err, "ERROR", "isTokenValid");
         monitoring.log("isTokenValid - error", timeTaken);
         console.log("Invalid token.", submittedToken);
@@ -49,7 +50,8 @@ async function isTokenValid(userID, submittedToken) {
 module.exports.authWrapper = async(req, res, next) => {
     let startTimestamp = new Date().getTime();
 
-    if (!req.headers.authorization) {
+    console.log("Thingg");
+    if(!req.headers.authorization) {
         res.status(codes.Unauthorized).json({ error: "Un-Authorised! 1" });
         monitoring.log(
             "authWrapper - failed to pass headers",
@@ -62,7 +64,7 @@ module.exports.authWrapper = async(req, res, next) => {
     var valid = await isTokenValid(req.params.MemberID, submittedToken);
     var timeTaken = new Date().getTime() - startTimestamp;
 
-    if (!valid) {
+    if(!valid) {
         monitoring.log("authWrapper - invalid token", timeTaken);
         logging.log(
             "Debug authentication failed as the token is invalid.",

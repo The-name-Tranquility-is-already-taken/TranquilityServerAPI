@@ -1,3 +1,7 @@
+var config = require("./../config").conf;
+
+var logging = require("./logging");
+
 const template = (name_t) => ({
     name: name_t,
     data: [],
@@ -10,7 +14,7 @@ const template = (name_t) => ({
 
 var data = [];
 
-module.exports.output = () => {
+exports.output = () => {
     data.forEach((entry) => {
         console.log("-----------------------");
         console.log(entry.name);
@@ -43,7 +47,7 @@ function getSpecificDataSet(name) {
     return ([Times, Ms]);
 }
 
-module.exports.data = (req, res) => {
+exports.data = (req, res) => {
     var colours = [{
         bg: 'rgb(255, 99, 132)',
         border: 'rgb(255, 99, 132)'
@@ -77,7 +81,7 @@ module.exports.data = (req, res) => {
     res.json({ all: all[0], times: times });
 };
 
-module.exports.log = async(module_t, timeTaken) => {
+exports.log = async(module_t, timeTaken) => {
     timeTaken = parseInt(timeTaken);
 
     var i = 0;
@@ -127,4 +131,20 @@ function getDateTime() {
     // day = (day < 10 ? "0" : "") + day;
 
     return /*year + ":" + month + ":" + day + " - " + */ hour + ":" + min + "." + sec;
+}
+
+
+if (config.monitoring.outputStats) {
+    setInterval(function() {
+        console.log("------------------------------------------------------------------------------------");
+        data.forEach((entry) => {
+            console.log("");
+            logging.log(`| ${entry.name} x${entry.callCount}`);
+            logging.log(`--- Average Times: ${entry.averageTimes.all}ms`);
+            logging.log(`--- Sway: +${(entry.averageTimes.all * entry.callCount) - entry.totalTime}ms`)
+            logging.log(`--- Total Time: ${entry.totalTime}ms`);
+            // logging.log(`--- Called: ${entry.callCount} times`);
+        });
+        console.log("------------------------------------------------------------------------------------");
+    }, config.monitoring.outputStatsEvery);
 }
