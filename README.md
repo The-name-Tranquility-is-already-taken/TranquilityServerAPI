@@ -9,13 +9,13 @@
 
 # Documentation
 
-## Member API
+### Member API
 https://documenter.getpostman.com/view/14329009/TzCL7ntF
 
-## Guild API
+### Guild API
 https://documenter.getpostman.com/view/14329009/TzCQbRuk
 
-## Auth API
+### Auth API
 https://documenter.getpostman.com/view/14329009/TzJx8wKc
 
 ## Configuration
