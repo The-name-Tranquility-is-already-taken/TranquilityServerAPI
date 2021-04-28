@@ -6,6 +6,7 @@ module.exports = (app) => {
     const authenticationGateway = require("../gatewayFunctions/authGateway");
     const smsGateway = require("../gatewayFunctions/smsGateway.js");
     const testingGateway = require("../gatewayFunctions/testingGateway.js");
+    const messagesGateway = require("../gatewayFunctions/messagesGateway.js");
 
     const authWrapper = require("../proxys/authProxy").authWrapper;
 
@@ -49,6 +50,15 @@ module.exports = (app) => {
     //#endregion
 
 
+
+    /** 
+     * Messages API
+     */
+    //#region 
+    app.route("/api/message/:MemberID/guild/:GuildID/channel/:ChannelID")
+        .post(authWrapper, messagesGateway.sendMessageInChannel);
+
+    //#endregion
 
     /**
      *  Channel Gateway

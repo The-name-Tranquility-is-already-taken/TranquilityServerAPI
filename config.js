@@ -1,7 +1,12 @@
 exports.conf = {
     channelName_Checks: {
         shortenChannelName: true, // Default: true
+        maxLength: 100,
         replaceSpacesWithChar: true, // Default: true
+    },
+    messageText_Checks: {
+        lengthLimit: true,
+        maxLength: 100
     },
     monitoring: {
         outputStats: false, // Default: true
