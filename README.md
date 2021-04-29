@@ -31,6 +31,7 @@ Tranquilitys server api is configured using  2 config files including the follow
 | TWILIO_SENDING_NUMBER | Twilio phone number for 2FA, account confirmation etc | N/A |
 | TWILIO_ACCOUNT_SID | Twilio account SID | N/A |
 | TWILIO_ACCOUNT_AUTH_TOKEN | Twilio auth token | N/A |
+| SALT_ROUNDS | Salt rounds for hashing( larger > more secure but longer run times) | 13
 
 and also a config.js
 ```js

@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
-const Guilds = mongoose.model("Guilds");
-const Members = mongoose.model("Members");
+const servers = require("./../../Databases/DBs").getServers();
+
+const Members = servers[0].Server1.databases.main.model("Members");
+const Guilds = servers[0].Server1.databases.main.model("Guilds");
+
 
 const guildSnowflake = require("../snowflake").GenerateID;
 const logging = require("../logging");
@@ -16,7 +19,7 @@ const limits = require("./limits");
 module.exports.newChannel = async(MemberID, GuilidID, newChannelName) => {
     var cleanedChannelNameRes = limits.channelName(newChannelName);
 
-    if (cleanedChannelNameRes.modified) {
+    if(cleanedChannelNameRes.modified) {
         logging.log("Parsed channel name isnt valid. TODO: Handle this for the client.", "WARNING");
         newChannelName = cleanedChannelNameRes.cleaned;
     }
@@ -32,7 +35,7 @@ module.exports.newChannel = async(MemberID, GuilidID, newChannelName) => {
 
     // Create channel in db.
     var res = await Guilds.findOneAndUpdate({ id: GuilidID }, { $push: { channels: builtJSON } });
-    if (res == null) {
+    if(res == null) {
         throw "Guild Doesnt Exist"
     }
 

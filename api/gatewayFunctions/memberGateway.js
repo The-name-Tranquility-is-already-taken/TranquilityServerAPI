@@ -1,8 +1,11 @@
 "use strict";
-const codes = require("../../Utils/misc/error_codes").codes;
+const mongoose = require("mongoose");
+const servers = require("./../../Databases/DBs").getServers();
 
-const mongoose = require("mongoose"),
-    Members = mongoose.model("Members");
+const Members = servers[0].Server1.databases.main.model("Members");
+
+
+const codes = require("../../Utils/misc/error_codes").codes;
 
 const memberFunctions = require("../../Utils/functions/memberFunctions");
 
@@ -13,7 +16,7 @@ const formattingData = require("./../../Utils/functions/dataHandler");
 
 async function getMemberRecord(memberID) {
     var member = await Members.find({ id: memberID }).catch((err) => {
-        if (err) {
+        if(err) {
             console.log(err);
             logging.log("getMemberRecord had an error", "ERROR");
         }
@@ -61,12 +64,12 @@ exports.createNewMember = async(req, res) => {
             res.status(codes.Bad_Request);
             return "error";
         });
-    if (typeof response != "object" && response.includes("exists")) {
+    if(typeof response != "object" && response.includes("exists")) {
         res.status(codes.Conflict);
         res.send({ error: response });
         return;
     }
-    if (response == "err") {
+    if(response == "err") {
         res.status(codes.Bad_Request);
     } else {
         res.status(codes.Ok);
@@ -130,7 +133,7 @@ exports.deleteMember = async(req, res) => {
         return "err";
     });
 
-    if (response == "err") {
+    if(response == "err") {
         res.status(codes.Bad_Request);
     } else {
         res.status(codes.Ok);
@@ -152,7 +155,7 @@ exports.login = async(req, res) => {
         return "err";
     });
 
-    if (response == "err") {
+    if(response == "err") {
         res.status(codes.Bad_Request);
     } else {
         res.status(codes.Ok);

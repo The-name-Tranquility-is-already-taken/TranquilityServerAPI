@@ -8,7 +8,7 @@
         "start": "echo starting",
         "poststart": "node index.js",
         "pretest": "npm install",
-        "test": "nodemon index.js"
+        "test": "node index.js"
     },
     "repository": {
         "type": "git",

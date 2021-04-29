@@ -1,6 +1,8 @@
+const servers = require("./../../Databases/DBs").getServers();
 const mongoose = require("mongoose");
-const Guilds = mongoose.model("Guilds");
-const Members = mongoose.model("Members");
+
+const Members = servers[0].Server1.databases.main.model("Members");
+const Guilds = servers[0].Server1.databases.main.model("Guilds");
 
 const guildSnowflake = require("../snowflake").GenerateID;
 const logging = require("../logging");
@@ -27,7 +29,7 @@ module.exports.newGuild = async(ownerID, guildName) => {
     // Automatically join guild after creating it.
     var ress = await this.joinGuild(ownerID, guildJSON.id, "FIRST");
 
-    if (ress != "Joined") {
+    if(ress != "Joined") {
         return "Failed";
     }
     return "Ok.";
@@ -42,7 +44,7 @@ module.exports.newGuild = async(ownerID, guildName) => {
 module.exports.getGuildsUserCanAccess = async(memberID) => {
     var result = await Members.find({ id: memberID });
 
-    if (!result[0]) {
+    if(!result[0]) {
         return undefined;
     }
     return { guilds: result[0].guilds };
@@ -62,20 +64,20 @@ module.exports.joinGuild = async(memberID, guildID, InviteCode) => {
 
     // Clean and check member object.
     member = member[0];
-    if (!member) {
+    if(!member) {
         return "Invalid UserID.";
     }
 
     // Check if user is already within the guild.
     var alreadyInGuild = false;
     member.guilds.forEach((e) => {
-        if (e == guildID) {
+        if(e == guildID) {
             alreadyInGuild = true;
             logging.log("User already within guild.");
             return "User already within guild.";
         }
     });
-    if (alreadyInGuild) {
+    if(alreadyInGuild) {
         return "User already within guild.";
     }
     // logging.log("User isnt within guild.");

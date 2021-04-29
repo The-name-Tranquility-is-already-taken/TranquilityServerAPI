@@ -78,7 +78,7 @@ exports.messageText = (messageText) => {
     }
 
     return {
-        cleaned: cleanedChannelName,
+        cleaned: cleanedMessageText,
         actions: actionsTaken,
         modified: isChanged,
     }

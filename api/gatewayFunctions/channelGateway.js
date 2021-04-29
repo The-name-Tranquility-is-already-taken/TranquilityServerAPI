@@ -23,7 +23,7 @@ exports.createChannel = async(req, res) => {
             console.log("ERR: ", err);
             return "err";
         });
-    if (response == "err") {
+    if(response == "err") {
         res.status(codes.Bad_Request);
     } else {
         res.status(codes.Ok);
@@ -58,7 +58,7 @@ exports.getChannels = async(req, res) => {
             console.log("ERR: ", err);
             return "err";
         });
-    if (response == "err") {
+    if(response == "err") {
         res.status(codes.Bad_Request);
     } else {
         res.status(codes.Ok);
@@ -93,7 +93,7 @@ exports.deleteChannel = async(req, res) => {
             console.log("ERR: ", err);
             return "err";
         });
-    if (response == "err") {
+    if(response == "err") {
         res.status(codes.Bad_Request);
     } else {
         res.status(codes.Ok);
