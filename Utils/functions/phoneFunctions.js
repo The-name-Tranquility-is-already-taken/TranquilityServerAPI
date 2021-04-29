@@ -2,10 +2,11 @@
  * Within this document do not catch any errors that will be handled by the
  * callers.
  */
+const servers = require("./../../Databases/DBs").getServers();
 
 const monitoring = require("../monitor");
 const mongoose = require("mongoose");
-const Members = mongoose.model("Members");
+const Members = servers[0].Server1.databases.main.model("Members");
 const logging = require("../logging");
 const {
   SamplePage,

@@ -1,9 +1,12 @@
 "use strict";
 module.exports = (app) => {
   const memberGateway = require("../gatewayFunctions/memberGateway");
+  const channelGateway = require("../gatewayFunctions/channelGateway");
   const guildGateway = require("../gatewayFunctions/guildGateway");
   const authenticationGateway = require("../gatewayFunctions/authGateway");
   const smsGateway = require("../gatewayFunctions/smsGateway.js");
+  const testingGateway = require("../gatewayFunctions/testingGateway.js");
+  const messagesGateway = require("../gatewayFunctions/messagesGateway.js");
 
   const authWrapper = require("../proxys/authProxy").authWrapper;
 
@@ -30,11 +33,43 @@ module.exports = (app) => {
     .route("/api/auth/:MemberID/verify/phone/:PhoneNumber")
     .post(authWrapper, authenticationGateway.verifPhone);
 
+  /**
+   *
+   *  Member Gateways
+   *
+   */
+  //#region Member Gateway
   app
     .route("/api/member/:MemberID")
     .get(authWrapper, memberGateway.getMemberRecord)
     .put(authWrapper, memberGateway.updateMember)
     .delete(authWrapper, memberGateway.deleteMember);
+  //#endregion
+
+  /**
+   * Messages API
+   */
+  //#region
+  app
+    .route("/api/message/:MemberID/guild/:GuildID/channel/:ChannelID")
+    .post(authWrapper, messagesGateway.sendMessageInChannel);
+
+  //#endregion
+
+  /**
+   *  Channel Gateway
+   */
+  //#region Channel Gateways
+  app
+    .route("/api/member/:MemberID/guild/:GuildID/channel")
+    .post(authWrapper, channelGateway.createChannel)
+    .get(authWrapper, channelGateway.getChannels);
+  app
+    .route("/api/member/:MemberID/guild/:GuildID/channel/:ChannelID")
+    .delete(authWrapper, channelGateway.deleteChannel);
+  //#endregion
+
+  //#region Guild Gateways
 
   // Routes for getting all guilds a user has access to. and creating guilds.
   app
@@ -46,6 +81,9 @@ module.exports = (app) => {
   app
     .route("/api/guild/:MemberID/:GuildID/:GuildInvite")
     .get(guildGateway.joinGuild);
+
+  //#endregion
+
   //#endregion
 
   /**
@@ -63,6 +101,15 @@ module.exports = (app) => {
   //#region SMS Gateways
 
   app.route("/api/verify/phone/start").post(smsGateway.verifyPhoneOwnership);
+
+  //#endregion
+
+  /**
+   *  Testing Stuff
+   */
+  //#region Testing stuff
+
+  app.route("/api/test/1").post(testingGateway.test1);
 
   //#endregion
 };

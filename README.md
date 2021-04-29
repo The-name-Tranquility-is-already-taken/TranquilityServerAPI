@@ -2,14 +2,25 @@
 
 [![DeepScan grade](https://deepscan.io/api/teams/13554/projects/16524/branches/357480/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=13554&pid=16524&bid=357480)
 
-# # Formatting
+## Formatting
 
 - For all HTTP Parmas the varible names have to be uppercase such that,
   req.params.MemberID `/guild/:MemberID/:GuildID/:GuildInvite`
 
+# Documentation
+
+### Member API
+https://documenter.getpostman.com/view/14329009/TzCL7ntF
+
+### Guild API
+https://documenter.getpostman.com/view/14329009/TzCQbRuk
+
+### Auth API
+https://documenter.getpostman.com/view/14329009/TzJx8wKc
+
 ## Configuration
 
-Tranquilitys server api is configured using the following .env variables.
+Tranquilitys server api is configured using  2 config files including the following .env variables.
 
 | Name | Description | Default |
 | ---- | ----------- | ----- |
@@ -20,3 +31,18 @@ Tranquilitys server api is configured using the following .env variables.
 | TWILIO_SENDING_NUMBER | Twilio phone number for 2FA, account confirmation etc | N/A |
 | TWILIO_ACCOUNT_SID | Twilio account SID | N/A |
 | TWILIO_ACCOUNT_AUTH_TOKEN | Twilio auth token | N/A |
+| SALT_ROUNDS | Salt rounds for hashing( larger > more secure but longer run times) | 13
+
+and also a config.js
+```js
+exports.conf = {
+    channelName_Checks: {
+        shortenChannelName: true,      // Default: true
+        replaceSpacesWithChar: true,   // Default: true
+    },
+    monitoring: {
+        outputStats: false,            // Default: true
+        outputStatsEvery: 10000,       // Currently: 10seconds // Default: 1000 ms
+    }
+}
+```

@@ -1,6 +1,8 @@
+const servers = require("./../../Databases/DBs").getServers();
 const mongoose = require("mongoose");
-const Guilds = mongoose.model("Guilds");
-const Members = mongoose.model("Members");
+
+const Members = servers[0].Server1.databases.main.model("Members");
+const Guilds = servers[0].Server1.databases.main.model("Guilds");
 
 const guildSnowflake = require("../snowflake").GenerateID;
 const logging = require("../logging");
@@ -21,7 +23,8 @@ module.exports.newGuild = async (ownerID, guildName) => {
 
   // Create and save guild.
   let tmp_NewGuild = new Guilds(guildJSON);
-  /* var response = */ await tmp_NewGuild.save();
+  /* var response = */
+  await tmp_NewGuild.save();
 
   // Automatically join guild after creating it.
   var ress = await this.joinGuild(ownerID, guildJSON.id, "FIRST");
@@ -44,7 +47,7 @@ module.exports.getGuildsUserCanAccess = async (memberID) => {
   if (!result[0]) {
     return undefined;
   }
-  return result[0].guilds;
+  return { guilds: result[0].guilds };
 };
 
 /**
@@ -85,8 +88,14 @@ module.exports.joinGuild = async (memberID, guildID, InviteCode) => {
   // Add new member to guild object.
   member.guilds.push(guildID);
 
-  // Update database with new object.
+  // Update member object with new guild.
   await Members.findOneAndUpdate({ id: memberID }, member, { new: true });
+
+  // Create member id in guilds.
+  await Guilds.findOneAndUpdate(
+    { id: guildID },
+    { $push: { members: memberID } }
+  );
 
   // Return success code.
   return "Joined";

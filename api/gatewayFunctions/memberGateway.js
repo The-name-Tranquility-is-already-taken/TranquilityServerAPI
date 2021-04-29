@@ -1,8 +1,10 @@
 "use strict";
-const codes = require("../../Utils/misc/error_codes").codes;
+const mongoose = require("mongoose");
+const servers = require("./../../Databases/DBs").getServers();
 
-const mongoose = require("mongoose"),
-  Members = mongoose.model("Members");
+const Members = servers[0].Server1.databases.main.model("Members");
+
+const codes = require("../../Utils/misc/error_codes").codes;
 
 const memberFunctions = require("../../Utils/functions/memberFunctions");
 
@@ -50,6 +52,8 @@ exports.listMembers = async (req, res) => {
 };
 
 exports.createNewMember = async (req, res) => {
+  console.log("Member");
+
   let startTimestamp = new Date().getTime();
 
   var response = await memberFunctions
@@ -140,6 +144,7 @@ exports.deleteMember = async (req, res) => {
     new Date().getTime() - startTimestamp
   );
 };
+
 exports.login = async (req, res) => {
   let startTimestamp = new Date().getTime();
 

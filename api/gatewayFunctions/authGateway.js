@@ -2,7 +2,8 @@
 const codes = require("../../Utils/misc/error_codes").codes;
 
 const mongoose = require("mongoose");
-const Members = mongoose.model("Members");
+const servers = require("./../../Databases/DBs").getServers();
+const Members = servers[0].Server1.databases.main.model("Members");
 
 const logging = require("../../Utils/logging");
 const monitoring = require("../../Utils/monitor");

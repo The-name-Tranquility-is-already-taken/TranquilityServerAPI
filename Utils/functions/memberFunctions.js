@@ -3,10 +3,12 @@
  * callers.
  */
 
+const servers = require("./../../Databases/DBs").getServers();
+
 const logging = require("../logging");
 const monitoring = require("../monitor");
 const mongoose = require("mongoose");
-const Members = mongoose.model("Members");
+const Members = servers[0].Server1.databases.main.model("Members");
 
 const hashing = require("../hashing");
 const SnowflakeFnc = require("../snowflake").GenerateID;
@@ -52,7 +54,7 @@ module.exports.createNewMember = async (tag, email, password) => {
   }
 
   var hashedPassword = hashing.hash(password);
-  console.log("TESTTTTTTTTTTTTTTTTTTTTTTT");
+  //console.log("TESTTTTTTTTTTTTTTTTTTTTTTT");
 
   var buildJson = {
     id: SnowflakeFnc(),
@@ -114,8 +116,6 @@ module.exports.memberLogin = async (body) => {
   // );
 
   if (!response) return "Un-Authenticated";
-
-  startTimestamp = new Date().getTime();
 
   var checkHashAgainstPassword = BCrypt.compareSync(
     body.password,

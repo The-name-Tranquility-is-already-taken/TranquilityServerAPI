@@ -4,6 +4,7 @@ const codes = require("../../Utils/misc/error_codes").codes;
 const guildFunctions = require("../../Utils/functions/guildFunctions");
 
 const logging = require("../../Utils/logging");
+const monitoring = require("../../Utils/monitor");
 
 exports.getGuildsUserCanAccess = async (req, res) => {
   let startTimestamp = new Date().getTime();
@@ -23,13 +24,14 @@ exports.getGuildsUserCanAccess = async (req, res) => {
   } else {
     res.status(codes.Ok);
   }
-  res.send(ress);
+  res.send({ response: ress });
 
   let end = new Date().getTime();
   var duration = end - startTimestamp;
 
   var ip = req.headers["x-forwarded-for"] || req.connection.remoteAddress;
   logging.log(`[ ${duration}ms ] - [ ${ip} ] - /guild/${memberID}`);
+  monitoring.log("guildGateway - getGuildsUserCanAccess", duration);
 };
 
 /**
@@ -63,6 +65,7 @@ exports.createGuild = async (req, res) => {
   logging.log(
     `[ ${duration}ms ] - [ ${ip} ] - POST /guild/${ownerID} - name: ${guildName}`
   );
+  monitoring.log("guildGateway - createGuild", duration);
 };
 
 /**
@@ -100,4 +103,6 @@ exports.joinGuild = async (req, res) => {
   logging.log(
     `[ ${duration}ms ] - [ ${ip} ] - POST /guild/${memberID}/${guildID}/${GuildInvite}`
   );
+
+  monitoring.log("guildGateway - joinGuild", duration);
 };

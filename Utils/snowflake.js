@@ -32,7 +32,7 @@ module.exports.GenerateID = (log = true) => {
     );
   }
 
-  monitoring.log("generateSnowFlake", new Date().getTime() - startTimestamp);
+  //monitoring.log("generateSnowFlake", new Date().getTime() - startTimestamp);
   return flake;
 };
 
