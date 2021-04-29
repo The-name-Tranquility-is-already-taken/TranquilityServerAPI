@@ -89,6 +89,10 @@ module.exports.sendMessage = async (
 
   console.log("Recieved message:", builtJSON);
 
+  // PERMS CHECK WOULD GO HERE.
+s
+
+
   // // Create channel in db.
   // var res = await Guilds.findOneAndUpdate({ id: GuilidID }, { $push: { channels: builtJSON } });
   // if(res == null) {

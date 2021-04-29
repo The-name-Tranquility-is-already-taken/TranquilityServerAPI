@@ -18,5 +18,14 @@ const GuildSchema = new Schema({
         type: Array,
         required: "Members lists are kinda importent my guy :/",
     },
+    buckets: {
+        type: Array,
+        required: "BUckets/??"
+    }
+    // "buckets": [{
+    //     "bucketID": "1",
+    //     "startTimeStamp": 100,
+    //     "endTimeStamp": 150
+    // }]
 });
 module.exports = mongoose.model("Guilds", GuildSchema);

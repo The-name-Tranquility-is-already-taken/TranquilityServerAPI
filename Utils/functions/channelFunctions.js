@@ -30,15 +30,7 @@ module.exports.newChannel = async (MemberID, GuilidID, newChannelName) => {
     id: guildSnowflake(false),
     name: newChannelName,
     desc: "N/A",
-    parentID: "N/A",
-    buckets: []
-    // "buckets": [
-    //   {
-    //     "bucketID": 1,
-    //     "startTimeStamp": 100,
-    //     "endTimeStamp": 150
-    //   }
-    // ]
+    parentID: "N/A"
   };
 
   MemberID; // TODO: Audit Log Creator
@@ -58,7 +50,10 @@ module.exports.newChannel = async (MemberID, GuilidID, newChannelName) => {
 module.exports.getChannelsForGuild = async (MemberID, GuildID) => {
   var response = await Guilds.find({ id: GuildID });
   response = response[0];
-
+  if(!response) {
+    throw("Guild doesnt exist.");
+  }
+  
   console.log("Channels", response.channels);
   return response.channels;
 };
