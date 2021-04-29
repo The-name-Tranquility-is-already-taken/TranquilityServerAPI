@@ -31,6 +31,14 @@ module.exports.newChannel = async (MemberID, GuilidID, newChannelName) => {
     name: newChannelName,
     desc: "N/A",
     parentID: "N/A",
+    buckets: []
+    // "buckets": [
+    //   {
+    //     "bucketID": 1,
+    //     "startTimeStamp": 100,
+    //     "endTimeStamp": 150
+    //   }
+    // ]
   };
 
   MemberID; // TODO: Audit Log Creator

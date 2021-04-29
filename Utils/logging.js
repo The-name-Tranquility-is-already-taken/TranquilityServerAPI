@@ -7,9 +7,10 @@ function getLogLevelNum(level) {
   if (level == "TESTING") return 0;
   if (level == "GENERIC") return 2;
   if (level == "WARNING") return 4;
-  if (level == "ERROR") return 6;
-  if (level == "DEBUG") return 8;
-  if (level == "ALL") return 10;
+  if (level == "ERROR")   return 6;
+  if (level == "DEBUG")   return 8;
+  if (level == "VERBOSE") return 9;
+  if (level == "ALL")     return 15;
 
   // Debugging stuff.
   if (level == "TIMINGS") return 20;
@@ -55,6 +56,7 @@ async function log(message, type = "DEBUG", callingFunction = "N/A") {
   } else if (type == "WARNING") StartMessage += type.blue;
   else if (type == "GENERIC") StartMessage += type.green;
   else if (type == "DEBUG") StartMessage += type.gray;
+  else if (type == "VERBOSE") StartMessage += type.rainbow;
   else if (type == "TESTING") StartMessage += type.magenta;
   else StartMessage += type.blue;
 
@@ -76,6 +78,11 @@ async function log(message, type = "DEBUG", callingFunction = "N/A") {
 exports.log = async (message, type = "DEBUG", callingFunction = "N/A") => {
   log(message, type, callingFunction);
 };
+
+exports.verbose = async (message, callingFunction = "N/A") => {
+  log(message, "VERBOSE", callingFunction);
+
+}
 
 exports.error = async (message, callingFunction = "N/A") => {
   log(message, "ERROR", callingFunction);

@@ -98,18 +98,13 @@ async function initDBs() {
 
     for(var i = 1; i <= maxBuckets; ++i) {
         var does = await doesBucketExist(Server1.databases["buckets"], i);
-        if(!does) {
-            break;
-        }
+        if(!does) break;
 
         var msgCounts = await getMessagesCount(Server1.databases["buckets"], i);
-        console.log("bucket", i, "has", msgCounts, "messages within it. max:", messagesPerBucket);
+        logging.verbose(`bucket ${i} has ${msgCounts} messages within it. max: ${messagesPerBucket}`);
         if(msgCounts < messagesPerBucket) {
             console.log("Added!.");
-            Server1.messageBuckets.push(
-                await getBucket(Server1.databases["buckets"], i)
-            );
-
+            Server1.messageBuckets.push(await getBucket(Server1.databases["buckets"], i));
         }
     }
 
