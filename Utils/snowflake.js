@@ -5,13 +5,13 @@ const monitoring = require("./monitor");
 const snowflakey = require("snowflakey");
 // Create the worker instance
 const Worker = new snowflakey.Worker({
-    name: "TESTING",
-    epoch: 1617278400,
-    workerId: process.env.CLUSTER_ID || 1,
-    processId: process.pid || undefined,
-    workerBits: 8,
-    processBits: 0,
-    incrementBits: 14,
+  name: "TESTING",
+  epoch: 1617278400,
+  workerId: process.env.CLUSTER_ID || 1,
+  processId: process.pid || undefined,
+  workerBits: 8,
+  processBits: 0,
+  incrementBits: 14,
 });
 
 /**
@@ -19,21 +19,21 @@ const Worker = new snowflakey.Worker({
  * @returns {string} Unique snowflake
  */
 module.exports.GenerateID = (log = true) => {
-    let startTimestamp = new Date().getTime();
+  let startTimestamp = new Date().getTime();
 
-    const flake = Worker.generate();
-    if (log) {
-        console.log(`Created snowflake: ${flake}`);
-        console.log(
-            `Creation date    : ${snowflakey.lookup(flake, Worker.options.epoch)}`
-        );
-        console.log(
-            `Deconstructed    : ${Worker.deconstruct(flake).timestamp.valueOf()}`
-        );
-    }
+  const flake = Worker.generate();
+  if (log) {
+    console.log(`Created snowflake: ${flake}`);
+    console.log(
+      `Creation date    : ${snowflakey.lookup(flake, Worker.options.epoch)}`
+    );
+    console.log(
+      `Deconstructed    : ${Worker.deconstruct(flake).timestamp.valueOf()}`
+    );
+  }
 
-    //monitoring.log("generateSnowFlake", new Date().getTime() - startTimestamp);
-    return flake;
+  //monitoring.log("generateSnowFlake", new Date().getTime() - startTimestamp);
+  return flake;
 };
 
 /**
