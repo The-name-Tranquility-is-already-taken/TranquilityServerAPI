@@ -16,16 +16,16 @@ const Snowflake = require("../../Utils/snowflake").GenerateID;
 */
 const Schema = mongoose.Schema;
 const BucketSchema = new Schema({
-    id: { type: String, required: "Ned Bucket id fam." },
-    messageType: { type: String, required: "Bucket messageType plz ok..." },
-    content: { type: String, required: "Bucket content text plz ok..." },
-    authorID: { type: String, required: "Bucket authorID text plz ok..." },
+  id: { type: String, required: "Ned Bucket id fam." },
+  messageType: { type: String, required: "Bucket messageType plz ok..." },
+  content: { type: String, required: "Bucket content text plz ok..." },
+  authorID: { type: String, required: "Bucket authorID text plz ok..." },
 
-    channelID: { type: String },
-    guildID: { type: String },
+  channelID: { type: String },
+  guildID: { type: String },
 
-    recipicantID: { type: String },
+  recipicantID: { type: String },
 
-    createdDate: { type: Date, default: Date.now },
+  createdDate: { type: Date, default: Date.now },
 });
 module.exports = mongoose.model("Buckets", BucketSchema);

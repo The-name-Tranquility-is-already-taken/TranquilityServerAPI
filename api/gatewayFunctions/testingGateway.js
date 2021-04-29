@@ -3,7 +3,6 @@
  * @param {*} req
  * @param {*} res
  */
-exports.test1 = async(req, res) => {
-    console.log("test");
-
+exports.test1 = async (req, res) => {
+  console.log("test");
 };
