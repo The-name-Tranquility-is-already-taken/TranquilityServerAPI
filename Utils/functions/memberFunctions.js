@@ -129,8 +129,6 @@ module.exports.memberLogin = async (body) => {
     );
 
     const secret = crypto.randomBytes(64).toString("hex");
-
-    console.log("Secret:", secret);
     const token = TokenFunc.createToken(response.id, secret);
     response.tokenSecret = secret;
 
