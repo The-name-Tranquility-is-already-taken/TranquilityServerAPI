@@ -88,12 +88,16 @@ async function initDBs() {
     };
 
     logging.log("Initiating dbs");
+
+    /*
+     *   Connect to each database one at a time then push it to the array
+     */
     Server1.databases["main"] = await openConnection(process.env.mongodb_main);
     logging.log("Connected to main db.");
 
     Server1.databases["buckets"] = await openConnection(process.env.mongodb_buckets);
-
     logging.log("Connected to buckets db.");
+
     logging.log("Finished establishing connections.");
 
     for(var i = 1; i <= maxBuckets; ++i) {
