@@ -26,6 +26,7 @@
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^5.12.4",
     "nodemailer": "^6.5.0",
+    "nodemon": "^2.0.7",
     "snowflakey": "^0.2.0",
     "twilio": "^3.61.0"
   }
