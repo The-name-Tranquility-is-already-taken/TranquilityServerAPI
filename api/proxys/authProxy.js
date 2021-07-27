@@ -49,8 +49,6 @@ async function isTokenValid(userID, submittedToken) {
 
 module.exports.authWrapper = async (req, res, next) => {
   let startTimestamp = new Date().getTime();
-
-  console.log("Thingg");
   if (!req.headers.authorization) {
     res.status(codes.Unauthorized).json({ error: "Un-Authorised! 1" });
     monitoring.log(

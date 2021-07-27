@@ -67,7 +67,14 @@ async function start() {
   require("./Databases/DBs").initDBs();
   const servers = await require("./Databases/DBs").get();
 
-  console.log("SERVERS", servers);
+  console.log("=========================");
+  console.log("Servers");
+  servers.forEach(e => {
+    var ServerName = Object.keys(e)[0];
+    console.log("|", ServerName, "- Databases:", undefined);
+  });
+  console.log("=========================");
+
   require("./api/models/MemberModel"); // created model loading here
   require("./api/models/GuildModel"); // created model loading here
   require("./api/models/BucketModel"); // created model loading here
