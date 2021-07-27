@@ -69,7 +69,7 @@ async function start() {
 
   console.log("=========================");
   console.log("Servers");
-  servers.forEach(e => {
+  servers.forEach((e) => {
     var ServerName = Object.keys(e)[0];
     console.log("|", ServerName, "- Databases:", undefined);
   });
