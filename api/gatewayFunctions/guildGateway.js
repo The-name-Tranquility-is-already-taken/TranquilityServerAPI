@@ -3,7 +3,7 @@ const codes = require("../../Utils/misc/error_codes").codes;
 
 const guildFunctions = require("../../Utils/functions/guildFunctions");
 
-const logging = require("../../Utils/logging");
+const logging = require("@connibug/js-logging");
 const monitoring = require("../../Utils/monitor");
 
 exports.getGuildsUserCanAccess = async (req, res) => {

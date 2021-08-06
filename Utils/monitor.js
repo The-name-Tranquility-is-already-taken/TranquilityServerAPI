@@ -1,6 +1,7 @@
 var config = require("./../config").conf;
 
-var logging = require("./logging");
+const logging = require("@connibug/js-logging");
+logging.setupMail("mail.spookiebois.club", 587, process.env.EMAIL, process.env.EMAIL_PASS);
 
 const template = (name_t) => ({
   name: name_t,

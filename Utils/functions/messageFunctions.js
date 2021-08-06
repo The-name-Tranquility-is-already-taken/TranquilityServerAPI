@@ -6,7 +6,7 @@ const Guilds = servers[0].Server1.databases.main.model("Guilds");
 const Buckets = mongoose.model("Buckets");
 
 const guildSnowflake = require("../snowflake").GenerateID;
-const logging = require("../logging");
+const logging = require("@connibug/js-logging");
 const limits = require("./limits");
 
 function getCurrentBucket() {

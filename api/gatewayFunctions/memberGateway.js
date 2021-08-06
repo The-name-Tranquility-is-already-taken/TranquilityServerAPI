@@ -8,7 +8,7 @@ const codes = require("../../Utils/misc/error_codes").codes;
 
 const memberFunctions = require("../../Utils/functions/memberFunctions");
 
-const logging = require("../../Utils/logging");
+const logging = require("@connibug/js-logging");
 const monitoring = require("../../Utils/monitor");
 
 const formattingData = require("./../../Utils/functions/dataHandler");
