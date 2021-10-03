@@ -1,7 +1,12 @@
 var config = require("./../config").conf;
 
 const logging = require("@connibug/js-logging");
-logging.setupMail("mail.spookiebois.club", 587, process.env.EMAIL, process.env.EMAIL_PASS);
+logging.setupMail(
+  "mail.spookiebois.club",
+  587,
+  process.env.EMAIL,
+  process.env.EMAIL_PASS
+);
 
 const template = (name_t) => ({
   name: name_t,
@@ -54,7 +59,7 @@ function getSpecificDataSet(name) {
 }
 
 /**
- * Used by api 
+ * Used by api
  */
 exports.data = (req, res) => {
   var colours = [
@@ -157,8 +162,8 @@ function getDateTime() {
 
 function calculateVariance(dataSet, mean) {
   variance = 0;
-  
-  for(var i = 0; i <= dataSet.length(); i++) {
+
+  for (var i = 0; i <= dataSet.length(); i++) {
     // subtract mean from each number, square the result
     dataSet[i] -= mean;
     dataSet[i] *= dataSet[i];
@@ -166,7 +171,7 @@ function calculateVariance(dataSet, mean) {
     // Average the result
     variance += dataSet[i];
     variance /= 2;
-   }
+  }
   return variance;
 }
 if (config.monitoring.outputStats) {
