@@ -1,11 +1,14 @@
+require("dotenv").config();
+
 const mongoose = require("mongoose");
 const monitoring = require("./Utils/monitor");
 const path = require("path");
-const logging = require("./Utils/logging");
+const logging = require("@connibug/js-logging");
+logging.setupMail("mail.spookiebois.club", 587, process.env.EMAIL, process.env.EMAIL_PASS);
 const express = require("express");
 const app = express();
 
-require("dotenv").config();
+
 
 const port = process.env.PORT || 3000;
 
@@ -17,49 +20,6 @@ const port = process.env.PORT || 3000;
 
 monitoring.output();
 
-// mongoose instance connection url connection
-// let startTimestamp = new Date().getTime();
-// mongoose
-//     .connect(uri_main, {
-//         useNewUrlParser: true,
-//         useCreateIndex: true,
-//         useUnifiedTopology: true,
-//         useFindAndModify: false,
-//     })
-//     .then((res) => {
-//         logging.log("uri_main Connected!");
-//         monitoring.log("mongodb_main - DB Connected", new Date().getTime() - startTimestamp);
-//     })
-//     .catch((err) => {
-//         console.log(Error, "Failed to connect to mongodb_main DB\nErrror :" + err.message);
-//         logging.log(err, "ERROR");
-//         monitoring.log(
-//             "mongodb_main - DB Connection failed",
-//             new Date().getTime() - startTimestamp
-//         );
-//         process.exit(1);
-//     });
-
-// mongoose
-//     .connect(uri_buckets, {
-//         useNewUrlParser: true,
-//         useCreateIndex: true,
-//         useUnifiedTopology: true,
-//         useFindAndModify: false,
-//     })
-//     .then((res) => {
-//         logging.log("uri_buckets Connected!");
-//         monitoring.log("uri_buckets - DB Connected", new Date().getTime() - startTimestamp);
-//     })
-//     .catch((err) => {
-//         console.log(Error, "Failed to connect to uri_buckets DB\nErrror :" + err.message);
-//         logging.log(err, "ERROR");
-//         monitoring.log(
-//             "uri_buckets - DB Connection failed",
-//             new Date().getTime() - startTimestamp
-//         );
-//         process.exit(1);
-//     });
 async function start() {
   logging.log("--------------------------------------------------");
   logging.log("Starting.");

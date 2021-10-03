@@ -5,7 +5,7 @@ const Members = servers[0].Server1.databases.main.model("Members");
 const Guilds = servers[0].Server1.databases.main.model("Guilds");
 
 const guildSnowflake = require("../snowflake").GenerateID;
-const logging = require("../logging");
+const logging = require("@connibug/js-logging");
 
 /**
  * Get the guilds by member id the user is in.

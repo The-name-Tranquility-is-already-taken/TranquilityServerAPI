@@ -2,7 +2,8 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
-const logging = require("./../Utils/logging");
+const logging = require("@connibug/js-logging");
+// logging.setupMail("mail.spookiebois.club", 587, process.env.EMAIL, process.env.EMAIL_PASS);
 
 var maxBuckets = 5;
 var messagesPerBucket = 4;
@@ -47,18 +48,16 @@ async function getBucket(bucketDB, bucketIndex) {
 }
 
 async function doesBucketExist(bucketDB, bucketIndex) {
-    if(
-        (await bucketDB
-            .collection("bucket_" + bucketIndex)
-            .findOne({ exists: true })) == null
-    ) {
+    var bucketName = "bucket_" + bucketIndex;
+    var flags = { exists: true };
+    if((await bucketDB.collection(bucketName).findOne(flags)) == null) {
         return false;
     }
     return true;
 }
 
 async function getMessagesCount(bucketDB, bucketIndex) {
-    return await bucketDB.collection("bucket_" + bucketIndex).countDocuments({});
+    return (await bucketDB.collection("bucket_" + bucketIndex).countDocuments({})) - 1;
 }
 
 // console.log("We are connected! " + host + ":" + port);
@@ -93,10 +92,18 @@ async function initDBs() {
      *   Connect to each database one at a time then push it to the array
      */
     Server1.databases["main"] = await openConnection(process.env.mongodb_main);
-    logging.log("Connected to main db.");
+    if(Server1.databases["main"] == false) {
+        logging.error("Error connecting to main db.");
+    } else {
+        logging.log("Connected to main db.");
+    }
 
     Server1.databases["buckets"] = await openConnection(process.env.mongodb_buckets);
-    logging.log("Connected to buckets db.");
+    if(Server1.databases["buckets"] == false) {
+        logging.error("Error connecting to buckets db.");
+    } else {
+        logging.log("Connected to buckets db.");
+    }
 
     logging.log("Finished establishing connections.");
 
@@ -107,7 +114,7 @@ async function initDBs() {
         var msgCounts = await getMessagesCount(Server1.databases["buckets"], i);
         logging.verbose(`bucket ${i} has ${msgCounts} messages within it. max: ${messagesPerBucket}`);
         if(msgCounts < messagesPerBucket) {
-            console.log("Added!.");
+            logging.log(`Added bucket number ${i} to the bucket table!.`);
             Server1.messageBuckets.push(await getBucket(Server1.databases["buckets"], i));
         }
     }

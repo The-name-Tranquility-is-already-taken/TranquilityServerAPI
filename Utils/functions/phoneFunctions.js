@@ -7,7 +7,7 @@ const servers = require("./../../Databases/DBs").getServers();
 const monitoring = require("../monitor");
 const mongoose = require("mongoose");
 const Members = servers[0].Server1.databases.main.model("Members");
-const logging = require("../logging");
+const logging = require("@connibug/js-logging");
 const {
   SamplePage,
 } = require("twilio/lib/rest/autopilot/v1/assistant/task/sample");

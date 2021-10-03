@@ -1,6 +1,6 @@
 const messageFunctions = require("../../Utils/functions/messageFunctions");
 const codes = require("../../Utils/misc/error_codes").codes;
-const logging = require("../../Utils/logging");
+const logging = require("@connibug/js-logging");
 const monitoring = require("../../Utils/monitor");
 
 /**

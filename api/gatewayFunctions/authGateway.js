@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const servers = require("./../../Databases/DBs").getServers();
 const Members = servers[0].Server1.databases.main.model("Members");
 
-const logging = require("../../Utils/logging");
+const logging = require("@connibug/js-logging");
 const monitoring = require("../../Utils/monitor");
 const phoneFunctions = require("../../Utils/functions/phoneFunctions");
 
