@@ -1,12 +1,13 @@
 const monitor = require("./monitor");
 const bcrypt = require("bcrypt");
 
+// Default is 8. In production it will get modified.
 var saltRounds = 8;
 
 /**
  * Used for benchmarking hasing speeds
  * @param {Integer} saltRounds
- * @returns
+ * @returns {Date} time taken to hash.
  */
 function hashTiming(saltRounds_t) {
   let startTimestamp = new Date().getTime();
@@ -20,11 +21,14 @@ function hashTiming(saltRounds_t) {
   return new Date().getTime() - startTimestamp;
 }
 
+/**
+ * Function used for setting up all the hashing rounds etc.
+ */
 module.exports.setup = () => {
   var timeTaken = -1;
 
-  var maxTimeAllowed = 1000;
-  var leaway = 150;
+  // Tweak to liking
+  var maxTimeAllowed = 1150;
 
   var bestRounds = -1;
   var bestTiming = -1;
@@ -42,7 +46,7 @@ module.exports.setup = () => {
       `testing ${curSalt} - times taken: ${test1}ms, ${test2}ms, ${test3}ms - average: ${timeTaken}ms`
     );
 
-    if (timeTaken <= maxTimeAllowed + leaway) {
+    if (timeTaken <= maxTimeAllowed) {
       if (timeTaken > bestTiming) {
         bestRounds = curSalt;
         bestTiming = timeTaken;
@@ -57,6 +61,11 @@ module.exports.setup = () => {
   saltRounds = bestRounds;
 };
 
+/**
+ * Hashing function for hashing things and shit yanno :/
+ * @param {String} text the text to get hashed.
+ * @returns {String} Hashed Text
+ */
 const hash = (text) => {
   let startTimestamp = new Date().getTime();
 
@@ -71,6 +80,9 @@ const hash = (text) => {
   return hash;
 };
 
+/**
+ * Proxy for hash func.
+ */
 module.exports.hash = (text) => {
   return hash(text);
 };
