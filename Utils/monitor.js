@@ -14,6 +14,9 @@ const template = (name_t) => ({
 
 var data = [];
 
+/**
+ * Used for formatting and outputing hash times.
+ */
 exports.output = () => {
   data.forEach((entry) => {
     console.log("-----------------------");
@@ -24,6 +27,11 @@ exports.output = () => {
   });
 };
 
+/**
+ * I think its pure jank but i cant tell.
+ * @param {String} Name the name of the dataset i think :|
+ * @returns
+ */
 function getSpecificDataSet(name) {
   var Times = [];
   var Ms = [];
@@ -31,7 +39,6 @@ function getSpecificDataSet(name) {
     // console.log("Entry name: ", entry.name, " - ", name);
     if (entry.name == name) {
       // console.log("Pushing");
-
       var i = 0;
       entry.data.forEach((r) => {
         Times.push(entry.data[i].timeStamp);
@@ -40,13 +47,14 @@ function getSpecificDataSet(name) {
       });
     }
   });
-
   // console.log(data);
   // console.log([ Times, Ms ]);
-
   return [Times, Ms];
 }
 
+/**
+ * Used by api 
+ */
 exports.data = (req, res) => {
   var colours = [
     {
@@ -85,6 +93,9 @@ exports.data = (req, res) => {
   res.json({ all: all[0], times: times });
 };
 
+/**
+ * Something
+ */
 exports.log = async (module_t, timeTaken) => {
   timeTaken = parseInt(timeTaken);
 
@@ -114,6 +125,10 @@ exports.log = async (module_t, timeTaken) => {
   }
 };
 
+/**
+ * Gets the current date and outputs it as a string for use when logging.
+ * @returns {String} Outputs the current time
+ */
 function getDateTime() {
   var date = new Date();
 
@@ -139,6 +154,20 @@ function getDateTime() {
   );
 }
 
+function calculateVariance(dataSet, mean) {
+  variance = 0;
+  
+  for(var i = 0; i <= dataSet.length(); i++) {
+    // subtract mean from each number, square the result
+    dataSet[i] -= mean;
+    dataSet[i] *= dataSet[i];
+
+    // Average the result
+    variance += dataSet[i];
+    variance /= 2;
+   }
+  return variance;
+}
 if (config.monitoring.outputStats) {
   setInterval(function () {
     console.log(
@@ -149,12 +178,12 @@ if (config.monitoring.outputStats) {
       logging.log(`| ${entry.name} x${entry.callCount}`);
       logging.log(`--- Average Times: ${entry.averageTimes.all}ms`);
       logging.log(
-        `--- Sway: +${
+        `--- Variance: + ${
           entry.averageTimes.all * entry.callCount - entry.totalTime
         }ms`
       );
       logging.log(`--- Total Time: ${entry.totalTime}ms`);
-      // logging.log(`--- Called: ${entry.callCount} times`);
+      logging.log(`--- Called: ${entry.callCount} times`);
     });
     console.log(
       "------------------------------------------------------------------------------------"
