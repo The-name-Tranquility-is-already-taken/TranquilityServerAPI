@@ -1,12 +1,11 @@
 const servers = require("./../../Databases/DBs").getServers();
 const mongoose = require("mongoose");
 
-const Members = servers[0].Server1.databases.main.model("Members");
-const Guilds = servers[0].Server1.databases.main.model("Guilds");
+const Members = mongoose.connection.model("Members");
+const Guilds = mongoose.connection.model("Guilds");
 
 const guildSnowflake = require("../snowflake").GenerateID;
-const logging = require("../logging");
-
+const logging = require("@connibug/js-logging");
 /**
  * Get the guilds by member id the user is in.
  * @param {string} ownerID MemberID of the user that created the guild.

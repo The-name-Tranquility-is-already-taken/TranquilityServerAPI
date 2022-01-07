@@ -20,6 +20,7 @@
   },
   "homepage": "https://github.com/The-name-Tranquility-is-already-taken/TranquilityServerAPI#readme",
   "dependencies": {
+    "@connibug/js-logging": "^2.0.1",
     "bcrypt": "^5.0.1",
     "colors": "^1.4.0",
     "dotenv": "^10.0.0",

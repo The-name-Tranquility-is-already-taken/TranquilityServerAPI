@@ -2,7 +2,7 @@ const mongoose = require("mongoose");
 require("dotenv").config();
 const sleep = (ms) => new Promise((res) => setTimeout(res, ms));
 
-const logging = require("./../Utils/logging");
+const logging = require("@connibug/js-logging");
 
 var maxBuckets = 5;
 var messagesPerBucket = 4;
@@ -45,13 +45,16 @@ async function getBucket(bucketDB, bucketIndex) {
 }
 
 async function doesBucketExist(bucketDB, bucketIndex) {
-    if(
-        (await bucketDB
-            .collection("bucket_" + bucketIndex)
+    let id = "bucket_" + bucketIndex;
+    logging.debug("Checking for bucket: ", id);
+    if((await bucketDB
+            .collection(id)
             .findOne({ exists: true })) == null
     ) {
+        logging.debug("Doesnt Exist");
         return false;
     }
+    logging.debug("EXISTS");
     return true;
 }
 
@@ -80,39 +83,42 @@ async function getMessagesCount(bucketDB, bucketIndex) {
 // });
 
 async function initDBs() {
-    let Server1 = {
-        databases: [],
-        messageBuckets: [],
-    };
+    // let Server1 = {
+    //     databases: [],
+    //     messageBuckets: [],
+    // };
 
-    logging.log("Initiating dbs");
+    logging.log("Initiating connection");
 
+    
     /*
-     *   Connect to each database one at a time then push it to the array
-     */
-    Server1.databases["main"] = await openConnection(process.env.mongodb_main);
+    *   Connect to each database one at a time then push it to the array
+    */
+   // await openConnection(process.env.mongodb_main);
+   mongoose.connect(process.env.mongodb_main, {useNewUrlParser: true, useUnifiedTopology: true});
     logging.log("Connected to main db.");
 
-    Server1.databases["buckets"] = await openConnection(process.env.mongodb_buckets);
-    logging.log("Connected to buckets db.");
+    // Server1.databases["buckets"] = await openConnection(process.env.mongodb_buckets);
+    // logging.log("Connected to buckets db.");
 
-    logging.log("Finished establishing connections.");
+    // logging.log("Finished establishing connections.");
 
-    for(var i = 1; i <= maxBuckets; ++i) {
-        var does = await doesBucketExist(Server1.databases["buckets"], i);
-        if(!does) break;
+    // for(var i = 1; i <= maxBuckets; ++i) {
+    //     var does = await doesBucketExist(Server1.databases["buckets"], i);
+    //     console.log(does)
+    //     if(!does) break;
 
-        var msgCounts = await getMessagesCount(Server1.databases["buckets"], i);
-        logging.verbose(`bucket ${i} has ${msgCounts} messages within it. max: ${messagesPerBucket}`);
-        if(msgCounts < messagesPerBucket) {
-            console.log("Added!.");
-            Server1.messageBuckets.push(await getBucket(Server1.databases["buckets"], i));
-        }
-    }
+    //     var msgCounts = await getMessagesCount(Server1.databases["buckets"], i);
+    //     logging.verbose(`bucket ${i} has ${msgCounts} messages within it. max: ${messagesPerBucket}`);
+    //     if(msgCounts < messagesPerBucket) {
+    //         console.log("Added!.");
+    //         Server1.messageBuckets.push(await getBucket(Server1.databases["buckets"], i));
+    //     }
+    // }
 
     initDone = true;
 
-    servers.push({ Server1: Server1 });
+    // servers.push({ Server1: Server1 });
 
     return true;
 }

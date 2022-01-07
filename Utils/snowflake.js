@@ -1,5 +1,6 @@
 "use strict";
 const monitoring = require("./monitor");
+const l = require("@connibug/js-logging");
 
 // Declare snowflakey
 const snowflakey = require("snowflakey");
@@ -19,15 +20,15 @@ const Worker = new snowflakey.Worker({
  * @returns {string} Unique snowflake
  */
 module.exports.GenerateID = (log = true) => {
-  let startTimestamp = new Date().getTime();
+  // let startTimestamp = new Date().getTime();
 
   const flake = Worker.generate();
   if (log) {
-    console.log(`Created snowflake: ${flake}`);
-    console.log(
+    l.verbose(`Created snowflake: ${flake}`);
+    l.verbose(
       `Creation date    : ${snowflakey.lookup(flake, Worker.options.epoch)}`
     );
-    console.log(
+    l.verbose(
       `Deconstructed    : ${Worker.deconstruct(flake).timestamp.valueOf()}`
     );
   }

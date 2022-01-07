@@ -1,6 +1,6 @@
 const jwt = require("jsonwebtoken");
 const getUserInfo = require("../gatewayFunctions/memberGateway").getMemberInfo;
-const logging = require("../../Utils/logging");
+const logging = require("@connibug/js-logging");
 const codes = require("../../Utils/misc/error_codes").codes;
 const monitoring = require("../../Utils/monitor");
 
@@ -32,7 +32,7 @@ async function isTokenValid(userID, submittedToken) {
 
     timeTaken = new Date().getTime() - startTimestamp;
     if (userID && userID == tokenUserID) {
-      console.log("Valid token.", submittedToken);
+      logging.debug("Valid token." + JSON.stringify(submittedToken));
       monitoring.log("isTokenValid - valid", timeTaken);
       return true;
     }
@@ -42,7 +42,7 @@ async function isTokenValid(userID, submittedToken) {
     timeTaken = new Date().getTime() - startTimestamp;
     logging.log(err, "ERROR", "isTokenValid");
     monitoring.log("isTokenValid - error", timeTaken);
-    console.log("Invalid token.", submittedToken);
+    logging.debug("Invalid token." + JSON.stringify(submittedToken));
     return false;
   }
 }

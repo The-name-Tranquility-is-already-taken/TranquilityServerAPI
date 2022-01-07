@@ -1,11 +1,13 @@
 const mongoose = require("mongoose");
 const monitoring = require("./Utils/monitor");
 const path = require("path");
-const logging = require("./Utils/logging");
+const logging = require("@connibug/js-logging");
+logging.setupFileLogging("./")
 const express = require("express");
 const app = express();
 
 require("dotenv").config();
+process.env.debug = ((process.env.debug == "True") ? true : false)
 
 const port = process.env.PORT || 3000;
 
@@ -78,8 +80,9 @@ async function start() {
   require("./api/models/MemberModel"); // created model loading here
   require("./api/models/GuildModel"); // created model loading here
   require("./api/models/BucketModel"); // created model loading here
+  require("./api/models/VerificationModel"); // created model loading here
 
-  console.log("Defined models", mongoose.modelNames())
+  logging.debug("Defined models", mongoose.modelNames())
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 

@@ -23,6 +23,8 @@ module.exports = (app) => {
 
   //#endregion
 
+
+  
   /**
    *  Authenticated Routes
    */
@@ -100,10 +102,11 @@ module.exports = (app) => {
    */
   //#region SMS Gateways
 
-  app.route("/api/verify/phone/start").post(smsGateway.verifyPhoneOwnership);
+  app.route("/api/verify/phone/start")
+    .post(smsGateway.sendPhoneCode);
 
   //#endregion
-
+ 
   /**
    *  Testing Stuff
    */

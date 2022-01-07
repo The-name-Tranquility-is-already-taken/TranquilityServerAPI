@@ -2,13 +2,13 @@
 const mongoose = require("mongoose");
 const servers = require("./../../Databases/DBs").getServers();
 
-const Members = servers[0].Server1.databases.main.model("Members");
+const Members = mongoose.connection.model("Members");
 
 const codes = require("../../Utils/misc/error_codes").codes;
 
 const memberFunctions = require("../../Utils/functions/memberFunctions");
 
-const logging = require("../../Utils/logging");
+const logging = require("@connibug/js-logging");
 const monitoring = require("../../Utils/monitor");
 
 const formattingData = require("./../../Utils/functions/dataHandler");
@@ -52,8 +52,6 @@ exports.listMembers = async (req, res) => {
 };
 
 exports.createNewMember = async (req, res) => {
-  console.log("Member");
-
   let startTimestamp = new Date().getTime();
 
   var response = await memberFunctions

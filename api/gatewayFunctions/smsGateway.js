@@ -1,13 +1,15 @@
+const phoneFunctions = require("../../Utils/functions/phoneFunctions");
+
 /**
- * Gateway used to start the process of verifying ownership of a phone number
+ * Gateway used to ?
  * @param {*} req
  * @param {*} res
  */
-exports.verifPhone = async (req, res) => {
+exports.sendPhoneCode = async (req, res) => {
   let startTimestamp = new Date().getTime();
 
   var response = await phoneFunctions
-    .setupPhone2FA(req.params.MemberID)
+    .sendPhoneCode(req.params.MemberID)
     .catch((err) => {
       console.log("ERR: ", err);
       res.status(codes.Bad_Request);
@@ -21,7 +23,7 @@ exports.verifPhone = async (req, res) => {
   }
   res.json({ response: response });
 
-  monitoring.log("verifPhone", new Date().getTime() - startTimestamp);
+  monitoring.log("sendPhoneCode", new Date().getTime() - startTimestamp);
 };
 
 /**

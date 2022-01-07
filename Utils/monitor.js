@@ -1,6 +1,6 @@
 var config = require("./../config").conf;
 
-var logging = require("./logging");
+const logging = require("@connibug/js-logging");
 
 const template = (name_t) => ({
   name: name_t,
