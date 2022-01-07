@@ -40,9 +40,13 @@ exports.conf = {
         shortenChannelName: true,      // Default: true
         replaceSpacesWithChar: true,   // Default: true
     },
+    messageText_Checks: {
+        lengthLimit: true,             // Default: true
+        maxLength: 100,                // Default: true
+    },
     monitoring: {
         outputStats: false,            // Default: true
-        outputStatsEvery: 10000,       // Currently: 10seconds // Default: 1000 ms
+        outputStatsEvery: 10000,       // Default: 10000 ms eg 10 Seconds
     }
 }
 ```

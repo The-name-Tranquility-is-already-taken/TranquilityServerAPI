@@ -79,6 +79,7 @@ async function start() {
   require("./api/models/GuildModel"); // created model loading here
   require("./api/models/BucketModel"); // created model loading here
 
+  console.log("Defined models", mongoose.modelNames())
   app.use(express.urlencoded({ extended: true }));
   app.use(express.json());
 

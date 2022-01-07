@@ -8,14 +8,12 @@ var maxBuckets = 5;
 var messagesPerBucket = 4;
 
 async function openConnection(url, db) {
+    console.log(url, db)
     return new Promise((resolve, reject) => {
         mongoose.createConnection(
             url, {
                 useUnifiedTopology: true,
-                useFindAndModify: false,
-                useCreateIndex: true,
                 useNewUrlParser: true,
-                poolSize: 10, // Can run 10 operations at a time
             },
             async function(err, client) {
                 if(err) {

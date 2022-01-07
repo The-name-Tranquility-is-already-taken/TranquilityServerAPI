@@ -4,7 +4,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const MemberSchema = new Schema({
   // Never changed!!!!!!!!!!!!!!!!!!!!!!!   >:(
-  id: { type: String, required: "FUCKING GIVE ME ID" },
+  id: { type: String, required: "Gib id" },
   createdDate: { type: Date, default: Date.now },
 
   // Filled in during account creation/modification
