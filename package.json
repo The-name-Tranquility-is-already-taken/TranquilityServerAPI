@@ -22,7 +22,7 @@
   "dependencies": {
     "@connibug/js-logging": "^2.0.1",
     "bcrypt": "^5.0.1",
-    "colors": "^1.4.0",
+    "colors": "^1.4.2",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
