@@ -16,11 +16,11 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const VerificationSchema = new Schema({
   userID: { type: String, required: "Ned userID fam." },
-  
+
   type: { type: String, required: "phone num or email." },
   content: { type: String, required: "full phone num or full email." },
 
   validCode: { type: String, required: "Needs a valid 2fa code" },
-  createdDate: { type: Date, default: Date.now }
+  createdDate: { type: Date, default: Date.now },
 });
 module.exports = mongoose.model("verifications", VerificationSchema);

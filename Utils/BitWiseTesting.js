@@ -1,69 +1,55 @@
 const ChannelBits = require(`./api/BitFlags/PermissionBitfields`).codes;
-const { PerformanceObserver, performance } = require('perf_hooks');
+const { PerformanceObserver, performance } = require("perf_hooks");
 /*
     0th bit = view channel
     1st bit = send messages
     2nd bit = manage messages
     00000000000000000000000000000000
 */
-function isBitSet(b,pos) 
-{
-	return (b.field & (1 << pos)) != 0;
+function isBitSet(b, pos) {
+  return (b.field & (1 << pos)) != 0;
 }
-function setBit(b,pos)
-{
-    b.field |= (1 << pos);
+function setBit(b, pos) {
+  b.field |= 1 << pos;
 }
-function clearBit(b,pos)
-{
-    b.field = ~(1 << pos);
+function clearBit(b, pos) {
+  b.field = ~(1 << pos);
 }
 
-
-
-
-var ChannelObj = 
-{
-    ChannelID:"",
-    Name:"",
-    Description:"",
-    RoleOverrides:
-    [
-        {
-            RoleID:"",
-            VIEW_CHANNEL: true,
-            MANAGE_CHANNEL: null,
-            MANAGE_PERMISSION: null,
-            CREATE_INVITE: null,
-            SEND_MESSAGES: true,
-        }
-    ]
+var ChannelObj = {
+  ChannelID: "",
+  Name: "",
+  Description: "",
+  RoleOverrides: [
+    {
+      RoleID: "",
+      VIEW_CHANNEL: true,
+      MANAGE_CHANNEL: null,
+      MANAGE_PERMISSION: null,
+      CREATE_INVITE: null,
+      SEND_MESSAGES: true,
+    },
+  ],
 };
 
-var RoleObject = 
-{
-    RoleID:"",
-    RoleName:"",
-    Colour:{r:255,g:0,b:255,a:255},
-    Permissions:
-    {
-        VIEW_CHANNEL: true,
-        MANAGE_CHANNEL: null,
-        MANAGE_PERMISSION: null,
-        CREATE_INVITE: null,
-        SEND_MESSAGES: true,
-    }
-}
-
+var RoleObject = {
+  RoleID: "",
+  RoleName: "",
+  Colour: { r: 255, g: 0, b: 255, a: 255 },
+  Permissions: {
+    VIEW_CHANNEL: true,
+    MANAGE_CHANNEL: null,
+    MANAGE_PERMISSION: null,
+    CREATE_INVITE: null,
+    SEND_MESSAGES: true,
+  },
+};
 
 /*
 
 
 
 */
-
-
-
 
 /*
 let start = (new Date()).getTime()
@@ -109,4 +95,3 @@ setHexBit(ConnisChannelPerms,)
 console.log(ConnisChannelPerms.field);
 console.log((ConnisChannelPerms.field & ChannelBits.Manage_Messages) ? "can manage messages in the channel" : "cant manage messages");
 */
-

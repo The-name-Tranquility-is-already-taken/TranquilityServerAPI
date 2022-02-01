@@ -17,7 +17,7 @@ const BCrypt = require(`bcrypt`);
 const crypto = require("crypto");
 require("dotenv").config();
 
-const debugMemberFuncs = (process.env.debug && true)
+const debugMemberFuncs = process.env.debug && true;
 
 /**
  * Get a list of all members within database.
@@ -34,26 +34,33 @@ module.exports.getAllMembers = async () => {
  * @returns {string} status text. Ok/Failed/Already Exists
  */
 module.exports.createNewMember = async (tag, email, password) => {
-  if(debugMemberFuncs) logging.debug("Request to create user with tag: <" + tag + "> and password: <" + password + ">");
+  if (debugMemberFuncs)
+    logging.debug(
+      "Request to create user with tag: <" +
+        tag +
+        "> and password: <" +
+        password +
+        ">"
+    );
   var check = await Members.find({
     $or: [{ email: email }, { tag: tag }],
   });
 
   check = check[0];
   if (check) {
-    if(debugMemberFuncs) {
+    if (debugMemberFuncs) {
       logging.debug("Existing data found: " + JSON.stringify(check));
     }
     if (check.email == email || check.tag == tag) {
       if (check.email == email && check.tag == tag) {
-        if(debugMemberFuncs) logging.debug("Email and Tag are matching.");
+        if (debugMemberFuncs) logging.debug("Email and Tag are matching.");
         return "email and tag exists";
       } else {
         if (check.email == email) {
-          if(debugMemberFuncs) logging.debug("email is matching.");
+          if (debugMemberFuncs) logging.debug("email is matching.");
           return "email exists";
         } else if (check.tag == tag) {
-          if(debugMemberFuncs) logging.debug("username is matching.");
+          if (debugMemberFuncs) logging.debug("username is matching.");
           return "username exists";
         }
       }
@@ -61,7 +68,7 @@ module.exports.createNewMember = async (tag, email, password) => {
   }
 
   var hashedPassword = hashing.hash(password);
-  if(debugMemberFuncs) logging.debug("hashed password: " + hashedPassword);
+  if (debugMemberFuncs) logging.debug("hashed password: " + hashedPassword);
 
   var buildJson = {
     id: SnowflakeFnc(),
@@ -73,7 +80,8 @@ module.exports.createNewMember = async (tag, email, password) => {
 
   await tmp_NewMember.save();
 
-  if(debugMemberFuncs) logging.debug("New account created with id: " + buildJson.id);
+  if (debugMemberFuncs)
+    logging.debug("New account created with id: " + buildJson.id);
   return { id: buildJson.id };
 };
 
