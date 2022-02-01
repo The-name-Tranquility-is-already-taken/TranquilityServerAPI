@@ -11,7 +11,7 @@ const leaseTime = 60 * 60 * 24 * 30;
 module.exports.createToken = (memberID, secret) => {
   l.verbose("Generating new token!");
   var signed = jwt.sign({ MemberID: memberID }, secret, {
-    expiresIn: leaseTime
+    expiresIn: leaseTime,
   });
   console.log(signed);
   l.verbose("Secret:" + secret);

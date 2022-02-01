@@ -60,33 +60,39 @@ function doesCodeExistInCache(
   return inCache;
 }
 
-
 /**
  * Create a new member
  * @param {json} body res.body from http request.
  * @returns {string} status text. Ok/Failed/Already Exists
  */
- module.exports.sendPhoneCode = async (tag, phoneNumber, password) => {
-  if(debugMemberFuncs) logging.debug("Request to create user with tag: <" + tag + "> and password: <" + password + ">");
+module.exports.sendPhoneCode = async (tag, phoneNumber, password) => {
+  if (debugMemberFuncs)
+    logging.debug(
+      "Request to create user with tag: <" +
+        tag +
+        "> and password: <" +
+        password +
+        ">"
+    );
   var check = await Verifications.find({
     $or: [{ email: email }, { tag: tag }],
   });
 
   check = check[0];
   if (check) {
-    if(debugMemberFuncs) {
+    if (debugMemberFuncs) {
       logging.debug("Existing data found: " + JSON.stringify(check));
     }
     if (check.email == email || check.tag == tag) {
       if (check.email == email && check.tag == tag) {
-        if(debugMemberFuncs) logging.debug("Email and Tag are matching.");
+        if (debugMemberFuncs) logging.debug("Email and Tag are matching.");
         return "email and tag exists";
       } else {
         if (check.email == email) {
-          if(debugMemberFuncs) logging.debug("email is matching.");
+          if (debugMemberFuncs) logging.debug("email is matching.");
           return "email exists";
         } else if (check.tag == tag) {
-          if(debugMemberFuncs) logging.debug("username is matching.");
+          if (debugMemberFuncs) logging.debug("username is matching.");
           return "username exists";
         }
       }
@@ -94,7 +100,7 @@ function doesCodeExistInCache(
   }
 
   var hashedPassword = hashing.hash(password);
-  if(debugMemberFuncs) logging.debug("hashed password: " + hashedPassword);
+  if (debugMemberFuncs) logging.debug("hashed password: " + hashedPassword);
 
   var buildJson = {
     id: SnowflakeFnc(),
@@ -106,12 +112,15 @@ function doesCodeExistInCache(
 
   await tmp_NewMember.save();
 
-  if(debugMemberFuncs) logging.debug("New account created with id: " + buildJson.id);
+  if (debugMemberFuncs)
+    logging.debug("New account created with id: " + buildJson.id);
   return { id: buildJson.id };
 };
 
 function genCode(currentTimeStamp = new Date().getTime()) {
-  var code = Math.random().toString(36).substring(2, 5) + Math.random().toString(36).substring(2, 5);
+  var code =
+    Math.random().toString(36).substring(2, 5) +
+    Math.random().toString(36).substring(2, 5);
   console.log("Auth Code:", code);
   var failed = false;
   var attempts = 0;
