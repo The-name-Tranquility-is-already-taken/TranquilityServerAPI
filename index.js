@@ -4,11 +4,14 @@ const mongoose = require("mongoose");
 const monitoring = require("./Utils/monitor");
 const path = require("path");
 const logging = require("@connibug/js-logging");
-logging.setupMail("mail.spookiebois.club", 587, process.env.EMAIL, process.env.EMAIL_PASS);
+logging.setupMail(
+  "mail.spookiebois.club",
+  587,
+  process.env.EMAIL,
+  process.env.EMAIL_PASS
+);
 const express = require("express");
 const app = express();
-
-
 
 const port = process.env.PORT || 3000;
 
@@ -29,7 +32,7 @@ async function start() {
 
   console.log("=========================");
   console.log("Servers");
-  servers.forEach(e => {
+  servers.forEach((e) => {
     var ServerName = Object.keys(e)[0];
     console.log("|", ServerName, "- Databases:", undefined);
   });
