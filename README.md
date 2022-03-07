@@ -30,29 +30,33 @@ https://documenter.getpostman.com/view/14329009/TzJx8wKc
 
 Tranquilitys api is configured using  2 config files including the following .env variables.
 
-| Name | Description | Default |
-| ---- | ----------- | ----- |
-| PORT | HTTP Port for the application | 322 |
-| mongodb | URL for the mongoDB database connection | N/A |
-| ADMIN_EMAIL | Administration email to send logging info etc to | N/A |
-| EMAIL | Sender email for 2FA, account confirmation etc | N/A |
-| TWILIO_SENDING_NUMBER | Twilio phone number for 2FA, account confirmation etc | N/A |
-| TWILIO_ACCOUNT_SID | Twilio account SID | N/A |
-| TWILIO_ACCOUNT_AUTH_TOKEN | Twilio auth token | N/A |
-| SALT_ROUNDS | Salt rounds for hashing( larger > more secure but longer run times) | 13
+| Name | Description | Default | Required |
+| ---- | ----------- | ------- | -------- |
+| PORT | HTTP Port for the application | 322 | True |
+| mongodb | URL for the mongoDB database connection | N/A | True |
+| ADMIN_EMAIL | Administration email to send logging info etc to | N/A | False |
+| EMAIL | Sender email for 2FA, account confirmation etc | N/A | False |
+| TWILIO_SENDING_NUMBER | Twilio phone number for 2FA, account confirmation etc | N/A | False |
+| TWILIO_ACCOUNT_SID | Twilio account SID | N/A | False |
+| TWILIO_ACCOUNT_AUTH_TOKEN | Twilio auth token | N/A | False |
+| SALT_ROUNDS | Salt rounds for hashing( larger > more secure but longer run times) | 13 |  True |
 
 and also a config.js
 ```js
 exports.conf = {
     channelName_Checks: {
         shortenChannelName: true,      // Default: true
+        
+        // Forces channel names to not contain spaces, such that they are replaces with a defined char 
         replaceSpacesWithChar: true,   // Default: true
     },
     messageText_Checks: {
+        // Limit how large a single message can be.
         lengthLimit: true,             // Default: true
         maxLength: 100,                // Default: true
     },
     monitoring: {
+        // Should the monitoring server echo statistics every X second to the attached console.
         outputStats: false,            // Default: true
         outputStatsEvery: 10000,       // Default: 10000 ms eg 10 Seconds
     }
