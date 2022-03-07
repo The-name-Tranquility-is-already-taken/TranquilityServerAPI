@@ -1,5 +1,13 @@
 # TranquilityServerAPI
 
+Backend API For Tranquility,
+<br>
+Fully documented api including,
+<br>
+Authentication API - (Currently no standalone solution)
+<br>
+Guild/Messages/User API
+
 [![DeepScan grade](https://deepscan.io/api/teams/13554/projects/16524/branches/357480/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=13554&pid=16524&bid=357480)
 
 ## Formatting
@@ -20,7 +28,7 @@ https://documenter.getpostman.com/view/14329009/TzJx8wKc
 
 ## Configuration
 
-Tranquilitys server api is configured using  2 config files including the following .env variables.
+Tranquilitys api is configured using  2 config files including the following .env variables.
 
 | Name | Description | Default |
 | ---- | ----------- | ----- |
