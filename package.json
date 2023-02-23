@@ -30,6 +30,6 @@
     "nodemailer": "^6.6.5",
     "nodemon": "^2.0.13",
     "snowflakey": "^0.2.0",
-    "twilio": "^3.68.0"
+    "twilio": "^4.8.0"
   }
 }
